@@ -8,13 +8,17 @@ $mezzo: 1.6rem;
 $piccolo: 0.8rem;
 
 // Breakpoints
-$large: 1024px;
-$medium: 768px;
-$small: 567px;
+$bp-large: 1024px;
+$bp-medium: 768px;
+$bp-small: 567px;
 
 // Widths
 $largest: 1200px;
 $smallest: 320px;
+
+* {
+  box-sizing: border-box;
+}
 
 html {
   box-sizing: border-box;
@@ -38,7 +42,7 @@ body {
   padding-left: $mezzo;
   padding-right: $mezzo;
 
-  @include breakpoint($small) {
+  @include breakpoint($bp-small) {
     padding-left: $grande;
     padding-right: $grande;
   }

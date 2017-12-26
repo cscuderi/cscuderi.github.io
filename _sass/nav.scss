@@ -1,12 +1,44 @@
+$nav-bp: $bp-small;
+
 .main-nav {
+  border-bottom: 4px solid white;
+  padding-top: $mezzo;
+
+  @include breakpoint($nav-bp) {
+    display: flex;
+    padding: $grande;
+  }
+
   ul {
     list-style-type: none;
     padding-left: 0;
+    width: 100%;
+    text-align: center;
+
+    @include breakpoint($nav-bp) {
+      display: flex;
+      justify-content: flex-end;
+      align-content: center;
+      margin: 0;
+    }
+  }
+
+  li {
+    display: inline-block;
+
+    @include breakpoint($nav-bp) {
+      display: flex;
+      align-items: center;
+      margin-right: $mezzo;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 
   a:not(.main-nav-logo-link) {
     color: white;
-    display: inline-block;
     text-decoration: none;
     text-transform: uppercase;
   }
@@ -14,7 +46,12 @@
 
 .main-nav-logo-link {
   display: block;
-  max-width: 70px;
+  margin: 0 auto;
+  max-width: 60px;
+
+  @include breakpoint($nav-bp) {
+    margin: 0;
+  }
 
   img {
     display: block;
