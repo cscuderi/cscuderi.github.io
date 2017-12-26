@@ -6,9 +6,9 @@ title: Home
 {% include nav.html %}
 
 <section class="section section-hello">
-  <div class="section-hello-content">
-    <h1 class="section-hello-title section-hello-title-small">Hi.</h1>
-    <h1 class="section-hello-title section-hello-title-large">Hello.</h1>
+  <div class="hello-content">
+    <h1 class="hello-title hello-title-small">Hi.</h1>
+    <h1 class="hello-title hello-title-large">Hello.</h1>
 
     <p>I'm a web developer and designer in London, Canada.</p>
   </div>
@@ -18,7 +18,14 @@ title: Home
   <h2>Work</h2>
 
   {% for post in site.posts %}
-    <h3>{{ post.title }}</h3>
+    <div class="work-item">
+      <div class="work-picture"></div>
+      <div class="work-title">
+        <h3 class="work-title-heading">{{ post.title }}</h3>
+      </div>
+      <div class="work-responsibilities">{{ post.responsibilities }}</div>
+      <div class="work-technology">{{ post.technology }}</div>
+    </div>
   {% endfor %}
 </section>
 

@@ -12,23 +12,23 @@ $section-hello-bp: $bp-medium;
   }
 }
 
-.section-hello-content {
+.hello-content {
   text-align: center;
 
-  .section-hello-title {
+  .hello-title {
     font-size: $mostruoso;
     text-transform: uppercase;
     letter-spacing: $grande;
     margin: 0;
   }
 
-  .section-hello-title-small {
+  .hello-title-small {
     @include breakpoint($section-hello-bp) {
       display: none;
     }
   }
 
-  .section-hello-title-large {
+  .hello-title-large {
     display: none;
 
     @include breakpoint($section-hello-bp) {

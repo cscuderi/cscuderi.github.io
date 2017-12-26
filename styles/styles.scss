@@ -4,8 +4,10 @@
 
 @import '../node_modules/breakpoint-sass/stylesheets/_breakpoint.scss';
 
+@import 'vars';
 @import 'normalize';
 @import 'base';
 @import 'nav';
 
 @import 'section-hello';
+@import 'section-work';
