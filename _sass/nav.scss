@@ -3,10 +3,12 @@ $nav-bp: $bp-small;
 .main-nav {
   border-bottom: 4px solid white;
   padding-top: $mezzo;
+  height: 16.4rem;
 
   @include breakpoint($nav-bp) {
     display: flex;
     padding: $grande;
+    height: 14.4rem;
   }
 
   ul {
@@ -37,24 +39,24 @@ $nav-bp: $bp-small;
     }
   }
 
-  a:not(.main-nav-logo-link) {
+  a {
     color: white;
     text-decoration: none;
     text-transform: uppercase;
-  }
-}
+    font-size: 80%;
 
-.main-nav-logo-link {
-  display: block;
-  margin: 0 auto;
-  max-width: 60px;
-
-  @include breakpoint($nav-bp) {
-    margin: 0;
+    @include breakpoint($nav-bp) {
+      font-size: 100%;
+    }
   }
 
   img {
     display: block;
-    width: 100%;
+    margin: 0 auto;
+    max-width: 60px;
+
+    @include breakpoint($nav-bp) {
+      margin: 0;
+    }
   }
 }

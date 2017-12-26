@@ -3,6 +3,8 @@
 // ==================================
 
 // Spacing
+$mostruoso: 12.8rem;
+$enorme: 6.4rem;
 $grande: 3.2rem;
 $mezzo: 1.6rem;
 $piccolo: 0.8rem;
@@ -33,12 +35,18 @@ html {
 
 body {
   margin: 0;
-  font-size: 16px;
+  font-size: 24px;
+  line-height: 1.45;
   background-color: black;
   color: white;
+  min-width: $smallest;
+
+  font-family: 'Montserrat', sans-serif;
 }
 
 .section {
+  max-width: $largest;
+  margin: 0 auto;
   padding-left: $mezzo;
   padding-right: $mezzo;
 
@@ -46,4 +54,14 @@ body {
     padding-left: $grande;
     padding-right: $grande;
   }
+}
+
+h2 {
+  font-size: 4.2rem;
+  font-weight: normal;
+}
+
+h3 {
+  font-size: 3.2rem;
+  font-weight: normal;
 }
