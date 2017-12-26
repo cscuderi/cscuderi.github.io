@@ -1,0 +1,45 @@
+// ==================================
+// Variables
+// ==================================
+
+// Spacing
+$grande: 3.2rem;
+$mezzo: 1.6rem;
+$piccolo: 0.8rem;
+
+// Breakpoints
+$large: 1024px;
+$medium: 768px;
+$small: 567px;
+
+// Widths
+$largest: 1200px;
+$smallest: 320px;
+
+html {
+  box-sizing: border-box;
+  font-size: 10px;
+
+  // Text improvements
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+}
+
+.section {
+  padding-left: $mezzo;
+  padding-right: $mezzo;
+
+  @include breakpoint($small) {
+    padding-left: $grande;
+    padding-right: $grande;
+  }
+}

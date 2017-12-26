@@ -1,0 +1,23 @@
+.main-nav {
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  a:not(.main-nav-logo-link) {
+    color: white;
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+}
+
+.main-nav-logo-link {
+  display: block;
+  max-width: 70px;
+
+  img {
+    display: block;
+    width: 100%;
+  }
+}
