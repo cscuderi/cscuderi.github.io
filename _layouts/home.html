@@ -15,9 +15,10 @@ title: Home
 </section>
 
 <section id="work" class="section section-work">
-  <h2>Work</h2>
+  <div class="section-content">
+    <h2 class="section-header">Work</h2>
 
-  {% for post in site.posts %}
+    {% for post in site.posts %}
     <div class="work-item">
       <div class="work-picture"></div>
       <div class="work-title">
@@ -26,28 +27,33 @@ title: Home
       <div class="work-responsibilities">{{ post.responsibilities }}</div>
       <div class="work-technology">{{ post.technology }}</div>
     </div>
-  {% endfor %}
+    {% endfor %}
+  </div>
 </section>
 
 <section id="about" class="section section-about">
-  <h2>About</h2>
-  <p>My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
-  <p>I believe in small details. Technology and the way people interact with it is an extremely important part of our lives. Learning about patterns, conventions, behaviours and how to create a positive experience for a wide audience is essential. I like to design and build things that other people will really enjoy using, and pass what I've learned on to help others do the same.</p>
-  <p> I'm currently available on a part-time basis for consultation, freelance contracts, and collaboration.</p>
+  <div class="section-content">
+    <h2 class="section-header">About</h2>
+    <p>My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
+    <p>I believe in small details. Technology and the way people interact with it is an extremely important part of our lives. Learning about patterns, conventions, behaviours and how to create a positive experience for a wide audience is essential. I like to design and build things that other people will really enjoy using, and pass what I've learned on to help others do the same.</p>
+    <p> I'm currently available on a part-time basis for consultation, freelance contracts, and collaboration.</p>
 
-  <h2>Tech</h2>
-  <ul>
-    <li>HTML, CSS (SASS), JavaScript</li>
-    <li>Photoshop, Illustrator, Sketch</li>
-    <li>InVision, Zeplin</li>
-    <li>Emphasis on accessibility, inclusiveness, and universal design</li>
-    <li>Desire to educate and help others</li>
-  </ul>
+    <h2 class="section-header">Tech</h2>
+    <ul>
+      <li>HTML, CSS (SASS), JavaScript</li>
+      <li>Photoshop, Illustrator, Sketch</li>
+      <li>InVision, Zeplin</li>
+      <li>Emphasis on accessibility, inclusiveness, and universal design</li>
+      <li>Desire to educate and help others</li>
+    </ul>
+  </div>
 </section>
 
 <section id="contact" class="section section-contact">
-  <h2>Contact me</h2>
-  <p>It's always great talking to other people in the industry from around the world. You can find me on any of the networks listed below; alternatively, feel free to send me an email.</p>
+  <div class="section-content">
+    <h2 class="section-header">Contact me</h2>
+    <p>It's always great talking to other people in the industry from around the world. You can find me on any of the networks listed below; alternatively, feel free to send me an email.</p>
+  </div>
 </section>
 
 {% include footer.html %}
