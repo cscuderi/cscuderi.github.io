@@ -5,9 +5,9 @@
 @import '../node_modules/breakpoint-sass/stylesheets/_breakpoint.scss';
 
 @import 'vars';
+@import 'a11y';
 @import 'normalize';
 @import 'base';
-@import 'a11y';
 
 @import 'section-hello';
 @import 'section-work';
