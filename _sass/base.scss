@@ -28,12 +28,44 @@ body {
 }
 
 h1,
+.h1,
 h2,
+.h2,
 h3,
+.h3,
 h4,
+.h4,
 h5,
-h6 {
+.h5,
+h6,
+.h6 {
   font-family: 'Montserrat', sans-serif;
+}
+
+h1,
+.h1 {
+  font-size: 4.8rem;
+}
+
+h2,
+.h2 {
+  font-size: 4.2rem;
+  font-weight: normal;
+}
+
+h3,
+.h3 {
+  font-size: 3.2rem;
+  font-weight: normal;
+}
+
+button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  @include focus();
 }
 
 .logo {
@@ -67,14 +99,4 @@ h6 {
   text-transform: uppercase;
   font-weight: bold;
   letter-spacing: $piccolo;
-}
-
-h2 {
-  font-size: 4.2rem;
-  font-weight: normal;
-}
-
-h3 {
-  font-size: 3.2rem;
-  font-weight: normal;
 }

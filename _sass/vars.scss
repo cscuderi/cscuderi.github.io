@@ -21,13 +21,16 @@ $largest: 1200px;
 $smallest: 320px;
 
 // Styles
-$border-width: 4px;
 $background-color: rgb(230, 231, 232); // Controls most site styles
 $color: invert($background-color, 100%);
+$border-width: 4px;
+$border-radius: 8px;
 $border-color: $color;
 
 // Colours
 $purple: #5700b7;
+$green: #00ff9a;
+$orange: #f95e00;
 
 // Animations + transitions
 $animation-duration: 0.6s;
