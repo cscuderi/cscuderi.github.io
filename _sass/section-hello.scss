@@ -3,100 +3,230 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100vh - 15rem);
-  // color: invert($color, 100%);
-  // background-color: invert($background-color, 100%);
+  height: calc(100vh);
 
   .section-content {
     text-align: center;
+  }
 
-    .section-hello-header {
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      flex-direction: row;
-      width: 100%;
+  .section-hello-header {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .hello-header-img {
+    height: 100%;
+    width: 100%;
+    margin-right: $mezzo;
+    opacity: 0;
+    transition: 0.2s;
+    animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
+    animation-fill-mode: forwards;
+
+    @include breakpoint($bp-small) {
+      margin-right: $grande;
+    }
+  }
+
+  .hello-header-c {
+    margin-left: -1rem;
+    width: 60px;
+
+    @include breakpoint($bp-small) {
+      margin-left: 0;
+      width: 90px;
     }
 
-    .hello-header-img {
+    @include breakpoint($bp-medium) {
+      width: 150px;
+    }
+  }
+
+  .hello-header-i {
+    width: 20px;
+    animation-delay: 0.3s;
+
+    @include breakpoint($bp-small) {
+      width: 31px;
+    }
+
+    @include breakpoint($bp-medium) {
+      width: 51px;
+    }
+  }
+
+  .hello-header-a {
+    width: 72px;
+    margin-right: 1.1rem;
+    animation-delay: 0.4s;
+
+    @include breakpoint($bp-small) {
+      width: 112px;
+      margin-right: 2.5rem;
+    }
+
+    @include breakpoint($bp-medium) {
+      width: 186px;
+    }
+  }
+
+  .hello-header-o {
+    width: 67px;
+    margin-right: 0;
+    animation-delay: 0.6s;
+
+    @include breakpoint($bp-small) {
+      width: 102px;
+    }
+
+    @include breakpoint($bp-medium) {
+      width: 170px;
+    }
+  }
+
+  .section-hello-intro {
+    font-size: 110%;
+    max-width: $bp-medium;
+    opacity: 0;
+    animation: fade-in ($animation-duration * 1.6);
+    animation-delay: 1.4s;
+    animation-fill-mode: forwards;
+
+    @include breakpoint($bp-medium) {
+      margin-top: $enorme;
+    }
+  }
+
+  .section-hello-burst {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation-name: rotate;
+    animation-duration: 120s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    .burst {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
       height: 100%;
       width: 100%;
-      margin-right: $mezzo;
-
-      @include breakpoint($bp-small) {
-        margin-right: $grande;
-      }
+      background: url('/assets/burst.svg') center center no-repeat;
     }
 
-    .hello-header-c {
-      margin-left: -1rem;
-      width: 60px;
-
-      @include breakpoint($bp-small) {
-        margin-left: 0;
-        width: 90px;
-      }
-
-      @include breakpoint($bp-medium) {
-        width: 150px;
-      }
+    // TODO Convert to a for loop
+    .burst-1 {
+      transform: translateY(-50%);
     }
 
-    .hello-header-i {
-      width: 20px;
-
-      @include breakpoint($bp-small) {
-        width: 31px;
-      }
-
-      @include breakpoint($bp-medium) {
-        width: 51px;
-      }
+    .burst-2 {
+      transform: translateY(-50%) rotate(45deg);
+      transform-origin: bottom center;
     }
 
-    .hello-header-a {
-      width: 72px;
-      margin-right: 1.1rem;
-
-      @include breakpoint($bp-small) {
-        width: 112px;
-        margin-right: 2.5rem;
-      }
-
-      @include breakpoint($bp-medium) {
-        width: 186px;
-      }
+    .burst-3 {
+      transform: translateY(-50%) rotate(90deg);
+      transform-origin: bottom center;
     }
 
-    .hello-header-o {
-      width: 67px;
-      margin-right: 0;
-
-      @include breakpoint($bp-small) {
-        width: 102px;
-      }
-
-      @include breakpoint($bp-medium) {
-        width: 170px;
-      }
+    .burst-4 {
+      transform: translateY(-50%) rotate(135deg);
+      transform-origin: bottom center;
     }
 
-    .hello-title-regular {
-      display: block;
-      letter-spacing: $mezzo;
-
-      @include breakpoint($bp-xlarge) {
-        display: none;
-      }
+    .burst-5 {
+      transform: translateY(-50%) rotate(180deg);
+      transform-origin: bottom center;
     }
 
-    .hello-title-large {
-      display: none;
-      letter-spacing: $grande;
-
-      @include breakpoint($bp-xlarge) {
-        display: block;
-      }
+    .burst-6 {
+      transform: translateY(-50%) rotate(225deg);
+      transform-origin: bottom center;
     }
+
+    .burst-7 {
+      transform: translateY(-50%) rotate(270deg);
+      transform-origin: bottom center;
+    }
+
+    .burst-8 {
+      transform: translateY(-50%) rotate(315deg);
+      transform-origin: bottom center;
+    }
+  }
+}
+
+.disable-animation {
+  font-size: 1.2rem;
+  background: transparent;
+  border: none;
+  color: lighten($color, 20%);
+  border-bottom: 1px solid lighten($color, 20%);
+  padding: 0;
+
+  animation: subtle 3s;
+  animation-fill-mode: forwards;
+  animation-delay: 2.5s;
+  opacity: 0;
+}
+
+@keyframes bobble {
+  0% {
+    transform: translateY(124px) scale(0.8, 1.6);
+  }
+  25% {
+    transform: translateY(-64px) scale(1.6, 0.8);
+  }
+  55% {
+    transform: translateY(16px) scale(0.9, 1.1);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    transform: translateY(64px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes subtle {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

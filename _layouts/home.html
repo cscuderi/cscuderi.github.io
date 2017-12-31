@@ -4,19 +4,46 @@ title: Home
 
 {% include head.html %}
 
-<header class="main-header">
-  <img src="{{ '/assets/logo.svg' }}" alt="">
-</header>
-
 <section class="section section-hello">
   <div class="section-content">
     <h1 lang="it" aria-label="Ciao" class="section-hello-header">
-      <img class="hello-header-img hello-header-c" src="{{ '/assets/C.svg' }}" alt="" aria-hidden="true" role="presentation" />
-      <img class="hello-header-img hello-header-i" src="{{ '/assets/I.svg' }}" alt="" aria-hidden="true" role="presentation" />
-      <img class="hello-header-img hello-header-a" src="{{ '/assets/A.svg' }}" alt="" aria-hidden="true" role="presentation" />
-      <img class="hello-header-img hello-header-o" src="{{ '/assets/O.svg' }}" alt="" aria-hidden="true" role="presentation" />
+      <img
+        class="hello-header-img hello-header-c js-hello-header-c"
+        src="{{ '/assets/C.svg' }}"
+        alt=""
+        aria-hidden="true"
+        role="presentation" />
+      <img
+        class="hello-header-img hello-header-i js-hello-header-i"
+        src="{{ '/assets/I.svg' }}"
+        alt=""
+        aria-hidden="true"
+        role="presentation" />
+      <img
+        class="hello-header-img hello-header-a js-hello-header-a"
+        src="{{ '/assets/A.svg' }}"
+        alt=""
+        aria-hidden="true"
+        role="presentation" />
+      <img
+        class="hello-header-img hello-header-o js-hello-header-o"
+        src="{{ '/assets/O.svg' }}"
+        alt=""
+        aria-hidden="true"
+        role="presentation" />
     </h1>
-    <p>My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
+    <p class="section-hello-intro">My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
+    <button type="button" class="disable-animation js-disable-animation">Disable animations</button>
+    <div class="section-hello-burst">
+      <div class="burst burst-1"></div>
+      <div class="burst burst-2"></div>
+      <div class="burst burst-3"></div>
+      <div class="burst burst-4"></div>
+      <div class="burst burst-5"></div>
+      <div class="burst burst-6"></div>
+      <div class="burst burst-7"></div>
+      <div class="burst burst-8"></div>
+    </div>
   </div>
 </section>
 
@@ -43,22 +70,13 @@ title: Home
     <p>My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
     <p>I believe in small details. Technology and the way people interact with it is an extremely important part of our lives. Learning about patterns, conventions, behaviours and how to create a positive experience for a wide audience is essential. I like to design and build things that other people will really enjoy using, and pass what I've learned on to help others do the same.</p>
     <p> I'm currently available on a part-time basis for consultation, freelance contracts, and collaboration.</p>
-
-    <h2 class="section-header">Tech</h2>
-    <ul>
-      <li>HTML, CSS (SASS), JavaScript</li>
-      <li>Photoshop, Illustrator, Sketch</li>
-      <li>InVision, Zeplin</li>
-      <li>Emphasis on accessibility, inclusiveness, and universal design</li>
-      <li>Desire to educate and help others</li>
-    </ul>
   </div>
 </section>
 
 <section id="contact" class="section section-contact">
   <div class="section-content">
     <h2 class="section-header">Contact me</h2>
-    <p>It's always great talking to other people in the industry from around the world. You can find me on any of the networks listed below; alternatively, feel free to send me an email.</p>
+    <p>Find me on any of the networks listed below; alternatively, feel free to send me an email.</p>
   </div>
 </section>
 
