@@ -10,9 +10,11 @@ $mezzo: 1.6rem;
 $piccolo: 0.8rem;
 
 // Breakpoints
+$bp-xlarge: 1280px;
 $bp-large: 1024px;
 $bp-medium: 768px;
 $bp-small: 567px;
+$bp-xsmall: 432px;
 
 // Widths
 $largest: 1200px;
@@ -20,4 +22,9 @@ $smallest: 320px;
 
 // Styles
 $border-width: 4px;
-$border-colour: white;
+$background-color: rgb(230, 231, 232); // Controls most site styles
+$color: invert($background-color, 100%);
+$border-color: $color;
+
+// Colours
+$purple: #5700b7;

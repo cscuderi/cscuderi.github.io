@@ -21,14 +21,26 @@ body {
   margin: 0;
   font-size: 24px;
   line-height: 1.45;
-  background-color: black;
-  color: white;
+  background-color: $background-color;
+  color: $color;
   min-width: $smallest;
+  font-family: 'EB Garamond', serif;
+}
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Montserrat', sans-serif;
 }
 
 .section {
+  width: 100%;
+}
+
+.section-content {
   max-width: $largest;
   margin: 0 auto;
   padding-left: $mezzo;
@@ -38,6 +50,12 @@ body {
     padding-left: $grande;
     padding-right: $grande;
   }
+}
+
+.section-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: $piccolo;
 }
 
 h2 {
