@@ -4,7 +4,8 @@
   .work-item {
     position: relative;
     display: inline-block;
-    border: $border-width solid $border-colour;
+    border: $border-width solid $border-color;
+    background-color: black;
     background-color: black;
     margin-right: $grande * 2;
     margin-bottom: $grande * 2;
@@ -23,7 +24,7 @@
       right: -$grande;
       width: 100%;
       height: 100%;
-      background: white;
+      background: invert($background-color, 100%);
       z-index: -1;
     }
   }
@@ -33,17 +34,17 @@
   .work-responsibilities,
   .work-technology {
     padding: $mezzo;
-    background: black;
+    background-color: $background-color;
   }
 
   .work-picture {
     min-height: 50px;
-    border-bottom: $border-width solid $border-colour;
+    border-bottom: $border-width solid $border-color;
   }
 
   .work-title {
     text-transform: uppercase;
-    border-bottom: $border-width solid $border-colour;
+    border-bottom: $border-width solid $border-color;
   }
 
   .work-title-heading {
@@ -52,6 +53,11 @@
   }
 
   .work-responsibilities {
-    border-bottom: $border-width solid $border-colour;
+    font-size: 2.2rem;
+    border-bottom: $border-width solid $border-color;
+  }
+
+  .work-technology {
+    font-size: 1.8rem;
   }
 }
