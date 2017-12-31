@@ -3,14 +3,20 @@ title: Home
 ---
 
 {% include head.html %}
-{% include nav.html %}
+
+<header class="main-header">
+  <img src="{{ '/assets/logo.svg' }}" alt="">
+</header>
 
 <section class="section section-hello">
-  <div class="hello-content">
-    <h1 class="hello-title hello-title-small">Hi.</h1>
-    <h1 class="hello-title hello-title-large">Hello.</h1>
-
-    <p>I'm a web developer and designer in London, Canada.</p>
+  <div class="section-content">
+    <h1 lang="it" aria-label="Ciao" class="section-hello-header">
+      <img class="hello-header-img hello-header-c" src="{{ '/assets/C.svg' }}" alt="" aria-hidden="true" role="presentation" />
+      <img class="hello-header-img hello-header-i" src="{{ '/assets/I.svg' }}" alt="" aria-hidden="true" role="presentation" />
+      <img class="hello-header-img hello-header-a" src="{{ '/assets/A.svg' }}" alt="" aria-hidden="true" role="presentation" />
+      <img class="hello-header-img hello-header-o" src="{{ '/assets/O.svg' }}" alt="" aria-hidden="true" role="presentation" />
+    </h1>
+    <p>My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
   </div>
 </section>
 
