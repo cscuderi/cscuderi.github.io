@@ -1,0 +1,30 @@
+.a11y-controls {
+  ul {
+    padding: 0;
+    list-style-type: none;
+  }
+
+  li {
+  }
+
+  a,
+  button {
+    opacity: 0;
+    position: fixed;
+    top: -100%;
+    left: -100%;
+    border: 3px solid white;
+    font-size: 2.4rem;
+    background: black;
+    color: white;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    padding: $mezzo;
+
+    &:focus {
+      opacity: 1;
+      top: 5px;
+      left: 5px;
+    }
+  }
+}
