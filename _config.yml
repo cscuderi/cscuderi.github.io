@@ -30,6 +30,8 @@ plugins:
 sass:
   sass_dir: _sass
   style: compressed
+gems:
+  - jekyll-babel
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
