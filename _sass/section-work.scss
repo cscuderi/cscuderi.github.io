@@ -1,63 +1,144 @@
 .section-work {
   padding-bottom: $grande;
+}
 
-  .work-item {
-    position: relative;
-    display: inline-block;
+.work-item {
+  position: relative;
+  margin: $grande auto;
+  background: $background-color;
+}
+
+.work-link {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: $animation-duration;
+  z-index: 1;
+
+  &:hover,
+  &:focus {
+    transform: translateY(-16px);
+
+    &:after {
+      height: 30px;
+      width: 95%;
+      opacity: 0.3;
+      bottom: -27px;
+      filter: blur(3px);
+    }
+  }
+
+  // Drop shadow
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    background: invert($background-color, 100%);
+    height: 15px;
+    width: 90%;
+    z-index: -1;
+    transition: $animation-duration;
+  }
+}
+
+.work-header {
+  margin: 0;
+  border: $border-width solid $border-color;
+  border-bottom-style: dashed;
+  border-radius: 0 0 $border-radius $border-radius;
+}
+
+.work-project {
+  margin: 0;
+  padding: $mezzo;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  color: invert($color, 100%);
+  background: invert($background-color, 100%);
+}
+
+.work-responsibilities {
+  text-align: center;
+  text-decoration: none;
+  padding: $mezzo;
+}
+
+.work-picture {
+  border: $border-width solid $border-color;
+  border-top: none;
+  border-radius: $border-radius $border-radius 0 0;
+  padding: $mezzo;
+
+  img {
+    display: block;
     border: $border-width solid $border-color;
-    background-color: black;
-    background-color: black;
-    margin-bottom: $grande * 2;
-    z-index: 5;
-    width: calc(100% - #{$grande});
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: $border-radius;
+    filter: grayscale(100%);
+    transition: $animation-duration;
 
-    @include breakpoint($bp-medium) {
-      margin-right: $grande * 2;
-      max-width: calc(50% - (#{$grande * 2} + (#{$border-width} * 2)));
-      margin-bottom: 0;
-    }
-
-    &:before {
-      content: '';
-      position: absolute;
-      top: $grande;
-      right: -$grande;
-      width: 100%;
-      height: 100%;
-      background: invert($background-color, 100%);
-      z-index: -1;
+    .work-item:hover & {
+      filter: greyscale(100%);
     }
   }
+}
 
-  .work-picture,
-  .work-title,
-  .work-responsibilities,
-  .work-technology {
-    padding: $mezzo;
-    background-color: $background-color;
+.work-modal {
+  position: fixed;
+  top: $piccolo;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - #{$piccolo * 2});
+  max-width: $bp-medium;
+  background: $background-color;
+  border: $border-width solid $border-color;
+  box-shadow: 0 0 0 $border-width $background-color;
+  z-index: 10;
+
+  @include breakpoint($bp-medium) {
+    top: $grande;
   }
+}
 
-  .work-picture {
-    min-height: 50px;
-    border-bottom: $border-width solid $border-color;
-  }
+.work-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border-bottom: $border-width solid $border-color;
+  padding: $mezzo;
 
-  .work-title {
-    text-transform: uppercase;
-    border-bottom: $border-width solid $border-color;
-  }
-
-  .work-title-heading {
+  h1 {
+    display: inline-block;
     margin: 0;
-    font-weight: bold;
   }
 
-  .work-responsibilities {
-    font-size: 2.2rem;
-    border-bottom: $border-width solid $border-color;
+  .modal-close-button {
+    @extend .h1;
   }
+}
 
-  .work-technology {
-    font-size: 1.8rem;
-  }
+.work-modal-content {
+  padding: $mezzo;
+}
+
+.work-modal-screen {
+  background: invert($background-color, 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
 }
