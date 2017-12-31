@@ -28,3 +28,13 @@
     }
   }
 }
+
+// Mixin for focus
+@mixin focus() {
+  &:focus {
+    outline-style: double;
+    outline-width: 8px;
+    outline-color: $orange;
+    outline-offset: 4px;
+  }
+}
