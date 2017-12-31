@@ -3,28 +3,29 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100vh);
+  height: 100vh;
 
   .section-content {
     text-align: center;
+    // margin-top: 8vh;
   }
 
-  .section-hello-header {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    flex-direction: row;
-    width: 100%;
-  }
+  // ===================================
+  // "Ciao" animation
+  // ===================================
 
   .hello-header-img {
     height: 100%;
     width: 100%;
-    margin-right: $mezzo;
+    margin-right: $piccolo;
     opacity: 0;
     transition: 0.2s;
     animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
     animation-fill-mode: forwards;
+
+    @include breakpoint($bp-xsmall) {
+      margin-right: $mezzo;
+    }
 
     @include breakpoint($bp-small) {
       margin-right: $grande;
@@ -34,6 +35,7 @@
   .hello-header-c {
     margin-left: -1rem;
     width: 60px;
+    animation-delay: 0.3s;
 
     @include breakpoint($bp-small) {
       margin-left: 0;
@@ -47,7 +49,7 @@
 
   .hello-header-i {
     width: 20px;
-    animation-delay: 0.3s;
+    animation-delay: 0.6s;
 
     @include breakpoint($bp-small) {
       width: 31px;
@@ -60,8 +62,8 @@
 
   .hello-header-a {
     width: 72px;
-    margin-right: 1.1rem;
-    animation-delay: 0.4s;
+    margin-right: 1rem;
+    animation-delay: 0.7s;
 
     @include breakpoint($bp-small) {
       width: 112px;
@@ -76,7 +78,7 @@
   .hello-header-o {
     width: 67px;
     margin-right: 0;
-    animation-delay: 0.6s;
+    animation-delay: 0.9s;
 
     @include breakpoint($bp-small) {
       width: 102px;
@@ -87,7 +89,10 @@
     }
   }
 
-  .section-hello-intro {
+  // ===================================
+  // Intro paragraph below Ciao
+  // ===================================
+  .hello-intro {
     font-size: 110%;
     max-width: $bp-medium;
     opacity: 0;
@@ -100,13 +105,17 @@
     }
   }
 
-  .section-hello-burst {
+  // ===================================
+  // Bursts
+  // ===================================
+  .hello-burst {
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
     z-index: -1;
+    overflow: hidden;
 
     display: flex;
     justify-content: center;
@@ -116,6 +125,17 @@
     animation-duration: 120s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 50px $background-color;
+      z-index: 1;
+    }
 
     .burst {
       position: absolute;
@@ -179,12 +199,15 @@
   border-bottom: 1px solid lighten($color, 20%);
   padding: 0;
 
-  animation: subtle 3s;
+  animation: subtle-fade-in 3s;
   animation-fill-mode: forwards;
   animation-delay: 2.5s;
   opacity: 0;
 }
 
+// TODO Move animations to separate Sass file
+
+// TODO Finesse this animation
 @keyframes bobble {
   0% {
     transform: translateY(124px) scale(0.8, 1.6);
@@ -211,7 +234,18 @@
   }
 }
 
-@keyframes subtle {
+@keyframes pop-in {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes subtle-fade-in {
   from {
     opacity: 0;
     transform: translateY(8px);

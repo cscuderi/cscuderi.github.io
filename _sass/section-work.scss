@@ -7,12 +7,12 @@
     border: $border-width solid $border-color;
     background-color: black;
     background-color: black;
-    margin-right: $grande * 2;
     margin-bottom: $grande * 2;
     z-index: 5;
     width: calc(100% - #{$grande});
 
     @include breakpoint($bp-medium) {
+      margin-right: $grande * 2;
       max-width: calc(50% - (#{$grande * 2} + (#{$border-width} * 2)));
       margin-bottom: 0;
     }
