@@ -14,16 +14,19 @@
           </div>
         </a>
       </article>
-      <div class="work-modal js-work-modal">
+      <div class="work-modal-wrapper js-work-modal is-hidden" aria-hidden="true">
+        <div class="work-modal">
         <header class="work-modal-header">
           <h1>{{ post.title }}</h1>
-          <button type="button" class="modal-close-button" aria-label="Close">&times;</button>
+          <button type="button" class="modal-close-button js-modal-close-button" aria-label="Close">&times;</button>
         </header>
         <div class="work-modal-content">
           {{ post.content }}
         </div>
       </div>
       <div class="work-modal-screen js-work-modal-screen"></div>
+      </div>
+
     {% endfor %}
   </div>
 </section>
