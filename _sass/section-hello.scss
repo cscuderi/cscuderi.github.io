@@ -22,6 +22,7 @@
     transition: 0.2s;
     animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
     animation-fill-mode: forwards;
+    // overflow: hidden;
 
     @include breakpoint($bp-xsmall) {
       margin-right: $mezzo;
@@ -122,7 +123,7 @@
     align-items: center;
 
     animation-name: rotate;
-    animation-duration: 120s;
+    animation-duration: 100s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 

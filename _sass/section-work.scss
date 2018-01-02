@@ -50,8 +50,9 @@
 .work-header {
   margin: 0;
   border: $border-width solid $border-color;
-  border-bottom-style: dashed;
+  // border-bottom-style: dashed;
   border-radius: 0 0 $border-radius $border-radius;
+  border-radius: 0;
 }
 
 .work-project {
@@ -75,6 +76,7 @@
   border: $border-width solid $border-color;
   border-top: none;
   border-radius: $border-radius $border-radius 0 0;
+  border-radius: 0;
   padding: $mezzo;
 
   img {

@@ -1,0 +1,72 @@
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  box-shadow: 0 0 200px rgba(0, 0, 0, 0.9) inset;
+
+  @include breakpoint($bp-small) {
+    box-shadow: 0 0 400px rgba(0, 0, 0, 0.9) inset;
+  }
+
+  @include breakpoint($bp-medium) {
+    box-shadow: 0 0 800px rgba(0, 0, 0, 0.9) inset;
+  }
+
+  @include breakpoint($bp-large) {
+    box-shadow: 0 0 1200px rgba(0, 0, 0, 0.9) inset;
+  }
+}
+
+.background-effects {
+  overflow: hidden;
+}
+
+.reverse-vignette {
+  position: fixed;
+  top: calc(50vh - 25%);
+  left: calc(50vw - 25%);
+  width: 50%;
+  height: 50%;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.7;
+  box-shadow: 0 0 100px 50px white;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.logo {
+  position: fixed;
+  top: $mezzo;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50px;
+  z-index: 10;
+}
+
+.section {
+  width: 100%;
+}
+
+.section-content {
+  max-width: $largest;
+  margin: 0 auto;
+  padding-left: $mezzo;
+  padding-right: $mezzo;
+
+  @include breakpoint($bp-small) {
+    padding-left: $grande;
+    padding-right: $grande;
+  }
+}
+
+.section-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: $piccolo;
+}
