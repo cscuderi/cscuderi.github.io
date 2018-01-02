@@ -20,12 +20,16 @@ $bp-xsmall: 432px;
 $largest: 1200px;
 $smallest: 320px;
 
-// Styles
+// Visual
 $background-color: rgb(230, 231, 232); // Controls most site styles
 $color: invert($background-color, 100%);
 $border-width: 4px;
 $border-radius: 8px;
 $border-color: $color;
+
+// Type
+$fancy-font: 'Montserrat', Arial, sans-serif;
+$body-font: 'EB Garamond', Georgia, sans-serif;
 
 // Colours
 $purple: #5700b7;
