@@ -1,0 +1,48 @@
+.main-footer {
+  padding: $enorme;
+  background-color: invert($background-color, 100%);
+  color: white;
+  text-align: center;
+}
+
+.footer-logo {
+  display: block;
+  margin: 0 auto $enorme auto;
+  max-width: 50px;
+  opacity: 0.4;
+}
+
+.footer-made {
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 4px;
+  font-size: 60%;
+
+  @include breakpoint($bp-small) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80%;
+  }
+
+  img {
+    display: block;
+    margin: $mezzo auto;
+    max-width: 80%;
+
+    @include breakpoint($bp-small) {
+      display: inline-block;
+      max-width: 140px;
+      margin: 0 $mezzo;
+    }
+  }
+}
+
+.footer-copyright {
+  margin-top: $enorme;
+  font-family: $fancy-font;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 60%;
+}
