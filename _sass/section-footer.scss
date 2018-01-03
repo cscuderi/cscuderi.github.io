@@ -3,6 +3,10 @@
   background-color: invert($background-color, 100%);
   color: white;
   text-align: center;
+
+  p {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  }
 }
 
 .footer-logo {
