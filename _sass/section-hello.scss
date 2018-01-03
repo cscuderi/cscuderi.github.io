@@ -40,6 +40,11 @@ $inital-delay: $animation-duration;
     @include breakpoint($bp-small) {
       margin-right: $grande;
     }
+
+    .no-animation & {
+      animation: none !important;
+      opacity: 1;
+    }
   }
 
   .hello-header-c {
@@ -113,6 +118,11 @@ $inital-delay: $animation-duration;
     @include breakpoint($bp-medium) {
       margin-top: $enorme;
     }
+
+    .no-animation & {
+      animation: none !important;
+      opacity: 1 !important;
+    }
   }
 
   // ===================================
@@ -136,7 +146,9 @@ $inital-delay: $animation-duration;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 
-    display: none;
+    .no-animation & {
+      animation: none !important;
+    }
 
     &:before {
       content: '';
@@ -210,29 +222,50 @@ $inital-delay: $animation-duration;
   margin-left: auto;
   margin-right: auto;
   bottom: 1vh;
-  width: 65px;
-  height: 65px;
+  max-width: 50px;
+  max-height: 66px;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
-  opacity: 0.5;
-  animation: finger-pointer 1s step-end infinite;
-  // animation-timing-function: steps(1);
-  // background: url('/assets/images/finger1.svg') center center no-repeat;
+  animation: finger-pointer 0.5s step-end alternate infinite;
+  background: url('/assets/images/hand-sprite.svg') no-repeat;
+  background-position: 0 0;
+  background-size: cover;
+  opacity: 0;
+  transition: 1s;
 
   @include breakpoint(max-height 700px) {
     display: none;
   }
+
+  &.is-active {
+    opacity: 0.5;
+  }
+
+  .no-animation & {
+    animation: none !important;
+    transition: 0 !important;
+    opacity: 1 !important;
+  }
+
+  $finger-width: 50px;
+  @keyframes finger-pointer {
+    0% {
+      background-position-x: 0;
+    }
+    25% {
+      background-position-x: -$finger-width;
+    }
+    50% {
+      background-position-x: -#{$finger-width * 2};
+    }
+    75% {
+      background-position-x: -#{$finger-width * 3};
+    }
+  }
 }
 
-@keyframes finger-pointer {
-  from {
-    background: url('/assets/images/finger1.svg') center center no-repeat;
-  }
-  to {
-    background: url('/assets/images/finger2.svg') center center no-repeat;
-  }
-}
-
-.disable-animation {
+.toggle-animation {
   font-size: 1.2rem;
   background: transparent;
   border: none;
@@ -244,6 +277,11 @@ $inital-delay: $animation-duration;
   animation-fill-mode: forwards;
   animation-delay: #{$inital-delay + 2.5};
   opacity: 0;
+
+  .no-animation & {
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }
 
 // TODO Move animations to separate Sass file

@@ -47,12 +47,48 @@ let site = {
     document.addEventListener("DOMContentLoaded", function(){
       site.intro();
       site.modalController();
+      site.animationController();
     });
 
   },
   intro() {
     console.log('🥁 Introducing... 🥁');
+
+    // Show circle wipe animation
     document.querySelector('.js-intro-wipe').classList.add('introduced');
+
+    // Only show the pointer finger if user doesn't scroll
+    let hasScrolled = false;
+    window.addEventListener('scroll', () => {
+      hasScrolled = true;
+    });
+
+    setTimeout(() => {
+      if(!hasScrolled) {
+        document.querySelector('.js-hello-finger').classList.add('is-active');
+      }
+    }, 5000);
+  },
+  /**
+   * animationController()
+   * Contains the code that disables animations site wide. It disables them by
+   * adding a class to the body of the page.
+   * TODO Re-enable animations? This will cause them all to play again...
+   */
+  animationController() {
+    console.log('🚶‍ Disabling animations... 🕴');
+
+    const animationToggleButtons = document.querySelectorAll('.js-toggle-animation');
+    const body = document.querySelector('body');
+    for(let i = 0; i < animationToggleButtons.length; i++) {
+      animationToggleButtons[i].addEventListener('click', () => {
+        if(body.classList.contains('no-animation')) {
+          body.classList.remove('no-animation');
+        } else {
+          body.classList.add('no-animation');
+        }
+      });
+    }
   },
   // Controls the hiding and showing of modals
   // TODO Esc key support
