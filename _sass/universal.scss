@@ -1,3 +1,40 @@
+// ============================================
+// Background effects
+// (vignette, lines, noise)
+// ============================================
+.background-effects {
+  overflow: hidden;
+}
+
+.intro-wipe {
+  position: fixed;
+  top: -50vh;
+  left: -50vw;
+  width: 200vw;
+  height: 200vh;
+  z-index: 100;
+  pointer-events: none;
+  border-radius: 50%;
+  box-shadow: inset 0 0 50px 97vh invert($background-color, 100%);
+  will-change: transform opacity;
+
+  &.introduced {
+    animation: circle-wipe #{$animation-duration + 0.5};
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes circle-wipe {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(8, 16);
+    opacity: 0;
+  }
+}
+
 .vignette {
   position: fixed;
   top: 0;
@@ -5,23 +42,19 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  box-shadow: 0 0 200px rgba(0, 0, 0, 0.9) inset;
+  box-shadow: 0 0 200px rgba(0, 0, 0, 0.4) inset;
 
   @include breakpoint($bp-small) {
-    box-shadow: 0 0 400px rgba(0, 0, 0, 0.9) inset;
+    box-shadow: 0 0 400px rgba(0, 0, 0, 0.6) inset;
   }
 
   @include breakpoint($bp-medium) {
-    box-shadow: 0 0 800px rgba(0, 0, 0, 0.9) inset;
+    box-shadow: 0 0 800px rgba(0, 0, 0, 0.7) inset;
   }
 
   @include breakpoint($bp-large) {
     box-shadow: 0 0 1200px rgba(0, 0, 0, 0.9) inset;
   }
-}
-
-.background-effects {
-  overflow: hidden;
 }
 
 .reverse-vignette {
@@ -38,6 +71,9 @@
   z-index: -1;
 }
 
+// ============================================
+// Other universal styles
+// ============================================
 .logo {
   position: fixed;
   top: $mezzo;

@@ -43,8 +43,16 @@
 let site = {
   // Starts the party.
   init() {
-    console.log('🥂 Site init! 🎉');
-    site.modalController();
+    console.log('🥂 Welcome! 🎉');
+    document.addEventListener("DOMContentLoaded", function(){
+      site.intro();
+      site.modalController();
+    });
+
+  },
+  intro() {
+    console.log('🥁 Introducing... 🥁');
+    document.querySelector('.js-intro-wipe').classList.add('introduced');
   },
   // Controls the hiding and showing of modals
   // TODO Esc key support
@@ -88,4 +96,4 @@ let site = {
   }
 };
 
-site.init();
+  site.init();

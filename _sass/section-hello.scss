@@ -1,3 +1,5 @@
+$inital-delay: $animation-duration;
+
 .section-hello {
   display: flex;
   align-items: center;
@@ -22,7 +24,14 @@
     transition: 0.2s;
     animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
     animation-fill-mode: forwards;
-    // overflow: hidden;
+
+    filter: drop-shadow(
+      5px 15px 15px lighten(invert($background-color, 100%), 30%)
+    );
+
+    * {
+      will-change: transform;
+    }
 
     @include breakpoint($bp-xsmall) {
       margin-right: $mezzo;
@@ -36,7 +45,7 @@
   .hello-header-c {
     margin-left: -1rem;
     width: 60px;
-    animation-delay: 0.3s;
+    animation-delay: #{$inital-delay + 0.3};
 
     @include breakpoint($bp-small) {
       margin-left: 0;
@@ -50,7 +59,7 @@
 
   .hello-header-i {
     width: 20px;
-    animation-delay: 0.6s;
+    animation-delay: #{$inital-delay + 0.6};
 
     @include breakpoint($bp-small) {
       width: 31px;
@@ -64,7 +73,7 @@
   .hello-header-a {
     width: 72px;
     margin-right: 1rem;
-    animation-delay: 0.7s;
+    animation-delay: #{$inital-delay + 0.7};
 
     @include breakpoint($bp-small) {
       width: 112px;
@@ -79,7 +88,7 @@
   .hello-header-o {
     width: 67px;
     margin-right: 0;
-    animation-delay: 0.9s;
+    animation-delay: #{$inital-delay + 0.9};
 
     @include breakpoint($bp-small) {
       width: 102px;
@@ -98,7 +107,7 @@
     max-width: $bp-medium;
     opacity: 0;
     animation: fade-in ($animation-duration * 1.6);
-    animation-delay: 1.4s;
+    animation-delay: #{$inital-delay + 1.4};
     animation-fill-mode: forwards;
 
     @include breakpoint($bp-medium) {
@@ -126,6 +135,8 @@
     animation-duration: 100s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+
+    display: none;
 
     &:before {
       content: '';
@@ -192,6 +203,35 @@
   }
 }
 
+.hello-finger {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 1vh;
+  width: 65px;
+  height: 65px;
+  margin: 0 auto;
+  opacity: 0.5;
+  animation: finger-pointer 1s step-end infinite;
+  // animation-timing-function: steps(1);
+  // background: url('/assets/images/finger1.svg') center center no-repeat;
+
+  @include breakpoint(max-height 700px) {
+    display: none;
+  }
+}
+
+@keyframes finger-pointer {
+  from {
+    background: url('/assets/images/finger1.svg') center center no-repeat;
+  }
+  to {
+    background: url('/assets/images/finger2.svg') center center no-repeat;
+  }
+}
+
 .disable-animation {
   font-size: 1.2rem;
   background: transparent;
@@ -202,7 +242,7 @@
 
   animation: subtle-fade-in 3s;
   animation-fill-mode: forwards;
-  animation-delay: 2.5s;
+  animation-delay: #{$inital-delay + 2.5};
   opacity: 0;
 }
 
