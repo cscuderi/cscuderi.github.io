@@ -33,7 +33,7 @@
   img {
     display: block;
     margin: $mezzo auto;
-    max-width: 80%;
+    max-width: 50%;
 
     @include breakpoint($bp-small) {
       display: inline-block;

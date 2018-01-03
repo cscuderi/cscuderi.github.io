@@ -43,18 +43,6 @@
   height: 100%;
   pointer-events: none;
   box-shadow: 0 0 200px rgba(0, 0, 0, 0.4) inset;
-
-  @include breakpoint($bp-small) {
-    box-shadow: 0 0 400px rgba(0, 0, 0, 0.6) inset;
-  }
-
-  @include breakpoint($bp-medium) {
-    box-shadow: 0 0 800px rgba(0, 0, 0, 0.7) inset;
-  }
-
-  @include breakpoint($bp-large) {
-    box-shadow: 0 0 1200px rgba(0, 0, 0, 0.9) inset;
-  }
 }
 
 .reverse-vignette {
@@ -89,7 +77,6 @@
   width: 100%;
 
   &:not(.section-hello) {
-    // border-top: 15px solid invert($background-color, 100%);
     margin-top: $enorme;
   }
 }

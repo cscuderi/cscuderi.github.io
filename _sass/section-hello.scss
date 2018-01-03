@@ -206,17 +206,10 @@ $inital-delay: $animation-duration;
 }
 
 .hello-finger {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 1vh;
-  max-width: 50px;
-  max-height: 66px;
-  height: 100%;
-  width: 100%;
-  margin: 0 auto;
+  display: block;
+  margin: $grande auto 0 auto;
+  height: 66px;
+  width: 50px;
   animation: finger-pointer 0.5s step-end alternate infinite;
   background: url('/assets/images/hand-sprite.svg') no-repeat;
   background-position: 0 0;
@@ -229,7 +222,7 @@ $inital-delay: $animation-duration;
   }
 
   &.is-active {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   .no-animation & {
