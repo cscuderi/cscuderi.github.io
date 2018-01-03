@@ -1,10 +1,16 @@
+// Mixin for focus
+@mixin focus() {
+  &:focus {
+    outline-color: blue;
+    outline-width: 8px;
+    outline-offset: 4px;
+  }
+}
+
 .a11y-controls {
   ul {
     padding: 0;
     list-style-type: none;
-  }
-
-  li {
   }
 
   a,
@@ -14,28 +20,20 @@
     left: -100%;
     font-family: Arial, sans-serif;
     font-size: 2.6rem;
-    color: white;
     text-decoration: none;
+    padding: $mezzo;
+    color: white;
     background: black;
     border: 3px solid white;
-    padding: $mezzo;
     opacity: 0;
     z-index: 200;
+
+    @include focus();
 
     &:focus {
       opacity: 1;
       top: 5px;
       left: 5px;
     }
-  }
-}
-
-// Mixin for focus
-@mixin focus() {
-  &:focus {
-    outline-style: double;
-    outline-width: 8px;
-    outline-color: $orange;
-    outline-offset: 4px;
   }
 }
