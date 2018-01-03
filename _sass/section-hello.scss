@@ -9,7 +9,6 @@ $inital-delay: $animation-duration;
 
   .section-content {
     text-align: center;
-    // margin-top: 8vh;
   }
 
   // ===================================
@@ -140,15 +139,6 @@ $inital-delay: $animation-duration;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    animation-name: rotate;
-    animation-duration: 100s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-
-    .no-animation & {
-      animation: none !important;
-    }
 
     &:before {
       content: '';

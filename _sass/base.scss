@@ -23,6 +23,7 @@ body {
   line-height: 1.45;
   background-color: $background-color;
   color: $color;
+  text-shadow: 0 0 1px transparentize($color, 1%);
   min-width: $smallest;
   font-family: $body-font;
 }
