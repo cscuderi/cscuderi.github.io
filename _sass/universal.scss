@@ -87,10 +87,15 @@
 
 .section {
   width: 100%;
+
+  &:not(.section-hello) {
+    // border-top: 15px solid invert($background-color, 100%);
+    margin-top: $enorme;
+  }
 }
 
 .section-content {
-  max-width: $largest;
+  max-width: $bp-medium;
   margin: 0 auto;
   padding-left: $mezzo;
   padding-right: $mezzo;
@@ -102,7 +107,9 @@
 }
 
 .section-header {
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: $piccolo;
+  margin: 0 auto $grande auto;
+
+  @include breakpoint($bp-medium) {
+    margin-bottom: $enorme;
+  }
 }

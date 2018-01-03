@@ -1,0 +1,27 @@
+.section-about {
+  padding-bottom: $grande;
+
+  .section-header {
+    max-width: 650px;
+  }
+}
+
+.about-availability {
+  position: relative;
+  background-color: $background-color;
+  border: $border-width solid $border-color;
+  padding: $mezzo;
+
+  &:after {
+    content: '';
+    position: absolute;
+    background: invert($background-color, 100%);
+    width: 90%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    height: 16px;
+    top: calc(100% + 6px);
+  }
+}

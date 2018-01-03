@@ -1,5 +1,13 @@
 .section-work {
   padding-bottom: $grande;
+
+  .section-content {
+    max-width: 1200px;
+  }
+
+  .section-header {
+    max-width: 550px;
+  }
 }
 
 .work-item {
