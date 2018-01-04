@@ -9,199 +9,221 @@ $inital-delay: $animation-duration;
 
   .section-content {
     text-align: center;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+}
+
+// ===================================
+// "Ciao" animation
+// ===================================
+.hello-header {
+  padding: 0 4.2rem;
+}
+
+.hello-header-img {
+  height: 100%;
+  width: 100%;
+  margin-right: $piccolo;
+  opacity: 0;
+  transition: 0.2s;
+  animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
+  animation-fill-mode: forwards;
+
+  filter: drop-shadow(
+    5px 15px 15px lighten(invert($background-color, 100%), 30%)
+  );
+
+  * {
+    will-change: transform;
   }
 
-  // ===================================
-  // "Ciao" animation
-  // ===================================
-
-  .hello-header-img {
-    height: 100%;
-    width: 100%;
-    margin-right: $piccolo;
-    opacity: 0;
-    transition: 0.2s;
-    animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
-    animation-fill-mode: forwards;
-
-    filter: drop-shadow(
-      5px 15px 15px lighten(invert($background-color, 100%), 30%)
-    );
-
-    * {
-      will-change: transform;
-    }
-
-    @include breakpoint($bp-xsmall) {
-      margin-right: $mezzo;
-    }
-
-    @include breakpoint($bp-small) {
-      margin-right: $grande;
-    }
-
-    .no-animation & {
-      animation: none !important;
-      opacity: 1;
-    }
+  @include breakpoint($bp-xsmall) {
+    margin-right: $mezzo;
   }
 
-  .hello-header-c {
-    margin-left: -1rem;
+  @include breakpoint($bp-small) {
+    margin-right: $grande;
+  }
+
+  .no-animation & {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+.hello-header-c {
+  margin-left: -1rem;
+  width: 60px;
+  animation-delay: #{$inital-delay + 0.3};
+
+  @include breakpoint($bp-small) {
+    margin-left: 0;
+    width: 90px;
+  }
+
+  @include breakpoint($bp-medium) {
+    width: 125px;
+    margin-right: 2.8rem;
+  }
+
+  @include breakpoint($bp-large) {
+    width: 145px;
+    margin-right: 3.2rem;
+  }
+
+  @include breakpoint($bp-xlarge) {
+    width: 175px;
+    margin-right: 5rem;
+  }
+}
+
+.hello-header-i {
+  width: 20px;
+  animation-delay: #{$inital-delay + 0.6};
+
+  @include breakpoint($bp-small) {
+    width: 31px;
+  }
+
+  @include breakpoint($bp-medium) {
+    width: 43px;
+    margin-right: 2.8rem;
+  }
+
+  @include breakpoint($bp-large) {
+    width: 49px;
+    margin-right: 3rem;
+  }
+
+  @include breakpoint($bp-xlarge) {
     width: 60px;
-    animation-delay: #{$inital-delay + 0.3};
+    margin-right: 5rem;
+  }
+}
 
-    @include breakpoint($bp-small) {
-      margin-left: 0;
-      width: 90px;
-    }
+.hello-header-a {
+  width: 72px;
+  margin-right: 1rem;
+  animation-delay: #{$inital-delay + 0.7};
 
-    @include breakpoint($bp-medium) {
-      width: 150px;
-    }
+  @include breakpoint($bp-small) {
+    width: 112px;
+    margin-right: 2.5rem;
   }
 
-  .hello-header-i {
-    width: 20px;
-    animation-delay: #{$inital-delay + 0.6};
-
-    @include breakpoint($bp-small) {
-      width: 31px;
-    }
-
-    @include breakpoint($bp-medium) {
-      width: 51px;
-    }
+  @include breakpoint($bp-medium) {
+    width: 156px;
+    margin-right: 1.5rem;
   }
 
-  .hello-header-a {
-    width: 72px;
-    margin-right: 1rem;
-    animation-delay: #{$inital-delay + 0.7};
-
-    @include breakpoint($bp-small) {
-      width: 112px;
-      margin-right: 2.5rem;
-    }
-
-    @include breakpoint($bp-medium) {
-      width: 186px;
-    }
+  @include breakpoint($bp-large) {
+    width: 178px;
+    margin-right: 1.5rem;
   }
 
-  .hello-header-o {
-    width: 67px;
-    margin-right: 0;
-    animation-delay: #{$inital-delay + 0.9};
+  @include breakpoint($bp-xlarge) {
+    width: 218px;
+    margin-right: 3.5rem;
+  }
+}
 
-    @include breakpoint($bp-small) {
-      width: 102px;
-    }
+.hello-header-o {
+  width: 67px;
+  margin-right: 0;
+  animation-delay: #{$inital-delay + 0.9};
 
-    @include breakpoint($bp-medium) {
-      width: 170px;
-    }
+  @include breakpoint($bp-small) {
+    width: 102px;
   }
 
-  // ===================================
-  // Intro paragraph below Ciao
-  // ===================================
-  .hello-intro {
-    font-size: 110%;
-    max-width: $bp-medium;
-    opacity: 0;
-    animation: fade-in ($animation-duration * 1.6);
-    animation-delay: #{$inital-delay + 1.4};
-    animation-fill-mode: forwards;
-
-    @include breakpoint($bp-medium) {
-      margin-top: $enorme;
-    }
-
-    .no-animation & {
-      animation: none !important;
-      opacity: 1 !important;
-    }
+  @include breakpoint($bp-medium) {
+    width: 143px;
   }
 
-  // ===================================
-  // Bursts
-  // ===================================
-  .hello-burst {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    overflow: hidden;
+  @include breakpoint($bp-large) {
+    width: 163px;
+  }
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  @include breakpoint($bp-xlarge) {
+    width: 199px;
+  }
+}
 
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      box-shadow: inset 0 0 50px $background-color;
-      z-index: 1;
-    }
+.hello-header-e {
+  position: relative;
+  top: 5px;
+  width: 35px;
+  margin-left: $mezzo;
+  margin-right: 0;
 
-    .burst {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      height: 100%;
-      width: 100%;
-      background: url('/assets/images/burst.svg') center center no-repeat;
-    }
+  animation: squishy $animation-duration ease-out;
+  animation-fill-mode: forwards;
+  animation-delay: #{$inital-delay + 1.4};
 
-    // TODO Convert to a for loop
-    .burst-1 {
-      transform: translateY(-50%);
-    }
+  @include breakpoint($bp-small) {
+    top: 10px;
+    width: 57px;
+  }
 
-    .burst-2 {
-      transform: translateY(-50%) rotate(45deg);
-      transform-origin: bottom center;
-    }
+  @include breakpoint($bp-medium) {
+    top: 20px;
+    width: 91px;
+  }
 
-    .burst-3 {
-      transform: translateY(-50%) rotate(90deg);
-      transform-origin: bottom center;
-    }
+  @include breakpoint($bp-large) {
+    top: 30px;
+    width: 101px;
+  }
 
-    .burst-4 {
-      transform: translateY(-50%) rotate(135deg);
-      transform-origin: bottom center;
-    }
+  @include breakpoint($bp-xlarge) {
+    width: 131px;
+    margin-left: 2.6rem;
+  }
+}
 
-    .burst-5 {
-      transform: translateY(-50%) rotate(180deg);
-      transform-origin: bottom center;
-    }
+// ===================================
+// Intro paragraph below Ciao
+// ===================================
+.hello-intro {
+  margin: 0 auto;
+  max-width: $bp-medium;
+  padding: 0 $grande;
+  font-size: 110%;
+  opacity: 0;
 
-    .burst-6 {
-      transform: translateY(-50%) rotate(225deg);
-      transform-origin: bottom center;
-    }
+  animation: fade-in ($animation-duration * 1.7);
+  animation-delay: #{$inital-delay + 1.8};
+  animation-fill-mode: forwards;
 
-    .burst-7 {
-      transform: translateY(-50%) rotate(270deg);
-      transform-origin: bottom center;
-    }
+  @include breakpoint($bp-medium) {
+    margin-top: $enorme;
+    margin-bottom: $grande;
+  }
 
-    .burst-8 {
-      transform: translateY(-50%) rotate(315deg);
-      transform-origin: bottom center;
-    }
+  .no-animation & {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+.toggle-animation {
+  font-size: 1.2rem;
+  background: transparent;
+  border: none;
+  color: lighten($color, 20%);
+  border-bottom: 1px solid lighten($color, 20%);
+  padding: 0;
+
+  animation: subtle-fade-in 3s;
+  animation-fill-mode: forwards;
+  animation-delay: #{$inital-delay + 2.8};
+  opacity: 0;
+
+  .no-animation & {
+    animation: none !important;
+    opacity: 1 !important;
   }
 }
 
@@ -230,45 +252,96 @@ $inital-delay: $animation-duration;
     transition: 0 !important;
     opacity: 1 !important;
   }
-
-  $finger-width: 50px;
-  @keyframes finger-pointer {
-    0% {
-      background-position-x: 0;
-    }
-    25% {
-      background-position-x: -$finger-width;
-    }
-    50% {
-      background-position-x: -#{$finger-width * 2};
-    }
-    75% {
-      background-position-x: -#{$finger-width * 3};
-    }
-  }
 }
 
-.toggle-animation {
-  font-size: 1.2rem;
-  background: transparent;
-  border: none;
-  color: lighten($color, 20%);
-  border-bottom: 1px solid lighten($color, 20%);
-  padding: 0;
+// ===================================
+// Bursts
+// ===================================
+.hello-burst {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.5;
 
-  animation: subtle-fade-in 3s;
-  animation-fill-mode: forwards;
-  animation-delay: #{$inital-delay + 2.5};
-  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .no-animation & {
-    animation: none !important;
-    opacity: 1 !important;
+  animation: rotate 120s infinite;
+  animation-timing-function: linear;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 50px $background-color;
+    z-index: 1;
+  }
+
+  .burst {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    width: 100%;
+    background: url('/assets/images/burst.svg') center center no-repeat;
+  }
+
+  // TODO Convert to a for loop?
+  // TODO Make this one SVG and ditch the transforms?
+  .burst-1 {
+    transform: translateY(-50%);
+  }
+
+  .burst-2 {
+    transform: translateY(-50%) rotate(45deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-3 {
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-4 {
+    transform: translateY(-50%) rotate(135deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-5 {
+    transform: translateY(-50%) rotate(180deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-6 {
+    transform: translateY(-50%) rotate(225deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-7 {
+    transform: translateY(-50%) rotate(270deg);
+    transform-origin: bottom center;
+  }
+
+  .burst-8 {
+    transform: translateY(-50%) rotate(315deg);
+    transform-origin: bottom center;
   }
 }
 
 // TODO Move animations to separate Sass file
 
+// Squish up and in, bouncey effect
 // TODO Finesse this animation
 @keyframes bobble {
   0% {
@@ -286,6 +359,23 @@ $inital-delay: $animation-duration;
   }
 }
 
+// Drops and squishes in. Used for the exclamation point
+@keyframes squishy {
+  0% {
+    transform: translateY(-124px) scale(0.8, 1.6) rotate(-18deg);
+  }
+  20% {
+    transform: translateY(100px) scale(1.6, 0.6) rotate(-18deg);
+  }
+  40% {
+    transform: translateY(0) scale(1, 1) rotate(0);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Simple up and in fade
 @keyframes fade-in {
   from {
     transform: translateY(64px);
@@ -296,17 +386,7 @@ $inital-delay: $animation-duration;
   }
 }
 
-@keyframes pop-in {
-  from {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
+// Simple up and in fade but less up
 @keyframes subtle-fade-in {
   from {
     opacity: 0;
@@ -318,11 +398,41 @@ $inital-delay: $animation-duration;
   }
 }
 
+// Scale upwards and in
+@keyframes pop-in {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Rotate 360deg
 @keyframes rotate {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+// Makes the finger wiggle
+$finger-width: 50px;
+@keyframes finger-pointer {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -$finger-width;
+  }
+  50% {
+    background-position-x: -#{$finger-width * 2};
+  }
+  75% {
+    background-position-x: -#{$finger-width * 3};
   }
 }

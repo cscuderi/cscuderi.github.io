@@ -67,7 +67,7 @@ let site = {
       if(!hasScrolled) {
         document.querySelector('.js-hello-finger').classList.add('is-active');
       }
-    }, 5000);
+    }, 6000);
   },
   /**
    * animationController()
