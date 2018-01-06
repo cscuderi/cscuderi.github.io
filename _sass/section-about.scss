@@ -1,10 +1,18 @@
 .section-about {
   padding-bottom: $grande;
+
+  .section-header {
+    margin-bottom: $grande;
+  }
+}
+
+.about-howdy {
+  font-size: larger;
 }
 
 .about-availability {
   position: relative;
-  background-color: $background-color;
+  margin-top: $grande;
   border: $border-width solid $border-color;
   padding: $mezzo;
 

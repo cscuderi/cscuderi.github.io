@@ -1,0 +1,146 @@
+// Animations for the whole site, organized in the order they're used,
+// top to bottom, left to right.
+
+// =================================================================
+// Squish up and in, bouncey effect
+// Used for the "CIAO" letters.
+// TODO Finesse this animation
+// =================================================================
+@keyframes bobble {
+  0% {
+    transform: translateY(124px) scale(0.8, 1.6);
+  }
+  25% {
+    transform: translateY(-64px) scale(1.6, 0.8);
+  }
+  55% {
+    transform: translateY(16px) scale(0.9, 1.1);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+// =================================================================
+// Drops and squishes in.
+// Used for the exclamation point
+// =================================================================
+@keyframes squishy {
+  0% {
+    transform: translateY(-124px) scale(0.8, 1.6) rotate(-18deg);
+  }
+  20% {
+    transform: translateY(100px) scale(1.6, 0.6) rotate(-18deg);
+  }
+  40% {
+    transform: translateY(0) scale(1, 1) rotate(0);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// =================================================================
+// Simple up and in fade
+// =================================================================
+@keyframes fade-in {
+  from {
+    transform: translateY(64px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// =================================================================
+// Simple up and in fade but less up
+// =================================================================
+@keyframes subtle-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// =================================================================
+// Scale upwards and in
+// =================================================================
+@keyframes pop-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  70% {
+    transform: scale(0.8);
+  }
+  80% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// =================================================================
+// Simple 360deg rotation
+// =================================================================
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =================================================================
+// Finger pointer
+// Makes the hello section finger do a wiggle thingy
+// =================================================================
+$finger-width: 50px;
+@keyframes finger-pointer {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -$finger-width;
+  }
+  50% {
+    background-position-x: -#{$finger-width * 2};
+  }
+  75% {
+    background-position-x: -#{$finger-width * 3};
+  }
+}
+
+// =================================================================
+// Projector slide in
+// Used for modals
+// =================================================================
+@keyframes projector-slide {
+  0% {
+    transform: translateY(-100%);
+  }
+  35% {
+    transform: translateY(10vh);
+  }
+  55% {
+    transform: translateY(-10vh);
+  }
+  60% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

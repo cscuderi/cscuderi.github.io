@@ -10,6 +10,9 @@
   }
 }
 
+// =============================
+// Work cards on homepage
+// =============================
 .work-items {
   display: flex;
   justify-content: center;
@@ -42,15 +45,35 @@
   color: inherit;
   background: white;
   border: ($border-width * 2) solid $border-color;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
 }
 
 .work-header {
-  margin: 0;
   position: relative;
+  margin: 0;
   background: invert($background-color, 100%);
   color: $background-color;
   margin-top: 50px;
   transform: skew(-10deg) rotate(-10deg);
+
+  &:before,
+  &:after {
+    content: '';
+    background: invert($background-color, 100%);
+    position: absolute;
+    width: 25px;
+    height: 100%;
+  }
+
+  &:before {
+    top: 15px;
+    left: -25px;
+  }
+
+  &:after {
+    top: -15px;
+    right: -25px;
+  }
 
   @include breakpoint($bp-medium) {
     margin-top: 60px;
@@ -62,29 +85,24 @@
 }
 
 .work-project {
-  position: relative;
   margin: 0;
-  padding: $grande $mezzo;
+  padding: $grande $mezzo 0 $mezzo;
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
   font-weight: bold;
   font-size: 4rem;
   line-height: 1.13;
-  z-index: 1;
+}
 
-  &:after {
-    content: attr(data-title);
-    position: absolute;
-    left: 10px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    top: 5px;
-    padding: 3.2rem 1.6rem;
-    color: rgba(0, 0, 0, 0.1);
-    z-index: -1;
-  }
+.work-category {
+  padding-bottom: $grande;
+  font-family: $fancy-font;
+  font-size: 1.6rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 5px;
 }
 
 .work-responsibilities {
@@ -99,12 +117,16 @@
 
   img {
     display: block;
-    border: $border-width solid $border-color;
+    // border: $border-width solid $border-color;
     max-width: 80%;
     margin: 0 auto;
-    border-radius: $border-radius;
+    // border-radius: $border-radius;
     filter: grayscale(100%);
     transition: $animation-duration;
+    width: 100%;
+    height: 100%;
+    max-width: 350px;
+    max-height: 350px;
     border-radius: 50%;
 
     .work-item:hover & {
@@ -113,11 +135,17 @@
   }
 }
 
+// =============================
+//
+// Work modals
+//
+// =============================
 .work-modal-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  min-width: $smallest;
   height: 100%;
   opacity: 0;
   transition: $animation-duration;
@@ -125,13 +153,16 @@
   overflow-y: scroll;
 
   &:focus {
-    @include focus();
-    outline-offset: -2px !important;
-    outline-width: 4px !important;
+    outline-color: white !important;
+    outline-offset: -4px !important;
   }
 
   &.is-visible {
     opacity: 1;
+  }
+
+  &.is-transitioning {
+    overflow-x: hidden;
   }
 }
 
@@ -152,36 +183,87 @@
   background: $background-color;
   border: $border-width solid $border-color;
   box-shadow: 0 0 0 $border-width $background-color;
-  transform: translateY(-100vh);
-  transition: $animation-duration;
+  transform: translateY(-100%);
+  transition: $animation-duration - 0.5;
   z-index: 10;
+  animation: projector-slide $animation-duration;
 
   @include breakpoint($bp-medium) {
     top: $grande;
-    margin-bottom: $border-width;
+    margin-bottom: $grande;
   }
 
   .is-visible & {
+    transition: 0;
     transform: translateY(0);
   }
 }
 
 .work-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: relative;
-  border-bottom: $border-width solid $border-color;
-  padding: $mezzo;
 
   h1 {
+    position: relative;
     display: inline-block;
     margin: 0;
+    text-transform: uppercase;
+    z-index: 1;
+
+    &:after {
+      content: attr(data-title);
+      position: absolute;
+      top: -25px;
+      left: -11px;
+      width: 100%;
+      padding: 3.2rem 1.6rem;
+      color: rgba(0, 0, 0, 0.1);
+      z-index: -1;
+    }
   }
 
   .modal-close-button {
     @extend .h1;
   }
+
+  .work-modal-row {
+    border-bottom: $border-width solid $border-color;
+
+    &:nth-child(2) {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+}
+
+.work-modal-footer {
+  .work-modal-row {
+    flex-direction: column;
+    border-top: $border-width solid $border-color;
+  }
+
+  .work-modal-mini-header {
+    text-align: center;
+  }
+}
+
+.work-modal-mini-header {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+.work-modal-row {
+  display: flex;
+  align-items: center;
+  padding: $mezzo;
+  justify-content: space-between;
+}
+
+.work-modal-link {
+  display: block;
 }
 
 .work-modal-content {
