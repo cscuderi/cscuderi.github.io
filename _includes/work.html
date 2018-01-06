@@ -5,31 +5,38 @@
       <img src="{{ 'assets/images/work.svg' }}" alt="" aria-hidden="true">
     </h2>
 
-    {% for post in site.posts %}
+    <hr>
+
+    <div class="work-items">
+
+      {% for post in site.posts %}
       <article class="work-item">
         <a href="#" class="work-link js-work-link">
           <header class="work-header">
-            <h3 class="work-project">{{ post.title }}</h3>
-            <div class="work-responsibilities">{{ post.responsibilities }}
+            <h3 class="work-project" data-title="{{post.title}}">{{ post.title }}</h3>
+
           </header>
           <div class="work-picture">
             <img src="{{ 'assets/images/work/quadrus_preview.jpg' }}" alt="">
           </div>
         </a>
       </article>
-      <div class="work-modal-wrapper js-work-modal is-hidden" aria-hidden="true">
+
+      <div class="work-modal-wrapper js-work-modal is-hidden" aria-hidden="true" tabindex="-1">
         <div class="work-modal">
-        <header class="work-modal-header">
-          <h1>{{ post.title }}</h1>
-          <button type="button" class="modal-close-button js-modal-close-button" aria-label="Close">&times;</button>
-        </header>
-        <div class="work-modal-content">
-          {{ post.content }}
+          <header class="work-modal-header">
+            <h1>{{ post.title }}</h1>
+            <button type="button" class="modal-close-button js-modal-close-button" aria-label="Close">&times;</button>
+          </header>
+          <div class="work-modal-content">
+            {{ post.content }}
+          </div>
         </div>
-      </div>
-      <div class="work-modal-screen js-work-modal-screen"></div>
+        <div class="work-modal-screen js-work-modal-screen"></div>
       </div>
 
-    {% endfor %}
+      {% endfor %}
+
+      </div>
   </div>
 </section>

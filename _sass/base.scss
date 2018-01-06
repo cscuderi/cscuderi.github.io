@@ -73,3 +73,10 @@ button {
   cursor: pointer;
   @include focus();
 }
+
+hr {
+  border: none;
+  border-top: $border-width solid $border-color;
+  max-width: 150px;
+  margin: $mezzo auto $mezzo auto;
+}
