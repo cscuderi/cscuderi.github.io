@@ -94,12 +94,15 @@ let site = {
   /**
    * modalController()
    * Controls the showing/hiding of the modals, and toggling their attributes.
+   * Adapted from a Codepen I made here: https://codepen.io/carlinscuderi/pen/VPXqzV
+   * TODO Trap focus inside modal on tab/shift tab
    */
   modalController() {
     const body = document.querySelector('body');
     const modalOpeners = document.querySelectorAll('.js-work-link');
     const modalClosers = document.querySelectorAll('.js-modal-close-button, .js-work-modal-screen');
     let trigger = '';
+    let modal = '';
 
     // Calls showModal() or hideModal() based on if a modal is showing or not
     function toggleModal(modal) {
@@ -120,6 +123,7 @@ let site = {
       let transitionEndProperties = (event) => {
         if(event.propertyName === 'opacity') {
           modal.removeEventListener('transitionend', transitionEndProperties, false);
+          modal.addEventListener('keydown', focusManager);
           modal.setAttribute('aria-hidden', false);
           modal.setAttribute('tabindex', "0");
           modal.classList.remove('is-transitioning');
@@ -128,9 +132,8 @@ let site = {
       };
 
       body.classList.add('modal-open');
-      modal.addEventListener('transitionend', transitionEndProperties);
       modal.classList.remove('is-hidden');
-      modal.addEventListener('keyup', focusManager);
+      modal.addEventListener('transitionend', transitionEndProperties);
 
       setTimeout(() => {
         modal.classList.add('is-visible', 'is-transitioning');
@@ -143,7 +146,7 @@ let site = {
       let transitionEndProperties = (event) => {
         if(event.propertyName === 'opacity') {
           modal.removeEventListener('transitionend', transitionEndProperties, false);
-          modal.removeEventListener('keyup', focusManager, false);
+          modal.removeEventListener('keydown', focusManager, false);
           modal.setAttribute('aria-hidden', true);
           modal.setAttribute('tabindex', "-1");
           modal.classList.remove('is-transitioning');
@@ -153,14 +156,47 @@ let site = {
         }
       };
 
-      modal.addEventListener('transitionend', transitionEndProperties);
       modal.classList.add('is-transitioning');
       modal.classList.remove('is-visible');
+      modal.addEventListener('transitionend', transitionEndProperties);
     }
 
+    // Listens for tabbing and keypresses inside modal
     function focusManager(event) {
+
+      // Find all focusable children
+      const focusableElementsString = 'a[href], button:not([disabled]), [tabindex="0"]';
+      let focusableElements = modal.querySelectorAll(focusableElementsString);
+
+      // Convert NodeList to Array
+      focusableElements = Array.prototype.slice.call(focusableElements);
+
+      const firstTabStop = focusableElements[0];
+      const lastTabStop = focusableElements[focusableElements.length - 1];
+
+      // Escape key (close modal)
       if (event.keyCode === 27 && body.classList.contains('modal-open')) {
-        hideModal(document.querySelector('.js-work-modal.is-visible'));
+        hideModal(modal);
+      }
+
+      // Check for tab key press
+      // Trap tab focus within modal while open
+      if (event.keyCode === 9) {
+
+        // Shift + tab
+        if (event.shiftKey) {
+          if (document.activeElement === firstTabStop) {
+            event.preventDefault();
+            lastTabStop.focus();
+          }
+
+        // Tab
+        } else {
+          if (document.activeElement === lastTabStop) {
+            event.preventDefault();
+            firstTabStop.focus();
+          }
+        }
       }
     }
 
@@ -169,7 +205,9 @@ let site = {
       modalOpeners[i].addEventListener('click', e => {
         e.preventDefault();
         trigger = e.target.closest('.js-work-link');
-        toggleModal(e.target.closest('.js-work-link').parentNode.nextElementSibling);
+        modal = trigger.parentNode.nextElementSibling;
+        // toggleModal(e.target.closest('.js-work-link').parentNode.nextElementSibling);
+        toggleModal(modal);
         return false;
       });
     }
@@ -178,7 +216,8 @@ let site = {
     for(let i = 0; i < modalClosers.length; i++) {
       modalClosers[i].addEventListener('click', e => {
         e.preventDefault();
-        hideModal(e.target.closest('.js-work-modal'));
+        // hideModal(e.target.closest('.js-work-modal'));
+        hideModal(modal);
         return false;
       });
     }
