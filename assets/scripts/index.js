@@ -76,12 +76,13 @@ let site = {
    * TODO Re-enable animations? This will cause them all to play again...
    */
   animationController() {
-    console.log('🚶‍ Disabling animations... 🕴');
 
     const animationToggleButtons = document.querySelectorAll('.js-toggle-animation');
     const body = document.querySelector('body');
     for(let i = 0; i < animationToggleButtons.length; i++) {
       animationToggleButtons[i].addEventListener('click', () => {
+        console.log('🚶‍ Toggling animations... 🕴');
+
         if(body.classList.contains('no-animation')) {
           body.classList.remove('no-animation');
         } else {
@@ -90,13 +91,22 @@ let site = {
       });
     }
   },
-  // Controls the hiding and showing of modals
-  // TODO Esc key support
+  /**
+   * modalController()
+   * Controls the showing/hiding of the modals, and toggling their attributes.
+   */
   modalController() {
-    let modalOpeners = document.querySelectorAll('.js-work-link');
-    let modalClosers = document.querySelectorAll('.js-modal-close-button, .js-work-modal-screen');
+    const body = document.querySelector('body');
+    const modalOpeners = document.querySelectorAll('.js-work-link');
+    const modalClosers = document.querySelectorAll('.js-modal-close-button, .js-work-modal-screen');
+    let trigger = '';
 
+    // Calls showModal() or hideModal() based on if a modal is showing or not
     function toggleModal(modal) {
+      if(modal.classList.contains('is-transitioning')) {
+        return false;
+      }
+
       if(modal.classList.contains('is-hidden')) {
         showModal(modal);
       } else {
@@ -104,24 +114,67 @@ let site = {
       }
     }
 
+    // Shows the modal
     function showModal(modal) {
-      modal.setAttribute('aria-hidden', false);
+
+      let transitionEndProperties = (event) => {
+        if(event.propertyName === 'opacity') {
+          modal.removeEventListener('transitionend', transitionEndProperties, false);
+          modal.setAttribute('aria-hidden', false);
+          modal.setAttribute('tabindex', "0");
+          modal.classList.remove('is-transitioning');
+          modal.focus();
+        }
+      };
+
+      body.classList.add('modal-open');
+      modal.addEventListener('transitionend', transitionEndProperties);
       modal.classList.remove('is-hidden');
+      modal.addEventListener('keyup', focusManager);
+
+      setTimeout(() => {
+        modal.classList.add('is-visible', 'is-transitioning');
+      }, 10);
     }
 
+    // Hides the modal
     function hideModal(modal) {
-      modal.setAttribute('aria-hidden', true);
-      modal.classList.add('is-hidden');
+
+      let transitionEndProperties = (event) => {
+        if(event.propertyName === 'opacity') {
+          modal.removeEventListener('transitionend', transitionEndProperties, false);
+          modal.removeEventListener('keyup', focusManager, false);
+          modal.setAttribute('aria-hidden', true);
+          modal.setAttribute('tabindex', "-1");
+          modal.classList.remove('is-transitioning');
+          modal.classList.add('is-hidden');
+          body.classList.remove('modal-open');
+          trigger.focus();
+        }
+      };
+
+      modal.addEventListener('transitionend', transitionEndProperties);
+      modal.classList.add('is-transitioning');
+      modal.classList.remove('is-visible');
     }
 
+    function focusManager(event) {
+      if (event.keyCode === 27 && body.classList.contains('modal-open')) {
+        hideModal(document.querySelector('.js-work-modal.is-visible'));
+      }
+    }
+
+    // Add toggle modal listeners
     for (let i = 0; i < modalOpeners.length; i++) {
       modalOpeners[i].addEventListener('click', e => {
         e.preventDefault();
+        trigger = e.target.closest('.js-work-link');
         toggleModal(e.target.closest('.js-work-link').parentNode.nextElementSibling);
         return false;
       });
     }
 
+    // Add close listeners to buttons, screens, etc.
     for(let i = 0; i < modalClosers.length; i++) {
       modalClosers[i].addEventListener('click', e => {
         e.preventDefault();
