@@ -206,7 +206,6 @@ let site = {
         e.preventDefault();
         trigger = e.target.closest('.js-work-link');
         modal = trigger.parentNode.nextElementSibling;
-        // toggleModal(e.target.closest('.js-work-link').parentNode.nextElementSibling);
         toggleModal(modal);
         return false;
       });
@@ -216,7 +215,6 @@ let site = {
     for(let i = 0; i < modalClosers.length; i++) {
       modalClosers[i].addEventListener('click', e => {
         e.preventDefault();
-        // hideModal(e.target.closest('.js-work-modal'));
         hideModal(modal);
         return false;
       });

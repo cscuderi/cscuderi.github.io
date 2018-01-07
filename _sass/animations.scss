@@ -129,16 +129,7 @@ $finger-width: 50px;
 // =================================================================
 @keyframes projector-slide {
   0% {
-    transform: translateY(-100%);
-  }
-  35% {
-    transform: translateY(10vh);
-  }
-  55% {
-    transform: translateY(-10vh);
-  }
-  60% {
-    transform: translateY(0);
+    transform: translateY(100%);
   }
   100% {
     transform: translateY(0);

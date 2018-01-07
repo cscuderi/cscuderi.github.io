@@ -237,8 +237,7 @@
   overflow-y: scroll;
 
   &:focus {
-    outline-color: white !important;
-    outline-offset: -4px !important;
+    outline: none !important;
   }
 
   &.is-visible {
