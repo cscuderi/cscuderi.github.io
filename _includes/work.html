@@ -13,11 +13,11 @@
       <article class="work-item work-item-{{ post.smalltitle }}">
         <a href="#" class="work-link js-work-link">
           <header class="work-header">
-            <h3 class="work-project">{{ post.title }}</h3>
+            <h3 class="work-project" data-title="{{post.title}}">{{ post.title }}</h3>
             <div class="work-category">{{ post.category }}</div>
           </header>
           <div class="work-picture">
-            <img src="{{ 'assets/images/work/'}}{{ post.smalltitle }}{{'-preview.svg'}}" alt="">
+            <img src="{{ 'assets/images/work/' '}}{{ post.smalltitle }}{{ '-image-1.svg' }}" alt="">
           </div>
         </a>
       </article>
