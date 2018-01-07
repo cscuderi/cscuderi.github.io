@@ -1,6 +1,10 @@
 .section-about {
   padding-bottom: $grande;
 
+  @include breakpoint($bp-medium) {
+    padding-bottom: $enorme;
+  }
+
   .section-header {
     margin-bottom: $grande;
   }
