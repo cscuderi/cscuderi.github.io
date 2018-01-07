@@ -1,0 +1,79 @@
+.section-contact {
+  .section-header {
+    margin-bottom: $grande;
+  }
+}
+
+.contact-email {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 2.5rem;
+  color: inherit;
+  text-decoration-skip: ink;
+
+  @include breakpoint($bp-xsmall) {
+    font-size: 3rem;
+  }
+
+  @include breakpoint($bp-small) {
+    font-size: 4rem;
+  }
+}
+
+.contact-other {
+  display: block;
+  text-align: center;
+  margin: $grande 0;
+}
+
+.contact-twitter,
+.contact-linkedin,
+.contact-dribbble {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background-position: 0 0;
+  background-size: cover;
+  margin-right: $mezzo;
+  opacity: 0.75;
+
+  &:hover,
+  &:focus {
+    animation: social 0.3s steps(1) infinite;
+    animation-direction: normal;
+    animation-fill-mode: both;
+    animation-timing-function: step-start, step-end;
+  }
+
+  .no-animation & {
+    animation: none !important;
+  }
+}
+
+.contact-twitter {
+  background-image: url('/assets/images/twitter.svg');
+}
+.contact-linkedin {
+  background-image: url('/assets/images/linkedin.svg');
+}
+.contact-dribbble {
+  background-image: url('/assets/images/dribbble.svg');
+  margin-right: 0;
+}
+
+$frame-width: 80px;
+@keyframes social {
+  0% {
+    background-position-x: 0;
+  }
+  33% {
+    background-position-x: #{$frame-width};
+  }
+  66% {
+    background-position-x: #{$frame-width * 2};
+  }
+  100% {
+    background-position-x: #{$frame-width * 3};
+  }
+}

@@ -31,6 +31,7 @@
   background: $background-color;
   border-radius: 15px;
   max-width: 400px;
+  width: 100%;
 
   @include breakpoint($bp-medium) {
     width: 48%;
@@ -46,45 +47,122 @@
   background: white;
   border: ($border-width * 2) solid $border-color;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
+  will-change: border;
+  transition: $animation-duration;
+
+  .work-item-quadrus &:hover,
+  .work-item-quadrus &:focus {
+    border-color: #714abd;
+  }
+  .work-item-londonlife &:hover,
+  .work-item-londonlife &:focus {
+    border-color: #ea6330;
+  }
+  .work-item-glc &:hover,
+  .work-item-glc &:focus {
+    border-color: #003c82;
+  }
+  .work-item-castle &:hover,
+  .work-item-castle &:focus {
+    border-color: #2600e1;
+  }
 }
 
 .work-header {
   position: relative;
+  left: calc(-#{$border-width / 2} - 3px);
+  width: 100%;
+  width: calc(100% + #{$border-width} + 6px);
   margin: 0;
   background: invert($background-color, 100%);
   color: $background-color;
   margin-top: 50px;
   transform: skew(-10deg) rotate(-10deg);
+  transition: $animation-duration;
+
+  .work-item-quadrus .work-link:hover &,
+  .work-item-quadrus .work-link:focus & {
+    background-color: #714abd;
+  }
+
+  .work-item-londonlife .work-link:hover &,
+  .work-item-londonlife .work-link:focus & {
+    background-color: #ea6330;
+  }
+
+  .work-item-castle .work-link:hover &,
+  .work-item-castle .work-link:focus & {
+    background-color: #2600e1;
+  }
+
+  .work-item-glc .work-link:hover &,
+  .work-item-glc .work-link:focus & {
+    background-color: #003c82;
+  }
 
   &:before,
   &:after {
     content: '';
     background: invert($background-color, 100%);
     position: absolute;
-    width: 25px;
+    max-width: 25px;
     height: 100%;
+
+    transition: $animation-duration;
+    width: 0;
+
+    will-change: width, transform, opacity;
+
+    .work-link:hover &,
+    .work-link:focus & {
+      width: 100%;
+      transform: translateY(0) scale(1);
+    }
+
+    .work-item-quadrus .work-link:hover &,
+    .work-item-quadrus .work-link:focus & {
+      background-color: #714abd;
+    }
+
+    .work-item-londonlife .work-link:hover &,
+    .work-item-londonlife .work-link:focus & {
+      background-color: #ea6330;
+    }
+
+    .work-item-castle .work-link:hover &,
+    .work-item-castle .work-link:focus & {
+      background-color: #2600e1;
+    }
+
+    .work-item-glc .work-link:hover &,
+    .work-item-glc .work-link:focus & {
+      background-color: #003c82;
+    }
   }
 
   &:before {
     top: 15px;
     left: -25px;
+    transform: translateX(25px) scale(0);
   }
 
   &:after {
     top: -15px;
     right: -25px;
+    transform: translateX(-25px) scale(0);
   }
 
   @include breakpoint($bp-medium) {
-    margin-top: 60px;
+    margin-top: 30px;
   }
 
   @include breakpoint($bp-large) {
-    margin-top: 75px;
+    margin-top: 45px;
   }
 }
 
 .work-project {
+  position: relative;
   margin: 0;
   padding: $grande $mezzo 0 $mezzo;
   text-align: center;
@@ -93,6 +171,17 @@
   font-weight: bold;
   font-size: 4rem;
   line-height: 1.13;
+
+  &:after {
+    content: attr(data-title);
+    position: absolute;
+    top: 5px;
+    left: -12px;
+    width: 100%;
+    padding: 3.2rem 1.6rem;
+    color: rgba(0, 0, 0, 0.1);
+    z-index: -1;
+  }
 }
 
 .work-category {
@@ -117,20 +206,15 @@
 
   img {
     display: block;
-    // border: $border-width solid $border-color;
     max-width: 80%;
     margin: 0 auto;
-    // border-radius: $border-radius;
     filter: grayscale(100%);
     transition: $animation-duration;
-    width: 100%;
-    height: 100%;
-    max-width: 350px;
-    max-height: 350px;
-    border-radius: 50%;
+    height: 200px;
 
-    .work-item:hover & {
-      filter: greyscale(100%);
+    .work-link:hover & {
+      transform: translateY(-8px);
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
     }
   }
 }
