@@ -13,11 +13,13 @@ TODO 404 page
 {% endcomment %}
 
 {% include head.html %}
-
 {% include hello.html %}
-{% include work.html %}
-{% include about.html %}
-{% include contact.html %}
+
+<main role="main" id="main">
+  {% include work.html %}
+  {% include about.html %}
+  {% include contact.html %}
+</main>
 
 {% include footer.html %}
 
