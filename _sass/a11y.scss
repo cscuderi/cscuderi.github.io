@@ -9,31 +9,53 @@
 
 .a11y-controls {
   ul {
+    width: 100%;
     padding: 0;
     list-style-type: none;
   }
 
   a,
   button {
-    position: fixed;
+    display: block;
+    position: absolute;
     top: -100%;
     left: -100%;
-    font-family: Arial, sans-serif;
-    font-size: 2.6rem;
-    text-decoration: none;
+    width: 90%;
+    margin: 0 auto;
     padding: $mezzo;
+    font-family: Arial, sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.23;
+    text-align: center;
+    text-decoration: none;
     color: white;
     background: black;
     border: 3px solid white;
-    opacity: 0;
     z-index: 200;
+
+    @include breakpoint($bp-small) {
+      display: inline-block;
+      width: auto;
+      text-align: left;
+      font-size: 2.6rem;
+      margin: 0;
+    }
 
     @include focus();
 
     &:focus {
-      opacity: 1;
-      top: 5px;
-      left: 5px;
+      top: 15px;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+
+      @include breakpoint($bp-small) {
+        left: 5px;
+        right: auto;
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 }
