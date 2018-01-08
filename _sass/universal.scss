@@ -22,6 +22,11 @@
     animation: circle-wipe #{$animation-duration + 0.5};
     animation-fill-mode: forwards;
   }
+
+  #{ $ie11 } & {
+    animation: none;
+    display: none;
+  }
 }
 
 @keyframes circle-wipe {
@@ -43,6 +48,10 @@
   height: 100%;
   pointer-events: none;
   box-shadow: 0 0 200px rgba(0, 0, 0, 0.4) inset;
+
+  #{ $ie11 } & {
+    display: none;
+  }
 }
 
 .reverse-vignette {
@@ -57,6 +66,10 @@
   box-shadow: 0 0 100px 50px white;
   pointer-events: none;
   z-index: -1;
+
+  #{ $ie11 } & {
+    display: none;
+  }
 }
 
 // ============================================

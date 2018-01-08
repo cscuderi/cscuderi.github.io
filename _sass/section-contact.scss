@@ -46,6 +46,10 @@
     animation-timing-function: step-start, step-end;
   }
 
+  #{ $ie11 } & {
+    animation: none;
+  }
+
   .no-animation & {
     animation: none !important;
   }
@@ -53,13 +57,25 @@
 
 .contact-twitter {
   background-image: url('/assets/images/twitter.svg');
+
+  #{ $ie11 } & {
+    background: url('/assets/images/twitter-noframes.svg') 0 0 no-repeat;
+  }
 }
 .contact-linkedin {
   background-image: url('/assets/images/linkedin.svg');
+
+  #{ $ie11 } & {
+    background: url('/assets/images/linkedin-noframes.svg') 0 0 no-repeat;
+  }
 }
 .contact-dribbble {
   background-image: url('/assets/images/dribbble.svg');
   margin-right: 0;
+
+  #{ $ie11 } & {
+    background: url('/assets/images/dribbble-noframes.svg') 0 0 no-repeat;
+  }
 }
 
 $frame-width: 80px;

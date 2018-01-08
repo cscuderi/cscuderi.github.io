@@ -44,6 +44,10 @@ let site = {
   // Starts the party.
   init() {
     console.log('🥂 Welcome! 🎉');
+
+    // Set the user agent as a data attr so we can target via CSS
+    document.documentElement.setAttribute('data-useragent', navigator.userAgent);
+
     document.addEventListener("DOMContentLoaded", function(){
       site.intro();
       site.modalController();

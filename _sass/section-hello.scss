@@ -33,13 +33,18 @@ $inital-delay: $animation-duration;
   width: 100%;
   opacity: 0;
   transition: 0.2s;
-
   animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
   animation-fill-mode: forwards;
 
   filter: drop-shadow(
     5px 15px 15px lighten(invert($background-color, 100%), 30%)
   );
+
+  #{ $ie11 } & {
+    animation: subtle-fade-in $animation-duration ease-in-out;
+    animation-fill-mode: forwards;
+    opacity: 1;
+  }
 
   * {
     will-change: transform;
@@ -213,14 +218,13 @@ $inital-delay: $animation-duration;
   font-size: 1.2rem;
   background: transparent;
   border: none;
-  color: lighten($color, 20%);
   border-bottom: 1px solid lighten($color, 20%);
   padding: 0;
+  opacity: 0;
 
   animation: subtle-fade-in 3s;
   animation-fill-mode: forwards;
   animation-delay: #{$inital-delay + 2.8};
-  opacity: 0;
 
   .no-animation & {
     animation: none !important;
@@ -242,6 +246,11 @@ $inital-delay: $animation-duration;
 
   @include breakpoint(max-height 700px) {
     display: none;
+  }
+
+  #{ $ie11 } & {
+    animation: none;
+    background: url('/assets/images/hand-sprite-noframes.svg') no-repeat;
   }
 
   &.is-active {

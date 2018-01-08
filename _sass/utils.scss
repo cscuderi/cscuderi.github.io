@@ -1,3 +1,9 @@
 .is-hidden {
   display: none;
 }
+
+// Problem browser selectors
+// Must be used from the root of the selector.
+// Like this: #{ $ie11 } & { width: 100%; }
+// ---------------------------------------------
+$ie11: '_:-ms-fullscreen, :root ' !default;
