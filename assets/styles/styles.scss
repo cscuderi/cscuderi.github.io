@@ -2,7 +2,7 @@
 # Site styles
 ---
 
-@import '../node_modules/breakpoint-sass/stylesheets/_breakpoint.scss';
+@import 'vendor/_breakpoint.scss';
 
 @import 'vars';
 @import 'utils';
