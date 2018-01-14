@@ -50,8 +50,11 @@
     animation: none;
   }
 
-  .no-animation & {
+  .no-animation &,
+  .no-animation &:hover,
+  .no-animation &:focus {
     animation: none !important;
+    opacity: 1 !important;
   }
 }
 
@@ -62,6 +65,7 @@
     background: url('/assets/images/twitter-noframes.svg') 0 0 no-repeat;
   }
 }
+
 .contact-linkedin {
   background-image: url('/assets/images/linkedin.svg');
 
@@ -69,27 +73,12 @@
     background: url('/assets/images/linkedin-noframes.svg') 0 0 no-repeat;
   }
 }
+
 .contact-dribbble {
   background-image: url('/assets/images/dribbble.svg');
   margin-right: 0;
 
   #{ $ie11 } & {
     background: url('/assets/images/dribbble-noframes.svg') 0 0 no-repeat;
-  }
-}
-
-$frame-width: 80px;
-@keyframes social {
-  0% {
-    background-position-x: 0;
-  }
-  33% {
-    background-position-x: #{$frame-width};
-  }
-  66% {
-    background-position-x: #{$frame-width * 2};
-  }
-  100% {
-    background-position-x: #{$frame-width * 3};
   }
 }

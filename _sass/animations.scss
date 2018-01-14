@@ -2,6 +2,21 @@
 // top to bottom, left to right.
 
 // =================================================================
+// Intro effect for the vignette
+// TODO This lags sometimes, should be looked at
+// =================================================================
+@keyframes circle-wipe {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(8, 16);
+    opacity: 0;
+  }
+}
+
+// =================================================================
 // Squish up and in, bouncey effect
 // Used for the "CIAO" letters.
 // TODO Finesse this animation
@@ -133,5 +148,26 @@ $finger-width: 50px;
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+// =================================================================
+// Social
+// Animates the social icon frames
+// TODO this could probably just be a mixin that takes a frame width
+// =================================================================
+$frame-width: 80px;
+@keyframes social {
+  0% {
+    background-position-x: 0;
+  }
+  33% {
+    background-position-x: #{$frame-width};
+  }
+  66% {
+    background-position-x: #{$frame-width * 2};
+  }
+  100% {
+    background-position-x: #{$frame-width * 3};
   }
 }

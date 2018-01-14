@@ -23,7 +23,7 @@ $inital-delay: $animation-duration;
   text-align: center;
   padding: 0 $piccolo;
 
-  @breakpoint ($bp-small) {
+  @include breakpoint ($bp-small) {
     padding: 0 4.2rem;
   }
 }
@@ -47,12 +47,13 @@ $inital-delay: $animation-duration;
   }
 
   * {
-    will-change: transform;
+    will-change: transform, opacity;
   }
 
   .no-animation & {
     animation: none !important;
-    opacity: 1;
+    animation-delay: 0 !important;
+    opacity: 1 !important;
   }
 }
 
