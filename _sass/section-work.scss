@@ -55,8 +55,33 @@
   background: white;
   border: ($border-width * 2) solid $border-color;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
-  transition: $animation-duration;
   will-change: border-color;
+
+  .work-item-quadrus & {
+    border-color: #714abd;
+  }
+
+  .work-item-londonlife & {
+    border-color: #ea6330;
+  }
+
+  .work-item-castle & {
+    border-color: #2600e1;
+  }
+
+  .work-item-glc & {
+    border-color: #003c82;
+  }
+
+  .work-item-quadrus &,
+  .work-item-londonlife &,
+  .work-item-castle &,
+  .work-item-glc & {
+    @include breakpoint($bp-medium) {
+      border: ($border-width * 2) solid $border-color;
+      transition: $animation-duration;
+    }
+  }
 
   .work-item-quadrus &:hover {
     border-color: #714abd;
@@ -81,7 +106,6 @@
   left: calc(-#{$border-width / 2} - 3px);
   width: calc(100% + #{$border-width} + 6px);
   margin: 0;
-  background: invert($background-color, 100%);
   color: $background-color;
   margin-top: 50px;
   transform: skew(-10deg) rotate(-10deg);
@@ -98,6 +122,32 @@
 
   .no-animation & {
     transition: none !important;
+  }
+
+  // TODO This code isn't very DRY
+  .work-item-quadrus .work-link & {
+    background-color: #714abd;
+  }
+
+  .work-item-londonlife .work-link & {
+    background-color: #ea6330;
+  }
+
+  .work-item-castle .work-link & {
+    background-color: #2600e1;
+  }
+
+  .work-item-glc .work-link & {
+    background-color: #003c82;
+  }
+
+  .work-item-quadrus .work-link &,
+  .work-item-londonlife .work-link &,
+  .work-item-castle .work-link &,
+  .work-item-glc .work-link & {
+    @include breakpoint($bp-medium) {
+      background: invert($background-color, 100%);
+    }
   }
 
   .work-item-quadrus .work-link:hover & {
@@ -129,7 +179,7 @@
     width: 0;
     will-change: width, transform, opacity;
 
-    @include breakpoint($bp-xsmall) {
+    @include breakpoint($bp-medium) {
       display: block;
     }
 
