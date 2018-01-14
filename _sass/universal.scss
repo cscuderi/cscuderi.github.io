@@ -1,6 +1,5 @@
 // ============================================
 // Background effects
-// (vignette, lines, noise)
 // ============================================
 .background-effects {
   overflow: hidden;
@@ -10,17 +9,40 @@
   position: fixed;
   top: -50vh;
   left: -50vw;
-  width: 200vw;
-  height: 200vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 100;
   pointer-events: none;
-  border-radius: 50%;
-  box-shadow: inset 0 0 50px 97vh invert($background-color, 100%);
-  will-change: transform, opacity;
+  background: invert($background-color, 100%);
+  transition: $animation-duration;
+  will-change: opacity;
+  opacity: 1;
+
+  p {
+    display: inline-block;
+    position: absolute;
+    top: 45vh;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: white;
+
+    &:focus {
+      outline: 4px solid white;
+      outline-offset: 8px;
+    }
+  }
 
   &.introduced {
-    animation: circle-wipe #{$animation-duration + 0.5};
-    animation-fill-mode: forwards;
+    opacity: 0;
+
+    p {
+      display: none;
+    }
   }
 
   #{ $ie11 } & {
@@ -37,24 +59,6 @@
   height: 100%;
   pointer-events: none;
   box-shadow: 0 0 200px rgba(0, 0, 0, 0.4) inset;
-
-  #{ $ie11 } & {
-    display: none;
-  }
-}
-
-.reverse-vignette {
-  position: fixed;
-  top: calc(50vh - 25%);
-  left: calc(50vw - 25%);
-  width: 50%;
-  height: 50%;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.7;
-  box-shadow: 0 0 100px 50px white;
-  pointer-events: none;
-  z-index: -1;
 
   #{ $ie11 } & {
     display: none;

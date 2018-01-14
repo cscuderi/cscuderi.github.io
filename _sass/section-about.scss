@@ -11,7 +11,19 @@
 }
 
 .about-howdy {
-  font-size: larger;
+  display: flex;
+  align-items: center;
+  font-size: 4rem;
+  margin-bottom: 0;
+}
+
+.about-h {
+  max-width: 120px;
+  margin-right: -12px;
+
+  @include breakpoint($bp-small) {
+    margin-left: -21px;
+  }
 }
 
 .about-availability {
