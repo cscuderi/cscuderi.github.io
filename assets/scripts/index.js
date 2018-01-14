@@ -45,33 +45,42 @@ let site = {
   init() {
     console.log('🥂 Welcome! 🎉');
 
-    // Set the user agent as a data attr so we can target via CSS
+    // For evil CSS selectors
     document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
+    // Run some DOM functions when it's ready
     document.addEventListener("DOMContentLoaded", function(){
-      site.intro();
       site.modalController();
       site.animationController();
+      document.querySelector('.js-intro-wipe p').focus();
     });
 
+    // Wait for an onload for the intro, otherwise images aren't ready sometimes
+    window.onload = () => {
+      console.log('🥁 Introducing... 🥁');
+      site.intro();
+    }
   },
+  /**
+   * intro()
+   * Checks if images have loaded, shows the intro section, gets everything ready for animation.
+   */
   intro() {
-    console.log('🥁 Introducing... 🥁');
 
-    // Show circle wipe animation
-    document.querySelector('.js-intro-wipe').classList.add('introduced');
+    // Show finger if there's no scroll after a few seconds
+    let showFinger = setTimeout(()=> {
+      document.querySelector('.js-hello-finger').classList.add('is-active');
+    }, 4500, false);
 
-    // Only show the pointer finger if user doesn't scroll
-    let hasScrolled = false;
+    // Listen for scrolling + clear timeout if user scrolls
     window.addEventListener('scroll', () => {
-      hasScrolled = true;
+      clearTimeout(showFinger);
     });
 
-    setTimeout(() => {
-      if(!hasScrolled) {
-        document.querySelector('.js-hello-finger').classList.add('is-active');
-      }
-    }, 6000);
+    console.log('🙃 Me! 🙃');
+    document.querySelectorAll('.js-hello-header')[0].classList.add('is-ready');
+    document.querySelectorAll('.js-intro-wipe')[0].classList.add('introduced');
+    document.location.href = '#top';
   },
   /**
    * animationController()
@@ -80,13 +89,11 @@ let site = {
    * TODO Re-enable animations? This will cause them all to play again...
    */
   animationController() {
-
     const animationToggleButtons = document.querySelectorAll('.js-toggle-animation');
     const body = document.querySelector('body');
     for(let i = 0; i < animationToggleButtons.length; i++) {
       animationToggleButtons[i].addEventListener('click', () => {
         console.log('🚶‍ Toggling animations... 🕴');
-
         if(body.classList.contains('no-animation')) {
           body.classList.remove('no-animation');
         } else {
@@ -125,7 +132,7 @@ let site = {
 
       let transitionEndProperties = (event) => {
         if(event.propertyName === 'opacity') {
-          modal.removeEventListener('transitionend', transitionEndProperties, false);
+          modal.removeEventListener('transitionend ', transitionEndProperties, false);
           modal.addEventListener('keydown', focusManager);
           modal.setAttribute('aria-hidden', false);
           modal.setAttribute('tabindex', "0");
