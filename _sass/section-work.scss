@@ -55,23 +55,19 @@
   background: white;
   border: ($border-width * 2) solid $border-color;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
-  will-change: border;
   transition: $animation-duration;
+  will-change: border-color;
 
-  .work-item-quadrus &:hover,
-  .work-item-quadrus &:focus {
+  .work-item-quadrus &:hover {
     border-color: #714abd;
   }
-  .work-item-londonlife &:hover,
-  .work-item-londonlife &:focus {
+  .work-item-londonlife &:hover {
     border-color: #ea6330;
   }
-  .work-item-glc &:hover,
-  .work-item-glc &:focus {
+  .work-item-glc &:hover {
     border-color: #003c82;
   }
-  .work-item-castle &:hover,
-  .work-item-castle &:focus {
+  .work-item-castle &:hover {
     border-color: #2600e1;
   }
 
@@ -90,24 +86,33 @@
   margin-top: 50px;
   transform: skew(-10deg) rotate(-10deg);
   transition: $animation-duration;
+  will-change: background-color;
 
-  .work-item-quadrus .work-link:hover &,
-  .work-item-quadrus .work-link:focus & {
+  @include breakpoint($bp-medium) {
+    margin-top: 30px;
+  }
+
+  @include breakpoint($bp-large) {
+    margin-top: 45px;
+  }
+
+  .no-animation & {
+    transition: none !important;
+  }
+
+  .work-item-quadrus .work-link:hover & {
     background-color: #714abd;
   }
 
-  .work-item-londonlife .work-link:hover &,
-  .work-item-londonlife .work-link:focus & {
+  .work-item-londonlife .work-link:hover & {
     background-color: #ea6330;
   }
 
-  .work-item-castle .work-link:hover &,
-  .work-item-castle .work-link:focus & {
+  .work-item-castle .work-link:hover & {
     background-color: #2600e1;
   }
 
-  .work-item-glc .work-link:hover &,
-  .work-item-glc .work-link:focus & {
+  .work-item-glc .work-link:hover & {
     background-color: #003c82;
   }
 
@@ -133,29 +138,24 @@
       display: none !important;
     }
 
-    .work-link:hover &,
-    .work-link:focus & {
+    .work-link:hover & {
       width: 100%;
       transform: translateY(0) scale(1);
     }
 
-    .work-item-quadrus .work-link:hover &,
-    .work-item-quadrus .work-link:focus & {
+    .work-item-quadrus .work-link:hover & {
       background-color: #714abd;
     }
 
-    .work-item-londonlife .work-link:hover &,
-    .work-item-londonlife .work-link:focus & {
+    .work-item-londonlife .work-link:hover & {
       background-color: #ea6330;
     }
 
-    .work-item-castle .work-link:hover &,
-    .work-item-castle .work-link:focus & {
+    .work-item-castle .work-link:hover & {
       background-color: #2600e1;
     }
 
-    .work-item-glc .work-link:hover &,
-    .work-item-glc .work-link:focus & {
+    .work-item-glc .work-link:hover & {
       background-color: #003c82;
     }
   }
@@ -170,18 +170,6 @@
     top: -15px;
     right: -25px;
     transform: translateX(-25px) scale(0);
-  }
-
-  @include breakpoint($bp-medium) {
-    margin-top: 30px;
-  }
-
-  @include breakpoint($bp-large) {
-    margin-top: 45px;
-  }
-
-  .no-animation & {
-    transition: none !important;
   }
 }
 
