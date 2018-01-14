@@ -30,11 +30,6 @@
     margin-right: auto;
     text-align: center;
     color: white;
-
-    &:focus {
-      outline: 4px solid white;
-      outline-offset: 8px;
-    }
   }
 
   &.introduced {
