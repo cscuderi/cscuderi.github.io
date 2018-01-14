@@ -99,7 +99,6 @@ let site = {
    * modalController()
    * Controls the showing/hiding of the modals, and toggling their attributes.
    * Adapted from a Codepen I made here: https://codepen.io/carlinscuderi/pen/VPXqzV
-   * TODO Trap focus inside modal on tab/shift tab
    */
   modalController() {
     const body = document.querySelector('body');
