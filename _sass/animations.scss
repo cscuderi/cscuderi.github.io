@@ -2,21 +2,6 @@
 // top to bottom, left to right.
 
 // =================================================================
-// Intro effect for the vignette
-// TODO This lags sometimes, should be looked at
-// =================================================================
-@keyframes circle-wipe {
-  from {
-    transform: scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(8, 16);
-    opacity: 0;
-  }
-}
-
-// =================================================================
 // Squish up and in, bouncey effect
 // Used for the "CIAO" letters.
 // TODO Finesse this animation
