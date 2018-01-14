@@ -10,7 +10,7 @@
   }
 
   .section-header {
-    max-width: 650px;
+    max-width: 700px;
   }
 }
 
@@ -74,6 +74,10 @@
   .work-item-castle &:focus {
     border-color: #2600e1;
   }
+
+  .no-animation & {
+    transition: none !important;
+  }
 }
 
 .work-header {
@@ -116,14 +120,17 @@
     max-width: 25px;
     height: 100%;
     display: none;
-
     transition: $animation-duration;
     width: 0;
-
     will-change: width, transform, opacity;
 
     @include breakpoint($bp-xsmall) {
       display: block;
+    }
+
+    .no-animation & {
+      transition: none !important;
+      display: none !important;
     }
 
     .work-link:hover &,
@@ -171,6 +178,10 @@
 
   @include breakpoint($bp-large) {
     margin-top: 45px;
+  }
+
+  .no-animation & {
+    transition: none !important;
   }
 }
 
@@ -233,9 +244,19 @@
       max-width: 80%;
     }
 
+    .no-animation & {
+      transition: none !important;
+      filter: none !important;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6)) !important;
+    }
+
     .work-link:hover & {
       transform: translateY(-8px);
       filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+
+      .no-animation & {
+        transform: translateY(0);
+      }
     }
   }
 }
@@ -270,7 +291,7 @@
   }
 
   .no-animation & {
-    transition: none !important;
+    transition: 0.01s !important; // Still want to fire event on transitionend
   }
 }
 
