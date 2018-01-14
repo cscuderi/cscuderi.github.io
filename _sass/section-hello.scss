@@ -32,13 +32,16 @@ $inital-delay: $animation-duration;
   height: 100%;
   width: 100%;
   opacity: 0;
-  transition: 0.2s;
   animation: bobble $animation-duration cubic-bezier(0.64, 0.57, 0.67, 1.53);
   animation-fill-mode: forwards;
+  animation-play-state: paused;
+  will-change: transform, opacity;
 
-  filter: drop-shadow(
-    5px 15px 15px lighten(invert($background-color, 100%), 30%)
-  );
+  // This filter causes performance drops and images drops when animated :(
+  // TODO Maybe add this drop-shadow back in some day.
+  // filter: drop-shadow(
+  //   5px 15px 15px lighten(invert($background-color, 100%), 30%)
+  // );
 
   #{ $ie11 } & {
     animation: subtle-fade-in $animation-duration ease-in-out;
@@ -46,8 +49,9 @@ $inital-delay: $animation-duration;
     opacity: 1;
   }
 
-  * {
-    will-change: transform, opacity;
+  // Play animations when images have loaded (JS)
+  .is-ready & {
+    animation-play-state: running;
   }
 
   .no-animation & {
@@ -59,7 +63,7 @@ $inital-delay: $animation-duration;
 
 .hello-header-c {
   width: 60px;
-  animation-delay: #{$inital-delay + 0.3};
+  animation-delay: #{$inital-delay + 0.2};
   margin-right: 0.3rem;
 
   @include breakpoint($bp-small) {
@@ -86,7 +90,7 @@ $inital-delay: $animation-duration;
 
 .hello-header-i {
   width: 20px;
-  animation-delay: #{$inital-delay + 0.6};
+  animation-delay: #{$inital-delay + 0.5};
 
   @include breakpoint($bp-small) {
     width: 31px;
@@ -111,7 +115,7 @@ $inital-delay: $animation-duration;
 .hello-header-a {
   width: 72px;
   margin-right: -0.5rem;
-  animation-delay: #{$inital-delay + 0.7};
+  animation-delay: #{$inital-delay + 0.8};
 
   @include breakpoint($bp-small) {
     width: 112px;
@@ -137,7 +141,7 @@ $inital-delay: $animation-duration;
 .hello-header-o {
   width: 67px;
   margin-right: 0;
-  animation-delay: #{$inital-delay + 0.9};
+  animation-delay: #{$inital-delay + 1.1};
 
   @include breakpoint($bp-small) {
     width: 102px;
@@ -162,9 +166,11 @@ $inital-delay: $animation-duration;
   width: 35px;
   margin-left: -0.3rem;
 
-  animation: squishy $animation-duration ease-out;
-  animation-fill-mode: forwards;
-  animation-delay: #{$inital-delay + 1.4};
+  .is-ready & {
+    animation: squishy $animation-duration ease-out;
+    animation-fill-mode: forwards;
+    animation-delay: #{$inital-delay + 1.4};
+  }
 
   @include breakpoint($bp-small) {
     top: 10px;
@@ -201,7 +207,7 @@ $inital-delay: $animation-duration;
   opacity: 0;
 
   animation: fade-in ($animation-duration * 1.7);
-  animation-delay: #{$inital-delay + 1.8};
+  animation-delay: #{$inital-delay + 1.7};
   animation-fill-mode: forwards;
 
   @include breakpoint($bp-medium) {
@@ -225,7 +231,7 @@ $inital-delay: $animation-duration;
 
   animation: subtle-fade-in 3s;
   animation-fill-mode: forwards;
-  animation-delay: #{$inital-delay + 2.8};
+  animation-delay: #{$inital-delay + 1.9};
 
   .no-animation & {
     animation: none !important;
