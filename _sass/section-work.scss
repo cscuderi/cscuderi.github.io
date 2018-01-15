@@ -212,13 +212,13 @@
 
   &:before {
     top: 15px;
-    left: -25px;
+    left: -24px;
     transform: translateX(25px) scale(0);
   }
 
   &:after {
     top: -15px;
-    right: -25px;
+    right: -24px;
     transform: translateX(-25px) scale(0);
   }
 }

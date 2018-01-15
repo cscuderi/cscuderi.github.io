@@ -37,7 +37,6 @@ $inital-delay: $animation-duration;
   height: 100%;
   width: 100%;
   opacity: 0;
-
   will-change: transform, opacity;
 
   // This filter causes performance drops and images drops when animated :(
