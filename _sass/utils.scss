@@ -4,6 +4,10 @@
 
 // Problem browser selectors
 // Must be used from the root of the selector.
+// These are kind of evil and hacky.
 // Like this: #{ $ie11 } & { width: 100%; }
 // ---------------------------------------------
 $ie11: '_:-ms-fullscreen, :root ' !default;
+$ios: 'html[data-useragent*="AppleWebKit"][data-useragent*="Safari"]:not([data-useragent*="Chrome"])';
+$safari_10: "html[data-useragent*='Safari'][data-useragent*='Version/10.1.2']:not([data-useragent*="Chrome'])';
+$safari: '_::-webkit-full-page-media, _:future, :root'; //Safari 7.1+
