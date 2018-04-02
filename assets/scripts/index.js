@@ -49,7 +49,7 @@ let site = {
     document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
     // Run some DOM functions when it's ready
-    document.addEventListener("load", function(){
+    window.addEventListener("load", function(){
       site.modalController();
       site.animationController();
       document.querySelector('.js-intro-wipe p').focus();
