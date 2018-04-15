@@ -87,27 +87,42 @@
   .work-item-quadrus &:focus {
     border-color: #714abd;
     box-shadow: 0 15px 60px rgba(#714abd, 0.8);
+  }
+
+  .work-item-quadrus &:focus {
     outline-offset: -20px;
     outline: 5px solid #714abd;
   }
+
   .work-item-londonlife &:hover,
   .work-item-londonlife &:focus {
     border-color: #ea6330;
     box-shadow: 0 15px 60px rgba(#ea6330, 0.8);
+  }
+
+  .work-item-londonlife &:focus {
     outline-offset: -20px;
     outline: 5px solid #ea6330;
   }
+
   .work-item-glc &:hover,
   .work-item-glc &:focus {
     border-color: #003c82;
     box-shadow: 0 15px 60px rgba(#003c82, 0.8);
+  }
+
+  .work-item-glc &:focus {
     outline-offset: -20px;
     outline: 5px solid #003c82;
   }
+
   .work-item-castle &:hover,
   .work-item-castle &:focus {
     border-color: #2600e1;
     box-shadow: 0 15px 60px rgba(#2600e1, 0.8);
+  }
+
+  .work-item-castle &:focus {
     outline-offset: -20px;
     outline: 5px solid #2600e1;
   }
