@@ -1,55 +1,17 @@
----
----
-
-/**
- * Element.closest polyfill
- * element-closest | CC0-1.0 | github.com/jonathantneal/closest
- */
-(function (ElementProto) {
-  if (typeof ElementProto.matches !== 'function') {
-    ElementProto.matches = ElementProto.msMatchesSelector || ElementProto.mozMatchesSelector || ElementProto.webkitMatchesSelector || function matches(selector) {
-      var element = this;
-      var elements = (element.document || element.ownerDocument).querySelectorAll(selector);
-      var index = 0;
-
-      while (elements[index] && elements[index] !== element) {
-        ++index;
-      }
-
-      return Boolean(elements[index]);
-    };
-  }
-
-  if (typeof ElementProto.closest !== 'function') {
-    ElementProto.closest = function closest(selector) {
-      var element = this;
-
-      while (element && element.nodeType === 1) {
-        if (element.matches(selector)) {
-          return element;
-        }
-
-        element = element.parentNode;
-      }
-
-      return null;
-    };
-  }
-})(window.Element.prototype);
-
-/**
- * All JS for the site.
- */
-let site = {
-  // Starts the party.
+const site = {
+  /**
+   * Calls everything that makes the JS run.
+   */
   init() {
     console.log('🥂 Welcome! 🎉');
+
+    this.polyfills();
 
     // For evil CSS selectors
     document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
     // Run some DOM functions when it's ready
-    window.addEventListener("load", function(){
+    window.addEventListener("load", function () {
       site.modalController();
       site.animationController();
       document.querySelector('.js-intro-wipe p').focus();
@@ -61,29 +23,71 @@ let site = {
       site.intro();
     }
   },
+
   /**
-   * intro()
-   * Checks if images have loaded, shows the intro section, gets everything ready for animation.
+   * Polyfills for JS methods.
+   */
+  polyfills() {
+    const ElementProto = window.Element.prototype;
+
+    if (typeof ElementProto.matches !== 'function') {
+      ElementProto.matches = ElementProto.msMatchesSelector || ElementProto.mozMatchesSelector || ElementProto.webkitMatchesSelector || function matches(selector) {
+        var element = this;
+        var elements = (element.document || element.ownerDocument).querySelectorAll(selector);
+        var index = 0;
+
+        while (elements[index] && elements[index] !== element) {
+          ++index;
+        }
+
+        return Boolean(elements[index]);
+      };
+    }
+
+    if (typeof ElementProto.closest !== 'function') {
+      ElementProto.closest = function closest(selector) {
+        var element = this;
+
+        while (element && element.nodeType === 1) {
+          if (element.matches(selector)) {
+            return element;
+          }
+
+          element = element.parentNode;
+        }
+
+        return null;
+      };
+    }
+  },
+
+  /**
+   * Checks if images have loaded, shows the intro section,
+   * gets everything ready for animation.
    */
   intro() {
+    const header = document.querySelector('.js-hello-header');
+    const wipe = document.querySelector('.js-intro-wipe');
+    const pointer = document.querySelector('.js-hello-finger');
+
+    // Make letters "float" after a delay
+    // Should happen after the initial animations
+    setTimeout(() => {
+      header.classList.add('is-bouncing');
+    }, 3500, false);
 
     // Show finger if there's no scroll after a few seconds
-    let showFinger = setTimeout(()=> {
-      document.querySelector('.js-hello-finger').classList.add('is-active');
+    setTimeout(() => {
+      pointer.classList.add('is-active');
     }, 4500, false);
 
-    // Listen for scrolling + clear timeout if user scrolls
-    window.addEventListener('scroll', () => {
-      clearTimeout(showFinger);
-    });
-
     console.log('🙃 Me! 🙃');
-    document.querySelectorAll('.js-hello-header')[0].classList.add('is-ready');
-    document.querySelectorAll('.js-intro-wipe')[0].classList.add('introduced');
+    header.classList.add('is-ready');
+    wipe.classList.add('introduced');
     document.location.href = '#top';
   },
+
   /**
-   * animationController()
    * Contains the code that disables animations site wide. It disables them by
    * adding a class to the body of the page.
    * TODO Re-enable animations? This will cause them all to play again...
@@ -91,10 +95,10 @@ let site = {
   animationController() {
     const animationToggleButtons = document.querySelectorAll('.js-toggle-animation');
     const body = document.querySelector('body');
-    for(let i = 0; i < animationToggleButtons.length; i++) {
+    for (let i = 0; i < animationToggleButtons.length; i++) {
       animationToggleButtons[i].addEventListener('click', () => {
         console.log('🚶‍ Toggling animations... 🕴');
-        if(body.classList.contains('no-animation')) {
+        if (body.classList.contains('no-animation')) {
           body.classList.remove('no-animation');
         } else {
           body.classList.add('no-animation');
@@ -102,10 +106,9 @@ let site = {
       });
     }
   },
+
   /**
-   * modalController()
    * Controls the showing/hiding of the modals, and toggling their attributes.
-   * Adapted from a Codepen I made here: https://codepen.io/carlinscuderi/pen/VPXqzV
    */
   modalController() {
     const body = document.querySelector('body');
@@ -116,11 +119,11 @@ let site = {
 
     // Calls showModal() or hideModal() based on if a modal is showing or not
     function toggleModal(modal) {
-      if(modal.classList.contains('is-transitioning')) {
+      if (modal.classList.contains('is-transitioning')) {
         return false;
       }
 
-      if(modal.classList.contains('is-hidden')) {
+      if (modal.classList.contains('is-hidden')) {
         showModal(modal);
       } else {
         hideModal(modal);
@@ -131,7 +134,7 @@ let site = {
     function showModal(modal) {
 
       let transitionEndProperties = (event) => {
-        if(event.propertyName === 'opacity') {
+        if (event.propertyName === 'opacity') {
           modal.removeEventListener('transitionend ', transitionEndProperties, false);
           modal.addEventListener('keydown', focusManager);
           modal.setAttribute('aria-hidden', false);
@@ -154,7 +157,7 @@ let site = {
     function hideModal(modal) {
 
       let transitionEndProperties = (event) => {
-        if(event.propertyName === 'opacity') {
+        if (event.propertyName === 'opacity') {
           modal.removeEventListener('transitionend', transitionEndProperties, false);
           modal.removeEventListener('keydown', focusManager, false);
           modal.setAttribute('aria-hidden', true);
@@ -200,7 +203,7 @@ let site = {
             lastTabStop.focus();
           }
 
-        // Tab
+          // Tab
         } else {
           if (document.activeElement === lastTabStop) {
             event.preventDefault();
@@ -222,7 +225,7 @@ let site = {
     }
 
     // Add close listeners to buttons, screens, etc.
-    for(let i = 0; i < modalClosers.length; i++) {
+    for (let i = 0; i < modalClosers.length; i++) {
       modalClosers[i].addEventListener('click', e => {
         e.preventDefault();
         hideModal(modal);
@@ -232,4 +235,4 @@ let site = {
   }
 };
 
-  site.init();
+site.init();
