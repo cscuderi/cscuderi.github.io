@@ -62,6 +62,31 @@
 }
 
 // =================================================================
+// Makes things bounce! Runs pretty quickly, because it expects
+// a delay. See usage in section-hello.scss.
+// =================================================================
+@keyframes bounce {
+  0% {
+    transform: scale(0.8, 1.6);
+  }
+  4% {
+    transform: scale(1.2, .8);
+  }
+  8% {
+    transform: scale(0.9, 1.4);
+  }
+  12% {
+    transform: scale(1.1, .9);
+  }
+  16% {
+    transform: scale(1, 1.1);
+  }
+  20%, 100% {
+    transform: scale(1,1);
+  }
+}
+
+// =================================================================
 // Simple up and in fade
 // =================================================================
 @keyframes fade-in {
@@ -86,52 +111,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-// =================================================================
-// Makes something look like it's floating
-// =================================================================
-@keyframes float {
-  0% {
-    top: -3px;
-    filter: drop-shadow(
-      5px 15px 15px lighten(invert($background-color, 100%), 30%)
-    );
-  }
-
-  100% {
-    top: 0;
-    filter: drop-shadow(
-      0 0 0 lighten(invert($background-color, 100%), 30%)
-    );
-  }
-}
-
-@keyframes bounce {
-  0% {
-    transform: scale(0.8, 1.6);
-  }
-
-  4% {
-    transform: scale(1.2, .8);
-  }
-
-  8% {
-    transform: scale(0.9, 1.4);
-  }
-
-  12% {
-    transform: scale(1.1, .9);
-  }
-
-  16% {
-    transform: scale(1, 1.1);
-  }
-
-  20%, 100% {
-    transform: scale(1,1);
-  }
-
 }
 
 // =================================================================
