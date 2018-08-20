@@ -44,4 +44,22 @@
     height: 16px;
     top: calc(100% + 6px);
   }
+
+  p {
+    margin-top: 0;
+    margin-left: 1.6rem;
+  }
+}
+
+.about-availability-flag {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background: invert($background-color, 100%);
+  transform: rotate(-20deg) skew(-20deg) translateX(-44px) translateY(-24px);
 }
