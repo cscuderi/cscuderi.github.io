@@ -66,9 +66,15 @@ const site = {
    * gets everything ready for animation.
    */
   intro() {
+    const burst = document.querySelector('.js-burst');
     const header = document.querySelector('.js-hello-header');
     const wipe = document.querySelector('.js-intro-wipe');
     const pointer = document.querySelector('.js-hello-finger');
+
+    // Make the burst background spin
+    setTimeout(() => {
+      burst.classList.add('is-spinning');
+    }, 2000, false);
 
     // Make letters "float" after a delay
     // Should happen after the initial animations
@@ -76,7 +82,7 @@ const site = {
       header.classList.add('is-bouncing');
     }, 3500, false);
 
-    // Show finger if there's no scroll after a few seconds
+    // Show the pointy finger
     setTimeout(() => {
       pointer.classList.add('is-active');
     }, 4500, false);
