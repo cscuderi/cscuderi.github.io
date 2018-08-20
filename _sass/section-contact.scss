@@ -1,7 +1,5 @@
-.section-contact {
-  .section-header {
-    margin-bottom: $grande;
-  }
+.section-contact  .section-header {
+  margin-bottom: $grande;
 }
 
 .contact-email {
@@ -50,12 +48,7 @@
     animation: none;
   }
 
-  .no-animation &,
-  .no-animation &:hover,
-  .no-animation &:focus {
-    animation: none !important;
-    opacity: 1 !important;
-  }
+  @include accessibleAnimations();
 }
 
 .contact-twitter {

@@ -127,9 +127,7 @@
     outline: 5px solid #2600e1;
   }
 
-  .no-animation & {
-    transition: none !important;
-  }
+  @include accessibleAnimations();
 }
 
 .work-header {
@@ -151,9 +149,7 @@
     margin-top: 45px;
   }
 
-  .no-animation & {
-    transition: none !important;
-  }
+  @include accessibleAnimations();
 
   // TODO This code isn't very DRY
   .work-item-quadrus .work-link & {
@@ -218,8 +214,10 @@
       display: block;
     }
 
+    @include accessibleAnimations();
+
+    // Additional display rule for no animation
     .no-animation & {
-      transition: none !important;
       display: none !important;
     }
 
@@ -323,8 +321,10 @@
       max-width: 80%;
     }
 
+    @include accessibleAnimations();
+
+    // Additional display rules for no animations
     .no-animation & {
-      transition: none !important;
       filter: none !important;
       filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6)) !important;
     }
@@ -334,9 +334,7 @@
       transform: translateY(-8px);
       filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
 
-      .no-animation & {
-        transform: translateY(0);
-      }
+      @include accessibleAnimations();
     }
   }
 }
@@ -358,6 +356,10 @@
   z-index: 1;
   overflow-y: scroll;
 
+  .no-animation & {
+    transition: 0.01s !important; // Still want to fire event on transitionend
+  }
+
   &:focus {
     outline: none !important;
   }
@@ -368,10 +370,6 @@
 
   &.is-transitioning {
     overflow-x: hidden;
-  }
-
-  .no-animation & {
-    transition: 0.01s !important; // Still want to fire event on transitionend
   }
 }
 
@@ -407,14 +405,11 @@
     margin-bottom: $grande;
   }
 
+  @include accessibleAnimations();
+
   .is-visible & {
     transition: 0;
     transform: translateY(0);
-  }
-
-  .no-animation & {
-    animation: none !important;
-    transition: none !important;
   }
 }
 

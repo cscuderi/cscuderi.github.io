@@ -1,6 +1,25 @@
 // Animations for the whole site, organized in the order they're used,
 // top to bottom, left to right.
 
+@mixin noAnimation() {
+  animation: none !important;
+  animation-delay: 0 !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+@mixin accessibleAnimations() {
+  @media screen and (prefers-reduced-motion) {
+    @include noAnimation();
+  }
+
+  .no-animation &,
+  .no-animation &:hover,
+  .no-animation &:focus {
+    @include noAnimation();
+  }
+}
+
 // =================================================================
 // Squish up and in, bouncey effect
 // Used for the "CIAO" letters.

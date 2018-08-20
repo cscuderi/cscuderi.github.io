@@ -59,15 +59,17 @@ $initial-delay: $animation-duration;
 
   // This filter causes performance drops and images drops when animated :(
   // TODO Maybe add this drop-shadow back in some day.
-  // .is-bouncing.is-bouncing & {
-  //   @include bounce();
+  // filter: drop-shadow(
+  //   5px 15px 15px lighten(invert($background-color, 100%), 30%)
+  // );
+
+  // .no-animation & {
+  //   animation: none !important;
+  //   animation-delay: 0 !important;
+  //   opacity: 1 !important;
   // }
 
-  .no-animation & {
-    animation: none !important;
-    animation-delay: 0 !important;
-    opacity: 1 !important;
-  }
+  @include accessibleAnimations();
 }
 
 // ===================================
@@ -277,10 +279,7 @@ $initial-delay: $animation-duration;
     margin-bottom: $grande;
   }
 
-  .no-animation & {
-    animation: none !important;
-    opacity: 1 !important;
-  }
+  @include accessibleAnimations();
 }
 
 .toggle-animation {
@@ -295,10 +294,7 @@ $initial-delay: $animation-duration;
   animation-fill-mode: forwards;
   animation-delay: #{$initial-delay + 1.9};
 
-  .no-animation & {
-    animation: none !important;
-    opacity: 1 !important;
-  }
+  @include accessibleAnimations();
 }
 
 .hello-finger {
@@ -326,42 +322,33 @@ $initial-delay: $animation-duration;
     opacity: 0.4;
   }
 
-  .no-animation & {
-    animation: none !important;
-    transition: 0 !important;
-    opacity: 1 !important;
-  }
+  @include accessibleAnimations();
 }
 
 // ===================================
-// Bursts
+// Burst
 // ===================================
-.burst-big {
+.burst-wrapper {
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
-  background: url('/assets/images/big-burst.svg') center center no-repeat;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   z-index: -1;
 }
 
-.hello-burst {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: -1;
-  overflow: hidden;
-  background-color: $background-color;
+.burst {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/images/big-burst.svg') center center no-repeat;
 
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 0 50px $background-color;
-    z-index: 1;
+  &.is-spinning {
+    animation: rotate 50s ease-in infinite;
   }
+
+  @include accessibleAnimations();
 }
