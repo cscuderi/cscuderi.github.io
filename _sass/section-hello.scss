@@ -48,7 +48,6 @@ $initial-delay: $animation-duration;
   height: 0;
   width: 100%;
   opacity: 0;
-  transition: 3s;
   will-change: transform, opacity, filter;
 
   #{ $ie11 } & {
@@ -62,12 +61,6 @@ $initial-delay: $animation-duration;
   // filter: drop-shadow(
   //   5px 15px 15px lighten(invert($background-color, 100%), 30%)
   // );
-
-  // .no-animation & {
-  //   animation: none !important;
-  //   animation-delay: 0 !important;
-  //   opacity: 1 !important;
-  // }
 
   @include accessibleAnimations();
 }
