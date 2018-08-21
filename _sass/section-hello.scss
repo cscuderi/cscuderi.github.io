@@ -285,7 +285,7 @@ $initial-delay: $animation-duration;
 
   animation: subtle-fade-in 3s;
   animation-fill-mode: forwards;
-  animation-delay: #{$initial-delay + 1.9};
+  animation-delay: #{$initial-delay + 2.5};
 
   @include accessibleAnimations();
 }
@@ -340,7 +340,7 @@ $initial-delay: $animation-duration;
   background: url('/assets/images/big-burst.svg') center center no-repeat;
 
   &.is-spinning {
-    animation: rotate 50s ease-in infinite;
+    animation: rotate 30s ease-in infinite;
   }
 
   @include accessibleAnimations();
