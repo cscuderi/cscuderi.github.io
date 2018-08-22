@@ -3,7 +3,7 @@
 
 @mixin noAnimation() {
   animation: none !important;
-  animation-delay: 0 !important;
+  animation-delay: 0s !important;
   opacity: 1 !important;
   transition: none !important;
 }
