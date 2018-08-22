@@ -308,7 +308,7 @@ $initial-delay: $animation-duration;
   opacity: 0;
   transition: 1s;
 
-  @include breakpoint(max-height 700px) {
+  @include breakpoint(max-height 600px) {
     display: none;
   }
 
