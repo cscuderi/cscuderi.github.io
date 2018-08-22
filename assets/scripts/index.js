@@ -65,7 +65,7 @@ const site = {
    */
   intro() {
     this.ciaoController();
-
+    const wipe = document.querySelector('.js-intro-wipe');
     const burst = document.querySelector('.js-burst');
     const pointer = document.querySelector('.js-hello-finger');
 
@@ -81,7 +81,7 @@ const site = {
 
     console.log('🙃 Me! 🙃');
     // header.classList.add('is-ready');
-    // wipe.classList.add('introduced');
+    wipe.classList.add('introduced');
     document.location.href = '#top';
   },
 
