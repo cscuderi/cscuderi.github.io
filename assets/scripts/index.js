@@ -1,3 +1,7 @@
+---
+---
+
+// TODO Make the whole site work with no JS (modals, etc)
 const site = {
   /**
    * Calls everything that makes the JS run.
@@ -11,17 +15,22 @@ const site = {
     document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
     // Run some DOM functions when it's ready
-    window.addEventListener("load", function () {
-      site.modalController();
-      site.animationController();
-      document.querySelector('.js-intro-wipe p').focus();
+    window.addEventListener('load', () => {
+      this.modalController();
+      this.animationController();
+      // document.querySelector('.js-intro-wipe p').focus();
     });
 
+    // site.modalController();
+    // site.animationController();
+    // document.querySelector('.js-intro-wipe p').focus();
+    this.intro();
+
     // Wait for an onload for the intro, otherwise images aren't ready sometimes
-    window.onload = () => {
-      console.log('🥁 Introducing... 🥁');
-      site.intro();
-    }
+    // window.onload = () => {
+    //   console.log('🥁 Introducing... 🥁');
+    //   site.intro();
+    // }
   },
 
   /**
@@ -67,20 +76,16 @@ const site = {
    */
   intro() {
     const burst = document.querySelector('.js-burst');
-    const header = document.querySelector('.js-hello-header');
-    const wipe = document.querySelector('.js-intro-wipe');
+    // const header = document.querySelector('.js-hello-header');
+    // const wipe = document.querySelector('.js-intro-wipe');
     const pointer = document.querySelector('.js-hello-finger');
+
+    this.ciaoController();
 
     // Make the burst background spin
     setTimeout(() => {
       burst.classList.add('is-spinning');
     }, 2000, false);
-
-    // Make letters "float" after a delay
-    // Should happen after the initial animations
-    setTimeout(() => {
-      header.classList.add('is-bouncing');
-    }, 3500, false);
 
     // Show the pointy finger
     setTimeout(() => {
@@ -88,15 +93,66 @@ const site = {
     }, 4500, false);
 
     console.log('🙃 Me! 🙃');
-    header.classList.add('is-ready');
-    wipe.classList.add('introduced');
+    // header.classList.add('is-ready');
+    // wipe.classList.add('introduced');
     document.location.href = '#top';
+  },
+
+  /**
+   * Creates the images for Ciao, and calls showWord() when they're ready.
+   */
+  ciaoController() {
+    const word = 'ciao!'.split('');
+    let images = [];
+    let imageLoaded = 0;
+
+    // Loop the word "ciao!" and create the image elements
+    for(let i = 0; i < word.length; i++) {
+      let image = new Image();
+
+      // Use 'e' instead of '!' for files and classnames
+      if(word[i] === '!') {
+        word[i] = 'e';
+      }
+
+      image.src = `/assets/images/${word[i]}.svg`;
+      image.className = `hello-header-img hello-header-${word[i]}`;
+      image.alt = '';
+      image.setAttribute('role','presentation');
+      image.setAttribute('aria-hidden',true);
+      image.onload = () => {
+        imageLoaded++;
+        if(imageLoaded === word.length) {
+          this.showWord(images);
+        }
+      };
+      images.push(image);
+    }
+  },
+
+  /**
+   * Loops an array and shows a word.
+   * @param {Array} word Each index should be an image element to be appended.
+   */
+  showWord(word) {
+    const header = document.querySelector('.js-hello-header');
+
+    for(let n = 0; n < word.length; n++) {
+      header.appendChild(word[n]);
+    }
+
+    header.classList.add('is-ready');
+
+    // Make letters "float" after a delay
+    // Should happen after the initial animations
+    setTimeout(() => {
+      header.classList.add('is-bouncing');
+    }, 3500, false);
   },
 
   /**
    * Contains the code that disables animations site wide. It disables them by
    * adding a class to the body of the page.
-   * TODO Re-enable animations? This will cause them all to play again...
    */
   animationController() {
     const animationToggleButtons = document.querySelectorAll('.js-toggle-animation');
