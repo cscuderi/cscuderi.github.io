@@ -3,6 +3,8 @@
 
 // TODO Make the whole site work with no JS (modals, etc)
 const site = {
+  allImagesHaveLoaded: false,
+
   /**
    * Calls everything that makes the JS run.
    */
@@ -13,6 +15,7 @@ const site = {
 
     // Load the lettered intro
     this.intro();
+    this.lazyLoadImages();
     console.log('🥂 Welcome! 🎉');
 
     // Run some DOM functions when site is ready
@@ -65,24 +68,24 @@ const site = {
    */
   intro() {
     this.ciaoController();
-    const wipe = document.querySelector('.js-intro-wipe');
-    const burst = document.querySelector('.js-burst');
-    const pointer = document.querySelector('.js-hello-finger');
 
-    // Make the burst background spin
-    setTimeout(() => {
-      burst.classList.add('is-spinning');
-    }, 2000, false);
-
-    // Show the pointy finger
-    setTimeout(() => {
-      pointer.classList.add('is-active');
-    }, 4500, false);
-
-    console.log('🙃 Me! 🙃');
-    // header.classList.add('is-ready');
-    wipe.classList.add('introduced');
+    // TODO Only reveal wipe when header stuff is loaded
     document.location.href = '#top';
+  },
+
+  /**
+   * Quick way to lazy load images.
+   */
+  lazyLoadImages() {
+    const images = document.querySelectorAll('img');
+
+    images.forEach((image, index) => {
+      if(image.dataset.lazyload !== 'false') {
+        image.src = image.dataset.src;
+      }
+    });
+
+    this.allImagesHaveLoaded = true;
   },
 
   /**
@@ -122,19 +125,30 @@ const site = {
    * @param {Array} ciao Each index should be a JS image element to be appended.
    */
   showCiao(ciao) {
+    const wipe = document.querySelector('.js-intro-wipe');
     const header = document.querySelector('.js-hello-header');
+    const burst = document.querySelector('.js-burst');
+    const pointer = document.querySelector('.js-hello-finger');
 
     for(let n = 0; n < ciao.length; n++) {
       header.appendChild(ciao[n]);
     }
 
+    // Remove the wipe, animate letter in
+    wipe.classList.add('introduced');
     header.classList.add('is-ready');
+    burst.classList.add('is-spinning');
 
     // Make letters "float" after a delay
     // Should happen after the initial animations
     setTimeout(() => {
       header.classList.add('is-bouncing');
     }, 3500, false);
+
+    // Show the pointy finger
+    setTimeout(() => {
+      pointer.classList.add('is-active');
+    }, 4500, false);
   },
 
   /**
