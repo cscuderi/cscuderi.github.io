@@ -7,30 +7,19 @@ const site = {
    * Calls everything that makes the JS run.
    */
   init() {
-    console.log('🥂 Welcome! 🎉');
-
+    // Evil things
     this.polyfills();
-
-    // For evil CSS selectors
     document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
-    // Run some DOM functions when it's ready
+    // Load the lettered intro
+    this.intro();
+    console.log('🥂 Welcome! 🎉');
+
+    // Run some DOM functions when site is ready
     window.addEventListener('load', () => {
       this.modalController();
       this.animationController();
-      // document.querySelector('.js-intro-wipe p').focus();
     });
-
-    // site.modalController();
-    // site.animationController();
-    // document.querySelector('.js-intro-wipe p').focus();
-    this.intro();
-
-    // Wait for an onload for the intro, otherwise images aren't ready sometimes
-    // window.onload = () => {
-    //   console.log('🥁 Introducing... 🥁');
-    //   site.intro();
-    // }
   },
 
   /**
@@ -75,12 +64,10 @@ const site = {
    * gets everything ready for animation.
    */
   intro() {
-    const burst = document.querySelector('.js-burst');
-    // const header = document.querySelector('.js-hello-header');
-    // const wipe = document.querySelector('.js-intro-wipe');
-    const pointer = document.querySelector('.js-hello-finger');
-
     this.ciaoController();
+
+    const burst = document.querySelector('.js-burst');
+    const pointer = document.querySelector('.js-hello-finger');
 
     // Make the burst background spin
     setTimeout(() => {
@@ -99,7 +86,7 @@ const site = {
   },
 
   /**
-   * Creates the images for Ciao, and calls showWord() when they're ready.
+   * Creates the images for Ciao, and calls showCiao() when they're ready.
    */
   ciaoController() {
     const word = 'ciao!'.split('');
@@ -123,7 +110,7 @@ const site = {
       image.onload = () => {
         imageLoaded++;
         if(imageLoaded === word.length) {
-          this.showWord(images);
+          this.showCiao(images);
         }
       };
       images.push(image);
@@ -132,13 +119,13 @@ const site = {
 
   /**
    * Loops an array and shows a word.
-   * @param {Array} word Each index should be an image element to be appended.
+   * @param {Array} ciao Each index should be a JS image element to be appended.
    */
-  showWord(word) {
+  showCiao(ciao) {
     const header = document.querySelector('.js-hello-header');
 
-    for(let n = 0; n < word.length; n++) {
-      header.appendChild(word[n]);
+    for(let n = 0; n < ciao.length; n++) {
+      header.appendChild(ciao[n]);
     }
 
     header.classList.add('is-ready');
