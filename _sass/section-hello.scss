@@ -33,6 +33,9 @@ $initial-delay: $animation-duration;
 }
 
 .hello-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
   text-align: center;
   padding: 0 $piccolo;
 
@@ -71,7 +74,7 @@ $initial-delay: $animation-duration;
 // ===================================
 .hello-header-c {
   width: 60px;
-  margin-right: 0.3rem;
+  margin-right: 1.2rem;
 
   .is-ready & {
     @include ciao(#{$initial-delay + 0.1});
@@ -84,7 +87,7 @@ $initial-delay: $animation-duration;
   @include breakpoint($bp-small) {
     margin-left: 0;
     width: 90px;
-    margin-right: 1.1rem;
+    margin-right: 1.5rem;
   }
 
   @include breakpoint($bp-medium) {
@@ -109,6 +112,7 @@ $initial-delay: $animation-duration;
 // ===================================
 .hello-header-i {
   width: 20px;
+  margin-right: 1rem;
 
   .is-ready & {
     @include ciao(#{$initial-delay + 0.2});
@@ -120,6 +124,7 @@ $initial-delay: $animation-duration;
 
   @include breakpoint($bp-small) {
     width: 31px;
+    margin-right: 1.5rem;
   }
 
   @include breakpoint($bp-medium) {
@@ -144,7 +149,7 @@ $initial-delay: $animation-duration;
 // ===================================
 .hello-header-a {
   width: 72px;
-  margin-right: -0.5rem;
+  margin-right: 0.4rem;
 
   .is-ready & {
     @include ciao(#{$initial-delay + 0.3});
@@ -156,7 +161,7 @@ $initial-delay: $animation-duration;
 
   @include breakpoint($bp-small) {
     width: 112px;
-    margin-right: 0;
+    margin-right: 0.7rem;
   }
 
   @include breakpoint($bp-medium) {
@@ -181,7 +186,7 @@ $initial-delay: $animation-duration;
 // ===================================
 .hello-header-o {
   width: 67px;
-  margin-right: 0;
+  margin-right: 0.7rem;
 
   .is-ready & {
     @include ciao(#{$initial-delay + 0.4});
@@ -193,6 +198,7 @@ $initial-delay: $animation-duration;
 
   @include breakpoint($bp-small) {
     width: 102px;
+    margin-right: 0.3rem;
   }
 
   @include breakpoint($bp-medium) {
@@ -257,7 +263,7 @@ $initial-delay: $animation-duration;
 // Intro paragraph below Ciao
 // ===================================
 .hello-intro {
-  margin: 0 auto;
+  margin: 0 auto $mezzo auto;
   max-width: $bp-medium;
   padding: 0 $grande;
   font-size: 110%;
