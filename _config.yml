@@ -30,7 +30,7 @@ plugins:
 sass:
   sass_dir: _sass
   style: compressed
-gems:
+plugins:
   - jekyll-babel
 
 # Exclude from processing.
