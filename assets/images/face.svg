@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <g id="head">
+    <ellipse cx="200" cy="205" rx="150" ry="170" fill="#ebe4d8" />
+    <ellipse cx="200" cy="205" rx="145" ry="164" fill="#d9d2c6" opacity="0.18" />
+  </g>
+  <g id="shadow">
+    <ellipse cx="220" cy="250" rx="70" ry="60" fill="#bdb7ac" opacity="0.2" />
+  </g>
+  <g id="eyeL">
+    <ellipse cx="145" cy="175" rx="30" ry="22" fill="#f7f2ea" />
+  </g>
+  <g id="eyeR">
+    <ellipse cx="255" cy="175" rx="30" ry="22" fill="#f7f2ea" />
+  </g>
+  <g id="pupilL">
+    <circle cx="145" cy="176" r="9" fill="#2a2520" />
+  </g>
+  <g id="pupilR">
+    <circle cx="255" cy="176" r="9" fill="#2a2520" />
+  </g>
+  <g id="lidL">
+    <ellipse cx="145" cy="175" rx="32" ry="24" fill="#e2dacc" />
+  </g>
+  <g id="lidR">
+    <ellipse cx="255" cy="175" rx="32" ry="24" fill="#e2dacc" />
+  </g>
+  <g id="nose">
+    <path d="M200 190 C206 205 206 220 195 226" fill="#cfc7bb" />
+  </g>
+  <g id="mouth">
+    <path d="M140 255 Q200 290 260 255 Q200 278 140 255 Z" fill="#2a2520" />
+    <path d="M162 258 Q200 272 238 258 Q200 266 162 258 Z" fill="#1b1814" opacity="0.6" />
+  </g>
+  <g id="browL">
+    <path d="M118 150 Q145 138 172 150" fill="#2a2520" />
+  </g>
+  <g id="browR">
+    <path d="M228 150 Q255 138 282 150" fill="#2a2520" />
+  </g>
+</svg>
