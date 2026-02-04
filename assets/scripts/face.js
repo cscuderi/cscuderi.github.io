@@ -1,8 +1,6 @@
 import * as THREE from "../vendor/three/build/three.module.js";
 import { SVGLoader } from "../vendor/three/examples/jsm/loaders/SVGLoader.js";
 
-const BUILD_ID = "2026-02-03.10";
-
 const CANONICAL_PART_IDS = new Set([
   "head",
   "eyeL",
@@ -131,6 +129,7 @@ const createPivotGroup = (group) => {
 
 export const createFace = async (canvas, { reducedMotion = false, debug = false } = {}) => {
   let reducedMotionEnabled = reducedMotion;
+  let debugEnabled = Boolean(debug);
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -151,23 +150,19 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     webgl.error = error?.message || String(error);
   }
 
-  if (debug) {
+  const applyDebugStyles = () => {
     try {
-      renderer.domElement.style.outline = "2px solid rgba(255, 0, 0, 0.35)";
-      renderer.domElement.style.background = "rgba(255, 0, 0, 0.03)";
+      renderer.domElement.style.outline = debugEnabled ? "2px solid rgba(255, 0, 0, 0.35)" : "";
+      renderer.domElement.style.background = debugEnabled ? "rgba(255, 0, 0, 0.03)" : "";
     } catch {
       // ignore
     }
-  }
+  };
+  applyDebugStyles();
 
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
   camera.position.set(0, 0, 4);
-
-  if (debug) {
-    // Visible non-transparent clear so we can confirm the canvas is drawing.
-    renderer.setClearColor(0x00ff5a, 0.12);
-  }
 
   const ambient = new THREE.AmbientLight(0xffffff, 0.8);
   const directional = new THREE.DirectionalLight(0xffffff, 0.55);
@@ -177,14 +172,14 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
   const faceGroup = new THREE.Group();
   scene.add(faceGroup);
 
-  if (debug) {
-    const marker = new THREE.Mesh(
-      new THREE.BoxGeometry(0.18, 0.18, 0.18),
-      new THREE.MeshBasicMaterial({ color: 0xff3b3b })
-    );
-    marker.position.set(0.6, -0.6, 0.2);
-    scene.add(marker);
-  }
+  const marker = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18, 0.18, 0.18),
+    new THREE.MeshBasicMaterial({ color: 0xff3b3b })
+  );
+  marker.position.set(0.6, -0.6, 0.2);
+  marker.visible = debugEnabled;
+  marker.frustumCulled = false;
+  scene.add(marker);
 
   const loader = new SVGLoader();
   const data = await loadSvg(loader, "assets/face.svg");
@@ -199,25 +194,15 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     const partId = findPartId(path.userData?.node);
     const baseColor = new THREE.Color(path.color || "#1f1b17");
 
-    const fillMaterial = debug
-      ? new THREE.MeshBasicMaterial({
-        color: baseColor,
-        side: THREE.DoubleSide,
-        depthTest: false,
-        depthWrite: false
-      })
-      : new THREE.MeshStandardMaterial({
-        color: baseColor,
-        side: THREE.DoubleSide,
-        roughness: 0.92,
-        metalness: 0.02
-      });
+    const fillMaterial = new THREE.MeshStandardMaterial({
+      color: baseColor,
+      side: THREE.DoubleSide,
+      roughness: 0.92,
+      metalness: 0.02
+    });
 
     const attachMesh = (mesh) => {
       mesh.frustumCulled = false;
-      if (debug) {
-        mesh.renderOrder = 10;
-      }
       meshCount += 1;
       if (partId) {
         if (!rawParts[partId]) {
@@ -263,19 +248,12 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       strokeLineCap: svgStyle.strokeLineCap || "round",
       strokeMiterLimit: Number(svgStyle.strokeMiterLimit || 4)
     };
-    const strokeMaterial = debug
-      ? new THREE.MeshBasicMaterial({
-        color: new THREE.Color(strokeStyle.stroke),
-        side: THREE.DoubleSide,
-        depthTest: false,
-        depthWrite: false
-      })
-      : new THREE.MeshStandardMaterial({
-        color: new THREE.Color(strokeStyle.stroke),
-        side: THREE.DoubleSide,
-        roughness: 0.92,
-        metalness: 0.02
-      });
+    const strokeMaterial = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(strokeStyle.stroke),
+      side: THREE.DoubleSide,
+      roughness: 0.92,
+      metalness: 0.02
+    });
 
     path.subPaths?.forEach((subPath) => {
       const points = subPath.getPoints(96);
@@ -318,11 +296,10 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
   faceGroup.position.y *= -1;
   const baseFacePosition = faceGroup.position.clone();
 
-  if (debug) {
-    const helper = new THREE.BoxHelper(faceGroup, 0xff3b3b);
-    helper.frustumCulled = false;
-    scene.add(helper);
-  }
+  const helper = new THREE.BoxHelper(faceGroup, 0xff3b3b);
+  helper.frustumCulled = false;
+  helper.visible = debugEnabled;
+  scene.add(helper);
 
   const basePositions = {};
   ["pupilL", "pupilR", "mouth", "lidL", "lidR", "eyeL", "eyeR", "browL", "browR"].forEach((id) => {
@@ -459,6 +436,10 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       parts.browR.position.y = basePositions.browR.y + ty * 0.1;
     }
 
+    if (debugEnabled) {
+      helper.update();
+    }
+
     renderer.render(scene, camera);
   };
 
@@ -488,6 +469,13 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     reducedMotionEnabled = value;
   };
 
+  const setDebug = (value) => {
+    debugEnabled = Boolean(value);
+    marker.visible = debugEnabled;
+    helper.visible = debugEnabled;
+    applyDebugStyles();
+  };
+
   return {
     update,
     resize,
@@ -495,8 +483,8 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     setResponsiveness,
     setWakeBoost,
     setReducedMotion,
+    setDebug,
     getDebugInfo: () => ({
-      buildId: BUILD_ID,
       meshCount,
       shapeCount,
       partCount: Object.keys(parts).length,

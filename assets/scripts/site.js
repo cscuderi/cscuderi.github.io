@@ -1,24 +1,38 @@
-const BUILD_ID = "2026-02-03.10";
+import { createFace } from "./face.js";
 
-import { createFace } from "./face.js?v=20260203-1";
+const publicApi = (() => {
+  const obj = (window.face && typeof window.face === "object") ? window.face : {};
+  window.face = obj;
+  return obj;
+})();
+
+let debugEnabled = Boolean(publicApi.debug);
+
+let face;
 
 const canvas = document.querySelector("#face-canvas");
 const tapHint = document.querySelector(".tap-hint");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 
-const debugEnabled = (() => {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("debug")) {
-      window.localStorage.setItem("faceDebug", "1");
-      return true;
+Object.defineProperty(publicApi, "debug", {
+  configurable: true,
+  enumerable: true,
+  get() {
+    return debugEnabled;
+  },
+  set(value) {
+    debugEnabled = Boolean(value);
+    if (face?.setDebug) {
+      face.setDebug(debugEnabled);
     }
-    return window.localStorage.getItem("faceDebug") === "1";
-  } catch {
-    return false;
+    if (debugEnabled) {
+      startDebugLoop();
+    } else {
+      stopDebugLoop();
+    }
   }
-})();
+});
 
 const ensureErrorOverlay = () => {
   let node = document.querySelector(".js-debug-overlay");
@@ -34,6 +48,10 @@ const ensureErrorOverlay = () => {
 };
 
 const showError = (message) => {
+  if (!debugEnabled) {
+    console.error(message);
+    return;
+  }
   const overlay = ensureErrorOverlay();
   overlay.textContent = String(message || "Unknown error");
   overlay.style.display = "block";
@@ -49,11 +67,9 @@ const showDebug = (message) => {
 };
 
 window.addEventListener("error", (event) => {
-  if (event?.error) {
-    showError(event.error.stack || event.error.message);
-  } else {
-    showError(event?.message || "Script error");
-  }
+  const error = event?.error;
+  const message = error ? (error.stack || error.message) : (event?.message || "Script error");
+  showError(message);
 });
 
 window.addEventListener("unhandledrejection", (event) => {
@@ -63,8 +79,67 @@ window.addEventListener("unhandledrejection", (event) => {
 
 document.body.classList.toggle("reduce-motion", prefersReducedMotion.matches);
 document.body.classList.toggle("touch", isTouch);
+let debugTimer = 0;
 
-let face;
+function debugLoop() {
+  if (!debugEnabled || !face) {
+    return;
+  }
+  const rect = canvas.getBoundingClientRect();
+  const info = face.getDebugInfo?.() || {};
+  const lines = [];
+  lines.push("window.face.debug = true");
+  lines.push(`webgl: ${info.webgl?.ok ? "ok" : "unknown"}`);
+  if (info.webgl?.error) {
+    lines.push(`webgl_error: ${info.webgl.error}`);
+  }
+  if (info.webgl?.renderer) {
+    lines.push(`gpu: ${info.webgl.renderer}`);
+  }
+  if (info.webgl?.version) {
+    lines.push(`gl: ${info.webgl.version}`);
+  }
+  if (info.threeRevision) {
+    lines.push(`three: r${info.threeRevision}`);
+  }
+  lines.push(`canvas_css: ${Math.round(rect.width)}x${Math.round(rect.height)}`);
+  if (info.rendererSize) {
+    lines.push(`canvas_px: ${info.rendererSize.w}x${info.rendererSize.h} (dpr=${info.rendererSize.dpr})`);
+  }
+  if (typeof info.meshCount === "number") {
+    lines.push(`meshes: ${info.meshCount} (shapes=${info.shapeCount || 0}) parts=${info.partCount || 0}`);
+  }
+  if (typeof info.vertexCount === "number") {
+    lines.push(`geo: verts=${info.vertexCount} tris_est=${info.triangleCount || 0}`);
+  }
+  if (info.faceBounds?.scale) {
+    lines.push(`bounds: max=${Math.round(info.faceBounds.maxSize)} scale=${info.faceBounds.scale.toFixed(4)}`);
+  }
+  if (info.renderInfo) {
+    lines.push(`draw: calls=${info.renderInfo.calls} tris=${info.renderInfo.triangles} geoms=${info.renderInfo.geometries} tex=${info.renderInfo.textures}`);
+  }
+  showDebug(lines.join("\n"));
+  debugTimer = window.setTimeout(debugLoop, 500);
+}
+
+function startDebugLoop() {
+  if (debugTimer) {
+    return;
+  }
+  debugLoop();
+}
+
+function stopDebugLoop() {
+  if (debugTimer) {
+    window.clearTimeout(debugTimer);
+    debugTimer = 0;
+  }
+  const overlay = document.querySelector(".js-debug-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+}
+
 try {
   if (!canvas) {
     throw new Error("Missing #face-canvas");
@@ -91,50 +166,8 @@ try {
     });
   });
 
-const debugLoop = () => {
-    if (!debugEnabled || !face) {
-      return;
-    }
-    const rect = canvas.getBoundingClientRect();
-    const info = face.getDebugInfo?.() || {};
-    const lines = [];
-    lines.push(`site.js: loaded (${BUILD_ID})`);
-    if (info.buildId) {
-      lines.push(`face.js: ${info.buildId}`);
-    }
-    lines.push(`webgl: ${info.webgl?.ok ? "ok" : "unknown"}`);
-    if (info.webgl?.error) {
-      lines.push(`webgl_error: ${info.webgl.error}`);
-    }
-    if (info.webgl?.renderer) {
-      lines.push(`gpu: ${info.webgl.renderer}`);
-    }
-    if (info.webgl?.version) {
-      lines.push(`gl: ${info.webgl.version}`);
-    }
-    if (info.threeRevision) {
-      lines.push(`three: r${info.threeRevision}`);
-    }
-    lines.push(`canvas_css: ${Math.round(rect.width)}x${Math.round(rect.height)}`);
-    if (info.rendererSize) {
-      lines.push(`canvas_px: ${info.rendererSize.w}x${info.rendererSize.h} (dpr=${info.rendererSize.dpr})`);
-    }
-    if (typeof info.meshCount === "number") {
-      lines.push(`meshes: ${info.meshCount} (shapes=${info.shapeCount || 0}) parts=${info.partCount || 0}`);
-    }
-    if (typeof info.vertexCount === "number") {
-      lines.push(`geo: verts=${info.vertexCount} tris_est=${info.triangleCount || 0}`);
-    }
-    if (info.faceBounds?.scale) {
-      lines.push(`bounds: max=${Math.round(info.faceBounds.maxSize)} scale=${info.faceBounds.scale.toFixed(4)}`);
-    }
-    if (info.renderInfo) {
-      lines.push(`draw: calls=${info.renderInfo.calls} tris=${info.renderInfo.triangles} geoms=${info.renderInfo.geometries} tex=${info.renderInfo.textures}`);
-    }
-    showDebug(lines.join("\n"));
-    window.setTimeout(debugLoop, 500);
-  };
-  debugLoop();
+  // Apply any pre-set value.
+  publicApi.debug = debugEnabled;
 } catch (error) {
   console.error(error);
   showError(error?.stack || error?.message || error);

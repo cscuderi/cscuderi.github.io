@@ -67,6 +67,10 @@
     - `assets/vendor/three/build/three.module.js`
     - `assets/vendor/three/examples/jsm/loaders/SVGLoader.js`
 
+- Debugging (devtools)
+  - Toggle runtime debug overlay + helpers with `window.face.debug = true` (set to `false` to hide).
+  - Debug mode shows a small on-page overlay with WebGL/renderer stats and enables a subtle canvas outline + a tiny debug cube.
+
 ---
 
 ## 4) Face SVG Rig Spec (Illustrator Export Checklist)
