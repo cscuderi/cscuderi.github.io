@@ -9,11 +9,11 @@
   --grain: rgba(0, 0, 0, 0.05);
 
   --intro-reveal-dur: 2200ms;
-  --intro-face-delay: 1650ms;
-  --intro-face-dur: 900ms;
-  --intro-ciao-delay: 1780ms;
-  --intro-ciao-dur: 900ms;
-  --intro-blurb-delay: 2420ms;
+  --intro-face-delay: 1300ms;
+  --intro-face-dur: 1100ms;
+  --intro-ciao-delay: 1600ms;
+  --intro-ciao-dur: 1100ms;
+  --intro-blurb-delay: 2300ms;
   --intro-blurb-dur: 900ms;
 
   --intro-letter-delay: 1850ms;
