@@ -23,8 +23,15 @@ const intro = {
   startAt: performance.now(),
 };
 
+// Body starts as `is-intro` in HTML to avoid a first-paint flash.
+if (!intro.enabled) {
+  document.body.classList.remove("is-intro");
+}
+
 if (intro.enabled) {
-  document.body.classList.add("is-intro");
+  window.setTimeout(() => {
+    document.body.classList.remove("is-intro");
+  }, 3600);
 }
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -183,17 +190,19 @@ try {
     });
   });
 
-  // Intro sequence (unless reduced motion).
+  // Intro smile timing (tie to global intro timeline).
   if (intro.enabled) {
-    const elapsed = performance.now() - intro.startAt;
-    const inMs = (ms, fn) => window.setTimeout(fn, Math.max(0, ms - elapsed));
+    const now = performance.now() - intro.startAt;
+    const smileOnAt = 1650;
+    const smileOffAt = 2550;
 
-    // Exaggerated smile on landing.
-    inMs(1650, () => face?.setWakeBoost?.(1));
-    inMs(2550, () => face?.setWakeBoost?.(0));
-
-    // Clear intro state after all staged animations complete.
-    inMs(3600, () => document.body.classList.remove("is-intro"));
+    if (now < smileOnAt) {
+      window.setTimeout(() => face?.setWakeBoost?.(1), smileOnAt - now);
+      window.setTimeout(() => face?.setWakeBoost?.(0), smileOffAt - now);
+    } else if (now < smileOffAt) {
+      face?.setWakeBoost?.(1);
+      window.setTimeout(() => face?.setWakeBoost?.(0), smileOffAt - now);
+    }
   }
 
   // Apply any pre-set value.
