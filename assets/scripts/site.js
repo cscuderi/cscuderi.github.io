@@ -453,6 +453,14 @@ if (!prefersReducedMotion.matches) {
   });
 
   window.addEventListener("pointerdown", (event) => {
+    if (face && faceWrap) {
+      const rect = faceWrap.getBoundingClientRect();
+      const inside = event.clientX >= rect.left && event.clientX <= rect.right
+        && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      if (inside) {
+        face.triggerMouthOpen?.();
+      }
+    }
     if (!isTouch) {
       return;
     }

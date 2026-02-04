@@ -20,6 +20,8 @@
 
   --ciao-land-dur: 1050ms;
   --ciao-land-settle: 180ms;
+
+  --ciao-letter-h: clamp(60px, 20vw, 140px);
 }
 
 *,
@@ -198,6 +200,7 @@ body.has-webgl .face-fallback {
   line-height: 1;
   will-change: transform;
   transform-origin: 50% 60%;
+  min-height: var(--ciao-letter-h);
 }
 
 .ciao-jiggle {
@@ -222,7 +225,8 @@ body.is-intro .ciao-intro {
 }
 
 .ciao-letter img {
-  height: clamp(60px, 20vw, 140px);
+  height: var(--ciao-letter-h);
+  aspect-ratio: var(--ar, 1 / 1);
   width: auto;
   display: block;
   filter: drop-shadow(0 24px 8px rgba(0, 0, 0, 0.05));

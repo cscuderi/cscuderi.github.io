@@ -16,38 +16,52 @@ const CANONICAL_PART_IDS = new Set([
   "earL",
   "earR",
   "highlight",
-  "shadow"
+  "shadow",
 ]);
 
-const CANONICAL_PART_BY_LOWER = Object.fromEntries(
-  Array.from(CANONICAL_PART_IDS, (id) => [id.toLowerCase(), id])
-);
+const CANONICAL_PART_BY_LOWER = Object.fromEntries(Array.from(CANONICAL_PART_IDS, (id) => [id.toLowerCase(), id]));
 
 const PART_ALIASES = {
-  // Current rig (assets/face.svg)
-  "face": "head",
+  // Current rig (assets/images/face.svg)
+  face: "head",
   "face-2": "head",
   "eye-l": "eyeL",
   "eye-left": "eyeL",
   "eye-r": "eyeR",
   "eye-right": "eyeR",
-  "mouth": "mouth",
+  mouth: "mouth",
   "mouth-2": "mouth",
-  "nose": "nose",
+  nose: "nose",
   "nose-2": "nose",
-  "forehead": "highlight",
-  "forehead-2": "highlight"
+  forehead: "highlight",
+  "forehead-2": "highlight",
 };
 
 const randRange = (min, max) => min + Math.random() * (max - min);
 
-const easeInOut = (t) => (t < 0.5
-  ? 4 * t * t * t
-  : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-const loadSvg = (loader, url) => new Promise((resolve, reject) => {
-  loader.load(url, resolve, undefined, reject);
-});
+const loadSvg = (loader, url) =>
+  new Promise((resolve, reject) => {
+    loader.load(url, resolve, undefined, reject);
+  });
+
+const setGroupOpacity = (group, opacity) => {
+  if (!group) {
+    return;
+  }
+  const clamped = THREE.MathUtils.clamp(opacity, 0, 1);
+  group.visible = clamped > 0.001;
+  group.traverse((obj) => {
+    if (!obj.isMesh || !obj.material) {
+      return;
+    }
+    obj.material.transparent = clamped < 0.999;
+    obj.material.opacity = clamped;
+    obj.material.depthWrite = clamped >= 0.999;
+    obj.visible = clamped > 0.001;
+  });
+};
 
 const getNodeTokenCandidates = (node) => {
   const tokens = [];
@@ -67,7 +81,10 @@ const getNodeTokenCandidates = (node) => {
 
     const classAttr = node.getAttribute("class");
     if (classAttr) {
-      classAttr.split(/\s+/).filter(Boolean).forEach((token) => tokens.push(token));
+      classAttr
+        .split(/\s+/)
+        .filter(Boolean)
+        .forEach((token) => tokens.push(token));
     }
   }
 
@@ -133,7 +150,7 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: true
+    antialias: true,
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
@@ -174,7 +191,7 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
 
   const marker = new THREE.Mesh(
     new THREE.BoxGeometry(0.18, 0.18, 0.18),
-    new THREE.MeshBasicMaterial({ color: 0xff3b3b })
+    new THREE.MeshBasicMaterial({ color: 0xff3b3b }),
   );
   marker.position.set(0.6, -0.6, 0.2);
   marker.visible = debugEnabled;
@@ -182,8 +199,72 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
   scene.add(marker);
 
   const loader = new SVGLoader();
-  const data = await loadSvg(loader, "assets/face.svg");
+  const data = await loadSvg(loader, "assets/images/face.svg");
   const rawParts = {};
+
+  const buildGroupFromSvgData = (svgData) => {
+    const group = new THREE.Group();
+    svgData.paths.forEach((path) => {
+      const baseColor = new THREE.Color(path.color || "#1f1b17");
+      const fillMaterial = new THREE.MeshStandardMaterial({
+        color: baseColor,
+        side: THREE.DoubleSide,
+        roughness: 0.92,
+        metalness: 0.02,
+      });
+
+      const attach = (mesh) => {
+        mesh.frustumCulled = false;
+        group.add(mesh);
+      };
+
+      const shapes = SVGLoader.createShapes(path);
+      let attachedAny = false;
+
+      if (shapes.length) {
+        shapes.forEach((shape) => {
+          const geometry = new THREE.ShapeGeometry(shape);
+          const pos = geometry.getAttribute("position");
+          if (!pos || pos.count === 0) {
+            geometry.dispose();
+            return;
+          }
+          geometry.computeVertexNormals();
+          attach(new THREE.Mesh(geometry, fillMaterial));
+          attachedAny = true;
+        });
+      }
+
+      if (attachedAny) {
+        return;
+      }
+
+      const svgStyle = path.userData?.style || {};
+      const strokeStyle = {
+        stroke: svgStyle.stroke && svgStyle.stroke !== "none" ? svgStyle.stroke : `#${baseColor.getHexString()}`,
+        strokeWidth: Number(svgStyle.strokeWidth || 1.6),
+        strokeLineJoin: svgStyle.strokeLineJoin || "round",
+        strokeLineCap: svgStyle.strokeLineCap || "round",
+        strokeMiterLimit: Number(svgStyle.strokeMiterLimit || 4),
+      };
+      const strokeMaterial = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(strokeStyle.stroke),
+        side: THREE.DoubleSide,
+        roughness: 0.92,
+        metalness: 0.02,
+      });
+      path.subPaths?.forEach((subPath) => {
+        const points = subPath.getPoints(96);
+        const geometry = SVGLoader.pointsToStroke(points, strokeStyle, 12, 0.5);
+        if (!geometry) {
+          return;
+        }
+        geometry.computeVertexNormals();
+        attach(new THREE.Mesh(geometry, strokeMaterial));
+      });
+    });
+    return group;
+  };
 
   let meshCount = 0;
   let shapeCount = 0;
@@ -198,7 +279,7 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       color: baseColor,
       side: THREE.DoubleSide,
       roughness: 0.92,
-      metalness: 0.02
+      metalness: 0.02,
     });
 
     const attachMesh = (mesh) => {
@@ -246,13 +327,13 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       strokeWidth: Number(svgStyle.strokeWidth || 1.6),
       strokeLineJoin: svgStyle.strokeLineJoin || "round",
       strokeLineCap: svgStyle.strokeLineCap || "round",
-      strokeMiterLimit: Number(svgStyle.strokeMiterLimit || 4)
+      strokeMiterLimit: Number(svgStyle.strokeMiterLimit || 4),
     };
     const strokeMaterial = new THREE.MeshStandardMaterial({
       color: new THREE.Color(strokeStyle.stroke),
       side: THREE.DoubleSide,
       roughness: 0.92,
-      metalness: 0.02
+      metalness: 0.02,
     });
 
     path.subPaths?.forEach((subPath) => {
@@ -308,6 +389,100 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     }
   });
 
+  // Mouth variants: keep base mouth as default; overlay smile/open occasionally.
+  const mouthRig = {
+    anchor: new THREE.Group(),
+    open: null,
+    smile: null,
+    base: parts.mouth || null,
+    baseWidthSvg: 0,
+    baseHeightSvg: 0,
+    smileW: 0,
+    smileV: 0,
+    openW: 0,
+    openV: 0,
+    openUntil: 0,
+    smileUntil: 0,
+    nextSmileAt: performance.now() + randRange(3500, 7000),
+  };
+  mouthRig.anchor.frustumCulled = false;
+  if (basePositions.mouth) {
+    mouthRig.anchor.position.copy(basePositions.mouth);
+    mouthRig.anchor.position.z += 0.25;
+  } else {
+    mouthRig.anchor.position.set(0, -0.32, 0.25);
+  }
+  faceGroup.add(mouthRig.anchor);
+
+  if (mouthRig.base) {
+    const baseBounds = new THREE.Box3().setFromObject(mouthRig.base);
+    const baseSize = baseBounds.getSize(new THREE.Vector3());
+    // baseBounds is computed in world units; convert back to face SVG units so
+    // we can size external SVG mouths before faceGroup scaling is applied.
+    const faceScale = Math.max(1e-6, Math.abs(scale));
+    mouthRig.baseWidthSvg = baseSize.x / faceScale;
+    mouthRig.baseHeightSvg = baseSize.y / faceScale;
+  } else {
+    // Fallback: approximate mouth width from the face's SVG bounds.
+    mouthRig.baseWidthSvg = maxSize * 0.28;
+    mouthRig.baseHeightSvg = maxSize * 0.12;
+  }
+
+  const normalizeMouth = (group, { targetWidth = 0.62, y = 0 } = {}) => {
+    if (!group) {
+      return;
+    }
+    const bounds = new THREE.Box3().setFromObject(group);
+    const size = bounds.getSize(new THREE.Vector3());
+    const center = bounds.getCenter(new THREE.Vector3());
+    group.position.sub(center);
+    const width = Math.max(size.x, 0.0001);
+    const scaleToWidth = targetWidth / width;
+    group.scale.setScalar(scaleToWidth);
+    group.position.multiplyScalar(scaleToWidth);
+    group.position.y += y;
+  };
+
+  const loadMouthVariant = async (url) => {
+    const mouthLoader = new SVGLoader();
+    const svgData = await loadSvg(mouthLoader, url);
+    const group = buildGroupFromSvgData(svgData);
+    group.frustumCulled = false;
+    group.renderOrder = 20;
+    group.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.frustumCulled = false;
+        obj.renderOrder = 20;
+      }
+    });
+    return group;
+  };
+
+  // Fire-and-forget load; if these fail, we just keep the existing face mouth.
+  loadMouthVariant("assets/images/mouth-open.svg")
+    .then((group) => {
+      mouthRig.open = group;
+      normalizeMouth(group, {
+        targetWidth: mouthRig.baseWidthSvg * 0.3,
+        y: -mouthRig.baseHeightSvg * 0.1,
+      });
+      mouthRig.anchor.add(group);
+      setGroupOpacity(group, 0);
+    })
+    .catch(() => {});
+
+  loadMouthVariant("assets/images/mouth-smile.svg")
+    .then((group) => {
+      mouthRig.smile = group;
+      normalizeMouth(group, {
+        targetWidth: mouthRig.baseWidthSvg * 0.7,
+        y: mouthRig.baseHeightSvg * 0.018,
+      });
+      mouthRig.anchor.add(group);
+      setGroupOpacity(group, 0);
+    })
+    .catch(() => {});
+
   const state = {
     target: new THREE.Vector2(0, 0),
     smoothTarget: new THREE.Vector2(0, 0),
@@ -317,8 +492,8 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       nextAt: performance.now() + randRange(1800, 4200),
       active: false,
       start: 0,
-      duration: 180
-    }
+      duration: 180,
+    },
   };
 
   const setTarget = (x, y) => {
@@ -331,6 +506,12 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
 
   const setWakeBoost = (value) => {
     state.wakeBoost = value;
+  };
+
+  const triggerMouthOpen = (durationMs = 900) => {
+    const now = performance.now();
+    mouthRig.openUntil = Math.max(mouthRig.openUntil, now + durationMs);
+    mouthRig.smileUntil = 0;
   };
 
   const updateBlink = (time) => {
@@ -397,11 +578,11 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     const invTy = -ty;
     const pupilOffset = new THREE.Vector2(
       THREE.MathUtils.clamp(tx * maxSize * 0.028, -maxSize * 0.045, maxSize * 0.045),
-      THREE.MathUtils.clamp(invTy * maxSize * 0.04, -maxSize * 0.06, maxSize * 0.06)
+      THREE.MathUtils.clamp(invTy * maxSize * 0.04, -maxSize * 0.06, maxSize * 0.06),
     );
     const eyeOffset = new THREE.Vector2(
       THREE.MathUtils.clamp(tx * maxSize * 0.01, -maxSize * 0.018, maxSize * 0.018),
-      THREE.MathUtils.clamp(invTy * maxSize * 0.016, -maxSize * 0.028, maxSize * 0.028)
+      THREE.MathUtils.clamp(invTy * maxSize * 0.016, -maxSize * 0.028, maxSize * 0.028),
     );
 
     if (parts.eyeL && basePositions.eyeL) {
@@ -423,11 +604,51 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
       parts.pupilR.position.y = basePositions.pupilR.y + pupilOffset.y;
     }
 
-    const mouthPulse = Math.sin(time * 0.002) * 0.08 + 0.1 + state.wakeBoost * 0.1;
-    if (parts.mouth) {
-      parts.mouth.scale.y = 1 + mouthPulse;
-      parts.mouth.scale.x = 1 + mouthPulse * 0.2;
+    // Mouth state machine.
+    if (state.wakeBoost > 0.5) {
+      mouthRig.openUntil = Math.max(mouthRig.openUntil, time + 250);
     }
+
+    if (time > mouthRig.openUntil) {
+      if (time < mouthRig.smileUntil) {
+        // keep smiling
+      } else if (time > mouthRig.nextSmileAt) {
+        mouthRig.smileUntil = time + randRange(1000, 2000);
+        mouthRig.nextSmileAt = time + randRange(5200, 9200);
+      }
+    }
+
+    const targetOpen = time < mouthRig.openUntil ? 1 : 0;
+    const targetSmile = targetOpen > 0 ? 0 : time < mouthRig.smileUntil ? 1 : 0;
+
+    const stiffness = 0.16;
+    const damping = 0.72;
+
+    mouthRig.openV += (targetOpen - mouthRig.openW) * stiffness;
+    mouthRig.openV *= damping;
+    mouthRig.openW = THREE.MathUtils.clamp(mouthRig.openW + mouthRig.openV, 0, 1);
+
+    mouthRig.smileV += (targetSmile - mouthRig.smileW) * stiffness;
+    mouthRig.smileV *= damping;
+    mouthRig.smileW = THREE.MathUtils.clamp(mouthRig.smileW + mouthRig.smileV, 0, 1);
+
+    const overlayW = Math.max(mouthRig.openW, mouthRig.smileW);
+    const baseW = 1 - overlayW;
+
+    if (mouthRig.base) {
+      setGroupOpacity(mouthRig.base, baseW);
+    }
+    if (mouthRig.open) {
+      setGroupOpacity(mouthRig.open, mouthRig.openW);
+    }
+    if (mouthRig.smile) {
+      setGroupOpacity(mouthRig.smile, mouthRig.smileW);
+    }
+
+    // Add a little squash during transitions.
+    const motion = Math.abs(mouthRig.openV) + Math.abs(mouthRig.smileV);
+    const squash = THREE.MathUtils.clamp(motion * 6, 0, 1);
+    mouthRig.anchor.scale.set(1 + squash * 0.12, 1 - squash * 0.08, 1);
 
     if (parts.browL && basePositions.browL) {
       parts.browL.position.y = basePositions.browL.y + ty * 0.1;
@@ -484,6 +705,7 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     setWakeBoost,
     setReducedMotion,
     setDebug,
+    triggerMouthOpen,
     getDebugInfo: () => ({
       meshCount,
       shapeCount,
@@ -494,21 +716,21 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
         size: { x: size.x, y: size.y, z: size.z },
         center: { x: center.x, y: center.y, z: center.z },
         maxSize,
-        scale
+        scale,
       },
       threeRevision: THREE.REVISION,
       webgl: { ...webgl },
       rendererSize: {
         w: renderer.getSize(new THREE.Vector2()).x,
         h: renderer.getSize(new THREE.Vector2()).y,
-        dpr: renderer.getPixelRatio()
+        dpr: renderer.getPixelRatio(),
       },
       renderInfo: {
         calls: renderer.info.render.calls,
         triangles: renderer.info.render.triangles,
         geometries: renderer.info.memory.geometries,
-        textures: renderer.info.memory.textures
-      }
-    })
+        textures: renderer.info.memory.textures,
+      },
+    }),
   };
 };

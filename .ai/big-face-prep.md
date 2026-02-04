@@ -82,7 +82,7 @@
   - `assets/styles/site.css` (hand-authored modern CSS)
   - `assets/scripts/site.js` (site bootstrap + CIAO + interaction state machine)
   - `assets/scripts/face.js` (Three.js face renderer + rig + animation loop)
-  - `assets/face.svg` (your exported rigged SVG)
+  - `assets/images/face.svg` (your exported rigged SVG)
   - `assets/vendor/three/...` (vendored Three.js + SVGLoader module files)
 
 - Three.js vendoring
@@ -163,7 +163,7 @@ Export rules:
 
 ## 6) Rendering Approach (Bubbly Without SVG Path Morphing)
 
-- Load `assets/face.svg` via `SVGLoader`.
+- Load `assets/images/face.svg` via `SVGLoader`.
 - Convert paths to shapes, triangulate, render as meshes.
 - "Bubbly" feel via:
   - Subtle lighting (ambient + soft directional).

@@ -14,11 +14,22 @@
       body {
         background: #0a0908;
       }
+
+      /* Hide all content until hero assets/fonts are ready */
+      body.is-preintro #app {
+        visibility: hidden;
+      }
+
+      body.has-intro-started #app {
+        visibility: visible;
+      }
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="assets/face.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="assets/images/face.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="assets/images/mouth-open.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="assets/images/mouth-smile.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/c.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/i.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/a.svg" as="image" type="image/svg+xml" />
@@ -61,7 +72,7 @@
             <div class="face-wrap">
               <div class="face-jiggle">
                 <div class="face-intro">
-                  <img class="face-fallback" src="assets/face.svg" alt="" aria-hidden="true" />
+                  <img class="face-fallback" src="assets/images/face.svg" alt="" aria-hidden="true" />
                   <canvas id="face-canvas" aria-hidden="true"></canvas>
                 </div>
               </div>
@@ -70,17 +81,26 @@
               <div class="ciao-jiggle">
                 <div class="ciao-intro">
                   <h1 id="hero-title" lang="it" aria-label="Ciao!" class="ciao">
-                    <span class="ciao-letter c" style="--delay: 0ms"><img src="assets/images/c.svg" alt="" /></span>
-                    <span class="ciao-letter i" style="--delay: 500ms"><img src="assets/images/i.svg" alt="" /></span>
-                    <span class="ciao-letter a" style="--delay: 700ms"><img src="assets/images/a.svg" alt="" /></span>
-                    <span class="ciao-letter o" style="--delay: 900ms"><img src="assets/images/o.svg" alt="" /></span>
-                    <span class="ciao-letter e" style="--delay: 1100ms"><img src="assets/images/e.svg" alt="" /></span>
+                    <span class="ciao-letter c" style="--delay: 0ms; --ar: 482.58 / 579.01"
+                      ><img src="assets/images/c.svg" width="483" height="579" alt=""
+                    /></span>
+                    <span class="ciao-letter i" style="--delay: 500ms; --ar: 163.24 / 573.58"
+                      ><img src="assets/images/i.svg" width="163" height="574" alt=""
+                    /></span>
+                    <span class="ciao-letter a" style="--delay: 700ms; --ar: 581.95 / 562.9"
+                      ><img src="assets/images/a.svg" width="582" height="563" alt=""
+                    /></span>
+                    <span class="ciao-letter o" style="--delay: 900ms; --ar: 545.73 / 579.01"
+                      ><img src="assets/images/o.svg" width="546" height="579" alt=""
+                    /></span>
+                    <span class="ciao-letter e" style="--delay: 1100ms; --ar: 225.89 / 573.55"
+                      ><img src="assets/images/e.svg" width="226" height="574" alt=""
+                    /></span>
                   </h1>
                 </div>
               </div>
               <p class="blurb">
-                My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web
-                experiences.
+                I'm Carlin; a developer and designer with a passion for building accessible, engaging web experiences.
               </p>
               <p class="tap-hint" aria-hidden="true">Tap to wake</p>
             </div>
