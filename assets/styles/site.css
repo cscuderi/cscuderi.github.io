@@ -25,6 +25,7 @@ body {
   font-family: "EB Garamond", serif;
   color: var(--ink);
   background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
+  min-height: 100vh;
   min-height: 100svh;
   overflow-x: hidden;
 }
@@ -35,6 +36,7 @@ main {
 }
 
 .hero {
+  min-height: 100vh;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -54,17 +56,48 @@ main {
 
 .face-wrap {
   width: min(92vw, 760px);
+  height: min(62vh, 560px);
   height: min(62svh, 560px);
+  min-height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
+.face-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.95;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.08));
+}
+
+body.has-webgl .face-fallback {
+  opacity: 0;
+  pointer-events: none;
+}
+
 #face-canvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* Ensure the canvas sits above the SVG fallback. */
+.face-wrap > * {
+  position: absolute;
+  inset: 0;
+}
+
+#face-canvas {
+  z-index: 2;
+}
+
+.face-fallback {
+  z-index: 1;
 }
 
 .hero-copy {
@@ -213,7 +246,9 @@ main {
 @media (max-width: 720px) {
   .face-wrap {
     width: min(96vw, 520px);
+    height: min(56vh, 420px);
     height: min(56svh, 420px);
+    min-height: 260px;
   }
 
   .contact-inner {

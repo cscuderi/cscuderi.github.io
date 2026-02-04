@@ -22,7 +22,7 @@
 - Hero stage (first viewport)
   - Centered face canvas (Three.js) that scales responsively.
   - "CIAO!" directly under chin (visually attached; not separated by large whitespace).
-  - Blurb under "CIAO!" (reuse existing copy from `_includes/hello.html`).
+  - Blurb under "CIAO!" (reuse the existing intro copy).
   - No extra UI except optional tiny "tap to wake" hint on mobile (visually subtle and only shown until first interaction).
 
 - Below the fold
@@ -58,7 +58,7 @@
   - `assets/styles/site.css` (hand-authored modern CSS)
   - `assets/scripts/site.js` (site bootstrap + CIAO + interaction state machine)
   - `assets/scripts/face.js` (Three.js face renderer + rig + animation loop)
-  - `assets/images/face.svg` (your exported rigged SVG)
+  - `assets/face.svg` (your exported rigged SVG)
   - `assets/vendor/three/...` (vendored Three.js + SVGLoader module files)
 
 - Three.js vendoring
@@ -133,7 +133,7 @@ Export rules:
 
 ## 6) Rendering Approach (Bubbly Without SVG Path Morphing)
 
-- Load `assets/images/face.svg` via `SVGLoader`.
+- Load `assets/face.svg` via `SVGLoader`.
 - Convert paths to shapes, triangulate, render as meshes.
 - "Bubbly" feel via:
   - Subtle lighting (ambient + soft directional).
@@ -166,9 +166,8 @@ Export rules:
 ## 9) Tracking (Keep Both)
 
 - Preserve:
-  - Hotjar snippet currently in `_includes/head.html`.
-  - Google Analytics snippet currently in `_includes/footer.html`.
-- In the new `index.html`, place them in equivalent locations (head for Hotjar, end-of-body for GA).
+  - Hotjar snippet (head).
+  - Google Analytics snippet (end-of-body).
 
 ---
 
@@ -194,5 +193,7 @@ What exact footer/contact content should remain below the fold (pick one):
 1) Email + 2-3 social icons
 2) Single line: "Email me at ..."
 3) Same contact section as today (trimmed), minus projects
+
+Selected for phase 1: (1) Email + 2-3 social icons (implemented in `index.html`).
 
 <promise>COMPLETE</promise>

@@ -1,7 +1,9 @@
 import * as THREE from "../vendor/three/build/three.module.js";
 import { SVGLoader } from "../vendor/three/examples/jsm/loaders/SVGLoader.js";
 
-const PART_IDS = new Set([
+const BUILD_ID = "2026-02-03.10";
+
+const CANONICAL_PART_IDS = new Set([
   "head",
   "eyeL",
   "eyeR",
@@ -19,6 +21,26 @@ const PART_IDS = new Set([
   "shadow"
 ]);
 
+const CANONICAL_PART_BY_LOWER = Object.fromEntries(
+  Array.from(CANONICAL_PART_IDS, (id) => [id.toLowerCase(), id])
+);
+
+const PART_ALIASES = {
+  // Current rig (assets/face.svg)
+  "face": "head",
+  "face-2": "head",
+  "eye-l": "eyeL",
+  "eye-left": "eyeL",
+  "eye-r": "eyeR",
+  "eye-right": "eyeR",
+  "mouth": "mouth",
+  "mouth-2": "mouth",
+  "nose": "nose",
+  "nose-2": "nose",
+  "forehead": "highlight",
+  "forehead-2": "highlight"
+};
+
 const randRange = (min, max) => min + Math.random() * (max - min);
 
 const easeInOut = (t) => (t < 0.5
@@ -29,11 +51,67 @@ const loadSvg = (loader, url) => new Promise((resolve, reject) => {
   loader.load(url, resolve, undefined, reject);
 });
 
+const getNodeTokenCandidates = (node) => {
+  const tokens = [];
+  if (!node) {
+    return tokens;
+  }
+
+  if (node.id) {
+    tokens.push(node.id);
+  }
+
+  if (typeof node.getAttribute === "function") {
+    const idAttr = node.getAttribute("id");
+    if (idAttr) {
+      tokens.push(idAttr);
+    }
+
+    const classAttr = node.getAttribute("class");
+    if (classAttr) {
+      classAttr.split(/\s+/).filter(Boolean).forEach((token) => tokens.push(token));
+    }
+  }
+
+  return tokens;
+};
+
+const normalizePartId = (token) => {
+  if (!token) {
+    return null;
+  }
+
+  if (CANONICAL_PART_IDS.has(token)) {
+    return token;
+  }
+
+  const direct = PART_ALIASES[token];
+  if (direct) {
+    return direct;
+  }
+
+  const lower = token.toLowerCase();
+  const canonical = CANONICAL_PART_BY_LOWER[lower];
+  if (canonical) {
+    return canonical;
+  }
+  const viaLower = PART_ALIASES[lower];
+  if (viaLower) {
+    return viaLower;
+  }
+
+  return null;
+};
+
 const findPartId = (node) => {
   let current = node;
   while (current) {
-    if (current.id && PART_IDS.has(current.id)) {
-      return current.id;
+    const candidates = getNodeTokenCandidates(current);
+    for (const token of candidates) {
+      const partId = normalizePartId(token);
+      if (partId) {
+        return partId;
+      }
     }
     current = current.parentNode;
   }
@@ -51,7 +129,8 @@ const createPivotGroup = (group) => {
   return pivot;
 };
 
-export const createFace = async (canvas, { reducedMotion = false } = {}) => {
+export const createFace = async (canvas, { reducedMotion = false, debug = false } = {}) => {
+  let reducedMotionEnabled = reducedMotion;
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -60,9 +139,35 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
 
+  const webgl = { ok: false, version: null, renderer: null, error: null };
+  try {
+    const gl = renderer.getContext();
+    webgl.ok = !!gl;
+    if (gl) {
+      webgl.version = gl.getParameter(gl.VERSION);
+      webgl.renderer = gl.getParameter(gl.RENDERER);
+    }
+  } catch (error) {
+    webgl.error = error?.message || String(error);
+  }
+
+  if (debug) {
+    try {
+      renderer.domElement.style.outline = "2px solid rgba(255, 0, 0, 0.35)";
+      renderer.domElement.style.background = "rgba(255, 0, 0, 0.03)";
+    } catch {
+      // ignore
+    }
+  }
+
   const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -10, 10);
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
   camera.position.set(0, 0, 4);
+
+  if (debug) {
+    // Visible non-transparent clear so we can confirm the canvas is drawing.
+    renderer.setClearColor(0x00ff5a, 0.12);
+  }
 
   const ambient = new THREE.AmbientLight(0xffffff, 0.8);
   const directional = new THREE.DirectionalLight(0xffffff, 0.55);
@@ -72,25 +177,48 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
   const faceGroup = new THREE.Group();
   scene.add(faceGroup);
 
+  if (debug) {
+    const marker = new THREE.Mesh(
+      new THREE.BoxGeometry(0.18, 0.18, 0.18),
+      new THREE.MeshBasicMaterial({ color: 0xff3b3b })
+    );
+    marker.position.set(0.6, -0.6, 0.2);
+    scene.add(marker);
+  }
+
   const loader = new SVGLoader();
-  const data = await loadSvg(loader, "assets/images/face.svg");
+  const data = await loadSvg(loader, "assets/face.svg");
   const rawParts = {};
 
+  let meshCount = 0;
+  let shapeCount = 0;
+  let vertexCount = 0;
+  let triangleCount = 0;
+
   data.paths.forEach((path) => {
-    const shapes = SVGLoader.createShapes(path);
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(path.color || "#1f1b17"),
-      side: THREE.DoubleSide,
-      roughness: 0.92,
-      metalness: 0.02
-    });
+    const partId = findPartId(path.userData?.node);
+    const baseColor = new THREE.Color(path.color || "#1f1b17");
 
-    shapes.forEach((shape) => {
-      const geometry = new THREE.ShapeGeometry(shape);
-      geometry.computeVertexNormals();
-      const mesh = new THREE.Mesh(geometry, material);
-      const partId = findPartId(path.userData?.node);
+    const fillMaterial = debug
+      ? new THREE.MeshBasicMaterial({
+        color: baseColor,
+        side: THREE.DoubleSide,
+        depthTest: false,
+        depthWrite: false
+      })
+      : new THREE.MeshStandardMaterial({
+        color: baseColor,
+        side: THREE.DoubleSide,
+        roughness: 0.92,
+        metalness: 0.02
+      });
 
+    const attachMesh = (mesh) => {
+      mesh.frustumCulled = false;
+      if (debug) {
+        mesh.renderOrder = 10;
+      }
+      meshCount += 1;
       if (partId) {
         if (!rawParts[partId]) {
           rawParts[partId] = new THREE.Group();
@@ -99,15 +227,82 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
       } else {
         faceGroup.add(mesh);
       }
+    };
+
+    const shapes = SVGLoader.createShapes(path);
+    let attachedAny = false;
+
+    if (shapes.length) {
+      shapes.forEach((shape) => {
+        const geometry = new THREE.ShapeGeometry(shape);
+        const pos = geometry.getAttribute("position");
+        if (!pos || pos.count === 0) {
+          geometry.dispose();
+          return;
+        }
+        geometry.computeVertexNormals();
+        shapeCount += 1;
+        vertexCount += pos.count;
+        triangleCount += Math.floor(pos.count / 3);
+        attachMesh(new THREE.Mesh(geometry, fillMaterial));
+        attachedAny = true;
+      });
+    }
+
+    if (attachedAny) {
+      return;
+    }
+
+    // Fallback: if fill triangulation yields no shapes, render a stroke.
+    // This keeps the face visible even when the SVG path is not fill-friendly.
+    const svgStyle = path.userData?.style || {};
+    const strokeStyle = {
+      stroke: svgStyle.stroke && svgStyle.stroke !== "none" ? svgStyle.stroke : `#${baseColor.getHexString()}`,
+      strokeWidth: Number(svgStyle.strokeWidth || 1.6),
+      strokeLineJoin: svgStyle.strokeLineJoin || "round",
+      strokeLineCap: svgStyle.strokeLineCap || "round",
+      strokeMiterLimit: Number(svgStyle.strokeMiterLimit || 4)
+    };
+    const strokeMaterial = debug
+      ? new THREE.MeshBasicMaterial({
+        color: new THREE.Color(strokeStyle.stroke),
+        side: THREE.DoubleSide,
+        depthTest: false,
+        depthWrite: false
+      })
+      : new THREE.MeshStandardMaterial({
+        color: new THREE.Color(strokeStyle.stroke),
+        side: THREE.DoubleSide,
+        roughness: 0.92,
+        metalness: 0.02
+      });
+
+    path.subPaths?.forEach((subPath) => {
+      const points = subPath.getPoints(96);
+      const geometry = SVGLoader.pointsToStroke(points, strokeStyle, 12, 0.5);
+      if (geometry) {
+        geometry.computeVertexNormals();
+        const pos = geometry.getAttribute("position");
+        if (pos) {
+          vertexCount += pos.count;
+          triangleCount += Math.floor(pos.count / 3);
+        }
+        attachMesh(new THREE.Mesh(geometry, strokeMaterial));
+      }
     });
   });
 
   const parts = {};
   Object.entries(rawParts).forEach(([id, group]) => {
     const pivot = createPivotGroup(group);
+    pivot.frustumCulled = false;
     parts[id] = pivot;
     faceGroup.add(pivot);
   });
+
+  if (meshCount === 0) {
+    throw new Error("Face SVG loaded but produced no renderable geometry");
+  }
 
   const bounds = new THREE.Box3().setFromObject(faceGroup);
   const size = bounds.getSize(new THREE.Vector3());
@@ -116,8 +311,18 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
 
   const maxSize = Math.max(size.x, size.y);
   const scale = maxSize > 0 ? 1.6 / maxSize : 1;
-  faceGroup.scale.setScalar(scale);
+  // SVG Y axis points down; Three's Y axis points up.
+  faceGroup.scale.set(scale, -scale, scale);
+  // faceGroup.position is in SVG units; scale + flip it into world units.
+  faceGroup.position.multiplyScalar(scale);
+  faceGroup.position.y *= -1;
   const baseFacePosition = faceGroup.position.clone();
+
+  if (debug) {
+    const helper = new THREE.BoxHelper(faceGroup, 0xff3b3b);
+    helper.frustumCulled = false;
+    scene.add(helper);
+  }
 
   const basePositions = {};
   ["pupilL", "pupilR", "mouth", "lidL", "lidR", "eyeL", "eyeR", "browL", "browR"].forEach((id) => {
@@ -174,7 +379,7 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
   };
 
   const update = (time) => {
-    if (reducedMotion) {
+    if (reducedMotionEnabled) {
       renderer.render(scene, camera);
       return;
     }
@@ -183,10 +388,13 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
     const tx = state.smoothTarget.x;
     const ty = state.smoothTarget.y;
 
-    faceGroup.rotation.z = tx * 0.08;
-    faceGroup.rotation.x = -ty * 0.06;
-    faceGroup.position.x = baseFacePosition.x + tx * 0.12;
-    faceGroup.position.y = baseFacePosition.y + ty * 0.08;
+    // Keep head motion subtle so the eyes do the "acting".
+    // Add a small yaw so the face feels like it turns "into" the target.
+    faceGroup.rotation.z = tx * 0.05;
+    faceGroup.rotation.x = -ty * 0.04;
+    faceGroup.rotation.y = tx * -0.16;
+    faceGroup.position.x = baseFacePosition.x + tx * 0.07;
+    faceGroup.position.y = baseFacePosition.y + ty * 0.05;
 
     const blinkAmount = updateBlink(time);
     const eyeScale = 1 - blinkAmount * 0.85;
@@ -205,17 +413,37 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
       parts.lidR.scale.y = lidScale;
     }
 
-    if (parts.pupilL && basePositions.pupilL) {
-      const pupilOffset = new THREE.Vector2(tx, ty).multiplyScalar(0.22);
-      const clamped = pupilOffset.clampLength(0, 0.28);
-      parts.pupilL.position.x = basePositions.pupilL.x + clamped.x;
-      parts.pupilL.position.y = basePositions.pupilL.y + clamped.y;
+    // Track in SVG units so motion scales with the art.
+    // Track in SVG units so motion scales with the art.
+    // Boost vertical a bit so up/down reads clearly.
+    // Because we flip the SVG Y axis (faceGroup scale.y is negative), translate eyes with inverted Y.
+    const invTy = -ty;
+    const pupilOffset = new THREE.Vector2(
+      THREE.MathUtils.clamp(tx * maxSize * 0.028, -maxSize * 0.045, maxSize * 0.045),
+      THREE.MathUtils.clamp(invTy * maxSize * 0.04, -maxSize * 0.06, maxSize * 0.06)
+    );
+    const eyeOffset = new THREE.Vector2(
+      THREE.MathUtils.clamp(tx * maxSize * 0.01, -maxSize * 0.018, maxSize * 0.018),
+      THREE.MathUtils.clamp(invTy * maxSize * 0.016, -maxSize * 0.028, maxSize * 0.028)
+    );
+
+    if (parts.eyeL && basePositions.eyeL) {
+      parts.eyeL.position.x = basePositions.eyeL.x + eyeOffset.x;
+      parts.eyeL.position.y = basePositions.eyeL.y + eyeOffset.y;
     }
+    if (parts.eyeR && basePositions.eyeR) {
+      parts.eyeR.position.x = basePositions.eyeR.x + eyeOffset.x;
+      parts.eyeR.position.y = basePositions.eyeR.y + eyeOffset.y;
+    }
+
+    if (parts.pupilL && basePositions.pupilL) {
+      parts.pupilL.position.x = basePositions.pupilL.x + pupilOffset.x;
+      parts.pupilL.position.y = basePositions.pupilL.y + pupilOffset.y;
+    }
+
     if (parts.pupilR && basePositions.pupilR) {
-      const pupilOffset = new THREE.Vector2(tx, ty).multiplyScalar(0.22);
-      const clamped = pupilOffset.clampLength(0, 0.28);
-      parts.pupilR.position.x = basePositions.pupilR.x + clamped.x;
-      parts.pupilR.position.y = basePositions.pupilR.y + clamped.y;
+      parts.pupilR.position.x = basePositions.pupilR.x + pupilOffset.x;
+      parts.pupilR.position.y = basePositions.pupilR.y + pupilOffset.y;
     }
 
     const mouthPulse = Math.sin(time * 0.002) * 0.08 + 0.1 + state.wakeBoost * 0.1;
@@ -235,8 +463,9 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
   };
 
   const resize = () => {
-    const { clientWidth: width, clientHeight: height } = canvas;
-    const aspect = width / height || 1;
+    const width = Math.max(1, canvas.clientWidth);
+    const height = Math.max(1, canvas.clientHeight);
+    const aspect = width / height;
     const frustumHeight = 2;
     camera.top = frustumHeight / 2;
     camera.bottom = -frustumHeight / 2;
@@ -255,11 +484,43 @@ export const createFace = async (canvas, { reducedMotion = false } = {}) => {
     parts.lidR.scale.y = 0.01;
   }
 
+  const setReducedMotion = (value) => {
+    reducedMotionEnabled = value;
+  };
+
   return {
     update,
     resize,
     setTarget,
     setResponsiveness,
-    setWakeBoost
+    setWakeBoost,
+    setReducedMotion,
+    getDebugInfo: () => ({
+      buildId: BUILD_ID,
+      meshCount,
+      shapeCount,
+      partCount: Object.keys(parts).length,
+      vertexCount,
+      triangleCount,
+      faceBounds: {
+        size: { x: size.x, y: size.y, z: size.z },
+        center: { x: center.x, y: center.y, z: center.z },
+        maxSize,
+        scale
+      },
+      threeRevision: THREE.REVISION,
+      webgl: { ...webgl },
+      rendererSize: {
+        w: renderer.getSize(new THREE.Vector2()).x,
+        h: renderer.getSize(new THREE.Vector2()).y,
+        dpr: renderer.getPixelRatio()
+      },
+      renderInfo: {
+        calls: renderer.info.render.calls,
+        triangles: renderer.info.render.triangles,
+        geometries: renderer.info.memory.geometries,
+        textures: renderer.info.memory.textures
+      }
+    })
   };
 };
