@@ -48,8 +48,23 @@ body {
 #app {
   min-height: 100vh;
   min-height: 100svh;
-  background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
+  background: #0a0908;
   position: relative;
+}
+
+body.has-intro-started #app {
+  background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
+}
+
+body.is-preintro .background-effects {
+  opacity: 0;
+}
+
+/* On slow connections: show nothing until hero assets + fonts are ready. */
+body.is-preintro #main,
+body.is-preintro .contact {
+  opacity: 0;
+  pointer-events: none;
 }
 
 body.is-intro {
@@ -68,6 +83,7 @@ body.is-intro #app {
 main {
   position: relative;
   z-index: 2;
+  opacity: 1;
 }
 
 .hero {
@@ -239,6 +255,7 @@ body.is-intro .blurb {
 }
 
 .contact {
+  opacity: 1;
   padding: clamp(32px, 6vw, 60px) clamp(18px, 5vw, 46px) clamp(40px, 7vw, 80px);
   border-top: 1px solid rgba(31, 27, 23, 0.08);
   background: linear-gradient(180deg, rgba(246, 242, 234, 0.7) 0%, rgba(230, 223, 211, 0.9) 100%);

@@ -23,15 +23,112 @@ const intro = {
   startAt: performance.now(),
 };
 
-// Body starts as `is-intro` in HTML to avoid a first-paint flash.
-if (!intro.enabled) {
-  document.body.classList.remove("is-intro");
-}
+const withTimeout = (promise, timeoutMs) => new Promise((resolve) => {
+  let done = false;
+  const timer = window.setTimeout(() => {
+    if (done) return;
+    done = true;
+    resolve({ ok: false, timeout: true });
+  }, timeoutMs);
 
-if (intro.enabled) {
+  promise
+    .then((value) => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
+      resolve({ ok: true, value });
+    })
+    .catch((error) => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
+      resolve({ ok: false, error });
+    });
+});
+
+const waitForImg = (img) => new Promise((resolve) => {
+  if (!img) {
+    resolve();
+    return;
+  }
+  if (img.complete && img.naturalWidth > 0) {
+    resolve();
+    return;
+  }
+  const done = () => {
+    img.removeEventListener("load", done);
+    img.removeEventListener("error", done);
+    resolve();
+  };
+  img.addEventListener("load", done, { once: true });
+  img.addEventListener("error", done, { once: true });
+});
+
+const waitForHeroAssets = async () => {
+  const hero = document.querySelector(".hero");
+  const imgs = hero ? Array.from(hero.querySelectorAll("img")) : [];
+  const imageWait = Promise.all(imgs.map(waitForImg));
+
+  let fontWait = Promise.resolve();
+  if (document.fonts && typeof document.fonts.load === "function") {
+    fontWait = (async () => {
+      // These weights match the Google Fonts request in index.html.
+      await Promise.all([
+        document.fonts.load('900 1em "Montserrat"'),
+        document.fonts.load('400 1em "Montserrat"'),
+        document.fonts.load('400 1em "EB Garamond"'),
+      ]);
+      await document.fonts.ready;
+    })();
+  }
+
+  await Promise.all([
+    withTimeout(imageWait, 5000),
+    withTimeout(fontWait, 5000),
+  ]);
+};
+
+let introSmileScheduled = false;
+
+const scheduleIntroSmile = () => {
+  if (!intro.enabled || introSmileScheduled || !face) {
+    return;
+  }
+
+  const elapsed = performance.now() - intro.startAt;
+  const smileOnAt = 1650;
+  const smileOffAt = 2550;
+  const inMs = (ms, fn) => window.setTimeout(fn, Math.max(0, ms - elapsed));
+
+  inMs(smileOnAt, () => face?.setWakeBoost?.(1));
+  inMs(smileOffAt, () => face?.setWakeBoost?.(0));
+  introSmileScheduled = true;
+};
+
+const startIntro = () => {
+  document.body.classList.remove("is-preintro");
+  document.body.classList.add("has-intro-started");
+
+  if (!intro.enabled) {
+    return;
+  }
+
+  intro.startAt = performance.now();
+  document.body.classList.add("is-intro");
+
   window.setTimeout(() => {
     document.body.classList.remove("is-intro");
   }, 3600);
+
+  scheduleIntroSmile();
+};
+
+if (intro.enabled) {
+  // Don’t kick off the intro until visible hero assets are ready.
+  waitForHeroAssets().then(startIntro);
+} else {
+  // Reduced motion: show the page immediately.
+  startIntro();
 }
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -190,20 +287,7 @@ try {
     });
   });
 
-  // Intro smile timing (tie to global intro timeline).
-  if (intro.enabled) {
-    const now = performance.now() - intro.startAt;
-    const smileOnAt = 1650;
-    const smileOffAt = 2550;
-
-    if (now < smileOnAt) {
-      window.setTimeout(() => face?.setWakeBoost?.(1), smileOnAt - now);
-      window.setTimeout(() => face?.setWakeBoost?.(0), smileOffAt - now);
-    } else if (now < smileOffAt) {
-      face?.setWakeBoost?.(1);
-      window.setTimeout(() => face?.setWakeBoost?.(0), smileOffAt - now);
-    }
-  }
+  scheduleIntroSmile();
 
   // Apply any pre-set value.
   publicApi.debug = debugEnabled;
