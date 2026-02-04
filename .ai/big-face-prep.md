@@ -41,12 +41,36 @@
   - Keep vignette effect (current site uses an inset shadow overlay).
   - Keep a light "film" feel: gentle easing, not "techy" UI motion.
 
+- Intro (Steamboat Willie / 70s cartoon opener)
+  - Start on near-black.
+  - A circle forms in the center and expands (slow at first) to reveal the full page.
+  - At ~75% of the reveal, the face flies in from below and lands with squash/stretch (big smile).
+  - CIAO follows (bounce-in from below, with a little stagger).
+  - Blurb fades in last.
+
 - Typography
   - Keep the current font pairing (Montserrat + EB Garamond) unless you explicitly want a change.
 
 - CIAO animation
   - Preserve the existing timing/energy: drop/bobble in + later bounce/float.
   - CIAO assets can remain the existing SVG letters in `assets/images/`.
+
+- Animation principles (non-negotiable)
+  - We follow Disney's 12 principles of animation for all motion on this site (face + CIAO + scroll jiggle).
+  - Reference: https://en.wikipedia.org/wiki/12_basic_principles_of_animation
+  - Principles:
+    - Squash and stretch
+    - Anticipation
+    - Staging
+    - Straight ahead action and pose to pose
+    - Follow through and overlapping action
+    - Slow in and slow out
+    - Arcs
+    - Secondary action
+    - Timing
+    - Exaggeration
+    - Solid drawing
+    - Appeal
 
 ---
 
@@ -105,6 +129,8 @@ Export rules:
 - `idle_mobile_autopilot` (mobile on load): virtual cursor drifts subtly; blink continues; mouth idles.
 - `wake_tap` (mobile for ~3s): face "looks at" tap point; then blends back to autopilot.
 - `reduced_motion` (prefers-reduced-motion): no continuous animation; render a still pose; no autopilot; no blink; CIAO shows without motion.
+
+- `intro` (on load): screen reveal + staged landings (face, CIAO, blurb) with squash/stretch and follow-through.
 
 ### Behaviors (independent channels)
 
@@ -185,6 +211,12 @@ Export rules:
   - Tap triggers ~3s "look at tap" then returns to idle.
 - CIAO:
   - Animates in under chin; blurb appears under CIAO.
+- Intro:
+  - Page starts nearly black.
+  - Circular reveal expands from center to full screen.
+  - Face lands from below with exaggerated squash/stretch, then settles.
+  - CIAO bounces in after the face and settles.
+  - Blurb fades in last.
 - 60fps feel on modern devices; no obvious stutters.
 - Static deployment works on GitHub Pages with `.nojekyll`.
 

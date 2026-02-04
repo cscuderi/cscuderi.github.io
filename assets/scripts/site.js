@@ -1,7 +1,7 @@
 import { createFace } from "./face.js";
 
 const publicApi = (() => {
-  const obj = (window.face && typeof window.face === "object") ? window.face : {};
+  const obj = window.face && typeof window.face === "object" ? window.face : {};
   window.face = obj;
   return obj;
 })();
@@ -11,9 +11,23 @@ let debugEnabled = Boolean(publicApi.debug);
 let face;
 
 const canvas = document.querySelector("#face-canvas");
+const faceJiggle = document.querySelector(".face-jiggle");
+const ciaoJiggle = document.querySelector(".ciao-jiggle");
+const faceWrap = document.querySelector(".face-wrap");
 const tapHint = document.querySelector(".tap-hint");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
+const intro = {
+  enabled: !prefersReducedMotion.matches,
+  startAt: performance.now(),
+};
+
+if (intro.enabled) {
+  document.body.classList.add("is-intro");
+}
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 Object.defineProperty(publicApi, "debug", {
   configurable: true,
@@ -31,7 +45,7 @@ Object.defineProperty(publicApi, "debug", {
     } else {
       stopDebugLoop();
     }
-  }
+  },
 });
 
 const ensureErrorOverlay = () => {
@@ -42,7 +56,8 @@ const ensureErrorOverlay = () => {
 
   node = document.createElement("div");
   node.className = "js-debug-overlay";
-  node.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:980px;margin:0 auto;background:rgba(31,27,23,.92);color:#f6f1e9;padding:10px 12px;border-radius:10px;font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace;display:none;box-shadow:0 16px 60px rgba(0,0,0,.25);white-space:pre-wrap;";
+  node.style.cssText =
+    'position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:980px;margin:0 auto;background:rgba(31,27,23,.92);color:#f6f1e9;padding:10px 12px;border-radius:10px;font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;display:none;box-shadow:0 16px 60px rgba(0,0,0,.25);white-space:pre-wrap;';
   document.body.appendChild(node);
   return node;
 };
@@ -68,7 +83,7 @@ const showDebug = (message) => {
 
 window.addEventListener("error", (event) => {
   const error = event?.error;
-  const message = error ? (error.stack || error.message) : (event?.message || "Script error");
+  const message = error ? error.stack || error.message : event?.message || "Script error";
   showError(message);
 });
 
@@ -116,7 +131,9 @@ function debugLoop() {
     lines.push(`bounds: max=${Math.round(info.faceBounds.maxSize)} scale=${info.faceBounds.scale.toFixed(4)}`);
   }
   if (info.renderInfo) {
-    lines.push(`draw: calls=${info.renderInfo.calls} tris=${info.renderInfo.triangles} geoms=${info.renderInfo.geometries} tex=${info.renderInfo.textures}`);
+    lines.push(
+      `draw: calls=${info.renderInfo.calls} tris=${info.renderInfo.triangles} geoms=${info.renderInfo.geometries} tex=${info.renderInfo.textures}`,
+    );
   }
   showDebug(lines.join("\n"));
   debugTimer = window.setTimeout(debugLoop, 500);
@@ -166,6 +183,19 @@ try {
     });
   });
 
+  // Intro sequence (unless reduced motion).
+  if (intro.enabled) {
+    const elapsed = performance.now() - intro.startAt;
+    const inMs = (ms, fn) => window.setTimeout(fn, Math.max(0, ms - elapsed));
+
+    // Exaggerated smile on landing.
+    inMs(1650, () => face?.setWakeBoost?.(1));
+    inMs(2550, () => face?.setWakeBoost?.(0));
+
+    // Clear intro state after all staged animations complete.
+    inMs(3600, () => document.body.classList.remove("is-intro"));
+  }
+
   // Apply any pre-set value.
   publicApi.debug = debugEnabled;
 } catch (error) {
@@ -179,6 +209,66 @@ let lastPointerTime = 0;
 let lastPointer = { x: 0, y: 0 };
 let wakeUntil = 0;
 let wakeTarget = { x: 0, y: 0 };
+
+const jiggle = {
+  lastScrollY: window.scrollY || 0,
+  lastScrollAt: 0,
+  velocity: 0,
+  value: 0,
+  speed: 0,
+};
+
+const applyJiggle = (time) => {
+  if (prefersReducedMotion.matches) {
+    if (faceJiggle) faceJiggle.style.transform = "";
+    if (ciaoJiggle) ciaoJiggle.style.transform = "";
+    return;
+  }
+
+  const active = time - jiggle.lastScrollAt < 160;
+  const dir = clamp(jiggle.velocity / 60, -1, 1);
+  const target = active ? clamp(Math.abs(jiggle.velocity) * 0.006, 0, 1) : 0;
+
+  // Spring for squash-and-stretch + follow-through.
+  const stiffness = 0.16;
+  const damping = 0.68;
+  jiggle.speed += (target - jiggle.value) * stiffness;
+  jiggle.speed *= damping;
+  jiggle.value += jiggle.speed;
+
+  // Signed value allows overshoot: goes skinny first, then bounces wider.
+  const amt = clamp(jiggle.value, -1.1, 1.1);
+  const abs = Math.abs(amt);
+
+  if (faceJiggle) {
+    const y = -dir * abs * 10;
+    const sx = clamp(1 - amt * 0.11, 0.82, 1.18);
+    const sy = clamp(1 + amt * 0.18, 0.78, 1.26);
+    const rz = -dir * abs * 1.0;
+    faceJiggle.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) rotate(${rz.toFixed(3)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
+  }
+
+  if (ciaoJiggle) {
+    const y = -dir * abs * 14;
+    const sx = clamp(1 - amt * 0.16, 0.78, 1.26);
+    const sy = clamp(1 + amt * 0.24, 0.74, 1.36);
+    const rz = -dir * abs * 1.4;
+    ciaoJiggle.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) rotate(${rz.toFixed(3)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
+  }
+};
+
+window.addEventListener(
+  "scroll",
+  () => {
+    const now = performance.now();
+    const y = window.scrollY || 0;
+    const delta = y - jiggle.lastScrollY;
+    jiggle.lastScrollY = y;
+    jiggle.velocity = delta;
+    jiggle.lastScrollAt = now;
+  },
+  { passive: true },
+);
 
 const markInteracted = () => {
   if (!document.body.classList.contains("has-interacted")) {
@@ -200,7 +290,7 @@ const getAutopilotTarget = (time) => {
   const t = time * 0.00012;
   return {
     x: Math.sin(t * 1.1) * 0.18,
-    y: Math.cos(t * 1.4) * 0.12
+    y: Math.cos(t * 1.4) * 0.12,
   };
 };
 
@@ -235,6 +325,7 @@ const tick = (time) => {
     return;
   }
   updateFaceTarget(time);
+  applyJiggle(time);
   face.update(time);
   rafId = window.requestAnimationFrame(tick);
 };
@@ -284,6 +375,26 @@ window.addEventListener("resize", () => {
     face.resize();
   }
 });
+
+// Keep face responsive even if only its container changes.
+if (faceWrap && typeof ResizeObserver !== "undefined") {
+  const ro = new ResizeObserver(() => {
+    if (face) {
+      face.resize();
+    }
+  });
+  ro.observe(faceWrap);
+}
+
+// Keep face responsive even when only the container changes.
+if (canvas && typeof ResizeObserver !== "undefined") {
+  const ro = new ResizeObserver(() => {
+    if (face) {
+      face.resize();
+    }
+  });
+  ro.observe(canvas);
+}
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {

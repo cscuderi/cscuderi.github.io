@@ -31,48 +31,58 @@
     </script>
   </head>
   <body>
-    <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-stage">
-          <div class="face-wrap">
-            <img class="face-fallback" src="assets/face.svg" alt="" aria-hidden="true">
-            <canvas id="face-canvas" aria-hidden="true"></canvas>
+    <div id="app">
+      <main id="main">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-stage">
+            <div class="face-wrap">
+              <div class="face-jiggle">
+                <div class="face-intro">
+                  <img class="face-fallback" src="assets/face.svg" alt="" aria-hidden="true">
+                  <canvas id="face-canvas" aria-hidden="true"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="hero-copy">
+              <div class="ciao-jiggle">
+                <div class="ciao-intro">
+                  <h1 id="hero-title" lang="it" aria-label="Ciao!" class="ciao">
+                    <span class="ciao-letter c" style="--delay: 0ms"><img src="assets/images/c.svg" alt=""></span>
+                    <span class="ciao-letter i" style="--delay: 80ms"><img src="assets/images/i.svg" alt=""></span>
+                    <span class="ciao-letter a" style="--delay: 160ms"><img src="assets/images/a.svg" alt=""></span>
+                    <span class="ciao-letter o" style="--delay: 240ms"><img src="assets/images/o.svg" alt=""></span>
+                    <span class="ciao-letter e" style="--delay: 320ms"><img src="assets/images/e.svg" alt=""></span>
+                  </h1>
+                </div>
+              </div>
+              <p class="blurb">My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
+              <p class="tap-hint" aria-hidden="true">Tap to wake</p>
+            </div>
           </div>
-          <div class="hero-copy">
-            <h1 id="hero-title" lang="it" aria-label="Ciao!" class="ciao">
-              <span class="ciao-letter c" style="--delay: 0ms"><img src="assets/images/c.svg" alt=""></span>
-              <span class="ciao-letter i" style="--delay: 80ms"><img src="assets/images/i.svg" alt=""></span>
-              <span class="ciao-letter a" style="--delay: 160ms"><img src="assets/images/a.svg" alt=""></span>
-              <span class="ciao-letter o" style="--delay: 240ms"><img src="assets/images/o.svg" alt=""></span>
-              <span class="ciao-letter e" style="--delay: 320ms"><img src="assets/images/e.svg" alt=""></span>
-            </h1>
-            <p class="blurb">My name is Carlin; I'm a web developer and designer with a passion for building accessible, engaging web experiences.</p>
-            <p class="tap-hint" aria-hidden="true">Tap to wake</p>
-          </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
 
-    <footer class="contact">
-      <div class="contact-inner">
-        <a class="contact-email" href="mailto:carlinscuderi@gmail.com">carlinscuderi@gmail.com</a>
-        <div class="contact-links" aria-label="Social links">
-          <a class="contact-link" href="https://twitter.com/carlinscuderi" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-            <img src="assets/images/twitter.svg" alt="" aria-hidden="true">
-          </a>
-          <a class="contact-link" href="https://www.linkedin.com/in/carlinscuderi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <img src="assets/images/linkedin.svg" alt="" aria-hidden="true">
-          </a>
-          <a class="contact-link" href="https://codepen.io/carlinscuderi/" target="_blank" rel="noopener noreferrer" aria-label="Codepen">
-            <img src="assets/images/codepen.svg" alt="" aria-hidden="true">
-          </a>
+      <footer class="contact">
+        <div class="contact-inner">
+          <a class="contact-email" href="mailto:carlinscuderi@gmail.com">carlinscuderi@gmail.com</a>
+          <div class="contact-links" aria-label="Social links">
+            <a class="contact-link" href="https://twitter.com/carlinscuderi" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <img src="assets/images/twitter.svg" alt="" aria-hidden="true">
+            </a>
+            <a class="contact-link" href="https://www.linkedin.com/in/carlinscuderi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <img src="assets/images/linkedin.svg" alt="" aria-hidden="true">
+            </a>
+            <a class="contact-link" href="https://codepen.io/carlinscuderi/" target="_blank" rel="noopener noreferrer" aria-label="Codepen">
+              <img src="assets/images/codepen.svg" alt="" aria-hidden="true">
+            </a>
+          </div>
         </div>
+      </footer>
+
+      <div class="background-effects" aria-hidden="true">
+        <div class="vignette"></div>
+        <div class="grain"></div>
       </div>
-    </footer>
-
-    <div class="background-effects" aria-hidden="true">
-      <div class="vignette"></div>
-      <div class="grain"></div>
     </div>
 
     <script type="importmap">
