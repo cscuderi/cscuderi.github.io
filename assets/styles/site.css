@@ -5,8 +5,15 @@
   --ink: #1f1b17;
   --ink-soft: #2c2723;
   --accent: #2a2520;
-  --vignette: rgba(0, 0, 0, 0.24);
+  --vignette: rgba(0, 0, 0, 0.5);
   --grain: rgba(0, 0, 0, 0.05);
+
+  --ink-bleed-1: rgba(10, 9, 8, 0.52);
+  --ink-bleed-2: rgba(10, 9, 8, 0.24);
+  --ink-bleed-3: rgba(10, 9, 8, 0.08);
+  --ink-bleed-filter: drop-shadow(0.4px 0.3px 0.2px var(--ink-bleed-1)) drop-shadow(0 1.2px 0.9px var(--ink-bleed-2))
+    drop-shadow(0 2.4px 1.8px var(--ink-bleed-3)) drop-shadow(0 10px 10px rgba(10, 9, 8, 0.05));
+  --ink-bleed-text: 0.4px 0.3px 0 var(--ink-bleed-1), 0 1px 0.8px var(--ink-bleed-3);
 
   --intro-reveal-dur: 2200ms;
   --intro-face-delay: 1300ms;
@@ -33,6 +40,10 @@
 html,
 body {
   height: 100%;
+}
+
+body.reduce-motion {
+  filter: none;
 }
 
 html {
@@ -72,9 +83,6 @@ body.is-preintro .contact {
   pointer-events: none;
 }
 
-body.is-intro {
-}
-
 body.is-intro .background-effects {
   opacity: 1;
 }
@@ -112,8 +120,8 @@ main {
 
 .face-wrap {
   width: min(96vw, 1200px);
-  height: clamp(320px, 76vh, 860px);
-  height: clamp(320px, 76svh, 860px);
+  height: clamp(320px, 70vh, 860px);
+  height: clamp(320px, 70svh, 860px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,6 +164,7 @@ body.has-webgl #face-canvas {
   height: 100%;
   object-fit: contain;
   opacity: 0;
+  /*filter: var(--ink-bleed-filter);*/
 }
 
 body.is-intro .face-fallback,
@@ -184,7 +193,7 @@ body.has-webgl .face-fallback {
   gap: min(3vh, 48px);
   text-wrap: balance;
   position: relative;
-  top: -48px;
+  top: -84px;
   padding: clamp(16px, 4vw, 40px);
 }
 
@@ -229,7 +238,7 @@ body.is-intro .ciao-intro {
   aspect-ratio: var(--ar, 1 / 1);
   width: auto;
   display: block;
-  filter: drop-shadow(0 24px 8px rgba(0, 0, 0, 0.05));
+  filter: var(--ink-bleed-filter);
   animation: ciao-shadow 4.6s ease-in-out
     calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
 }
@@ -262,6 +271,7 @@ body.is-intro .blurb {
   text-transform: uppercase;
   color: rgba(31, 27, 23, 0.55);
   opacity: 0.9;
+  text-shadow: none;
 }
 
 .contact {
@@ -312,6 +322,7 @@ body.is-intro .blurb {
   width: 16px;
   height: 16px;
   opacity: 0.8;
+  filter: var(--ink-bleed-filter);
 }
 
 .contact-link:hover,
@@ -332,7 +343,7 @@ body.is-intro .blurb {
 .vignette {
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 180px var(--vignette);
+  box-shadow: inset 0 0 15vw var(--vignette);
 }
 
 .grain {
@@ -390,6 +401,10 @@ body.is-intro .blurb {
   animation: none;
 }
 
+.reduce-motion #app :where(p, a, h1, h2, h3, h4, h5, h6, li, small, strong, em) {
+  text-shadow: none;
+}
+
 @media (max-width: 720px) {
   .face-wrap {
     width: min(98vw, 720px);
@@ -400,6 +415,30 @@ body.is-intro .blurb {
   .contact-inner {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* Wide + shallow screens (laptops): avoid cutting off CIAO */
+@media (min-width: 900px) and (max-height: 700px) {
+  :root {
+    --ciao-letter-h: clamp(48px, 10vh, 112px);
+  }
+
+  .hero {
+    padding: clamp(12px, 2.5vw, 28px);
+  }
+
+  .face-wrap {
+    height: clamp(280px, 60vh, 640px);
+    height: clamp(280px, 60svh, 640px);
+  }
+
+  .hero-copy {
+    gap: min(2vh, 28px);
+  }
+
+  .blurb {
+    font-size: clamp(1rem, 1.3vw, 1.4rem);
   }
 }
 
@@ -511,9 +550,9 @@ body.is-intro .blurb {
 @keyframes ciao-shadow {
   0%,
   100% {
-    filter: drop-shadow(0 24px 8px rgba(0, 0, 0, 0.05));
+    filter: var(--ink-bleed-filter) drop-shadow(0 24px 8px rgba(0, 0, 0, 0.05));
   }
   50% {
-    filter: drop-shadow(0 8px 1px rgba(0, 0, 0, 0.4));
+    filter: var(--ink-bleed-filter) drop-shadow(0 8px 1px rgba(0, 0, 0, 0.4));
   }
 }
