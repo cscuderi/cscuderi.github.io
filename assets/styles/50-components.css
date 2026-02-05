@@ -1,0 +1,180 @@
+@layer components {
+  /* On slow connections: show nothing until hero assets + fonts are ready. */
+  body.is-preintro #main,
+  body.is-preintro .contact {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #face-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 260ms ease-out;
+    z-index: 2;
+  }
+
+  body.has-webgl #face-canvas {
+    opacity: 1;
+  }
+
+  .face-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+  }
+
+  body.is-intro .face-fallback,
+  body:not(.has-webgl) .face-fallback {
+    opacity: 1;
+  }
+
+  body.has-webgl .face-fallback {
+    opacity: 0;
+  }
+
+  /* Ensure the canvas sits above the SVG fallback. */
+  .face-intro > * {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ciao {
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(4px, 1vw, 10px);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    will-change: transform;
+    transform-origin: 50% 60%;
+    min-height: var(--ciao-letter-h);
+  }
+
+  .ciao-letter {
+    display: inline-flex;
+    align-items: flex-end;
+    animation:
+      ciao-land var(--ciao-land-dur) cubic-bezier(0.16, 0.92, 0.18, 1.18) calc(var(--intro-letter-delay) + var(--delay))
+        both,
+      ciao-bob 4.6s ease-in-out calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle))
+        infinite;
+  }
+
+  .ciao-letter img {
+    height: var(--ciao-letter-h);
+    aspect-ratio: var(--ar, 1 / 1);
+    width: auto;
+    display: block;
+    animation: ciao-shadow 4.6s ease-in-out
+      calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
+  }
+
+  .ciao-letter.o {
+    position: relative;
+    left: -4px;
+  }
+
+  .blurb {
+    max-width: 680px;
+    text-align: center;
+    margin: 0;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  body.is-intro .blurb {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    animation: intro-fade-up var(--intro-blurb-dur) ease-out var(--intro-blurb-delay) both;
+  }
+
+  .tap-hint {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(31, 27, 23, 0.55);
+    opacity: 0.9;
+    text-shadow: none;
+  }
+
+  .touch .tap-hint {
+    display: block;
+  }
+
+  .tap-hint {
+    display: none;
+  }
+
+  .has-interacted .tap-hint {
+    display: none;
+  }
+
+  .contact {
+    opacity: 1;
+    padding: clamp(32px, 6vw, 60px) clamp(18px, 5vw, 46px) clamp(40px, 7vw, 80px);
+    border-top: 1px solid rgba(31, 27, 23, 0.08);
+    background: linear-gradient(180deg, rgba(246, 242, 234, 0.7) 0%, rgba(230, 223, 211, 0.9) 100%);
+  }
+
+  .contact-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .contact-email {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .contact-link {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(31, 27, 23, 0.2);
+    transition:
+      transform 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .contact-link img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+  }
+
+  .contact-link:hover,
+  .contact-link:focus-visible {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.45);
+  }
+
+  .reduce-motion .ciao-letter {
+    animation: none;
+  }
+}

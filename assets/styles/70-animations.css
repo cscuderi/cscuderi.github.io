@@ -1,0 +1,116 @@
+@layer animations {
+  @keyframes intro-reveal {
+    0% {
+      clip-path: circle(0% at 50% 45%);
+    }
+    40% {
+      clip-path: circle(18% at 50% 45%);
+    }
+    100% {
+      clip-path: circle(150% at 50% 45%);
+    }
+  }
+
+  @keyframes intro-squash-in {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 44vh, 0) scale(1.15, 0.72) rotate(-2deg);
+    }
+    62% {
+      opacity: 1;
+      transform: translate3d(0, -1.6vh, 0) scale(0.92, 1.12) rotate(0.6deg);
+    }
+    78% {
+      transform: translate3d(0, 0.6vh, 0) scale(1.06, 0.92) rotate(-0.4deg);
+    }
+    90% {
+      transform: translate3d(0, -0.2vh, 0) scale(0.98, 1.02) rotate(0.15deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1, 1) rotate(0);
+    }
+  }
+
+  @keyframes intro-squash-in-face {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 44vh, 0) scale(1.15, 0.72) rotate(-2deg);
+    }
+    60% {
+      opacity: 1;
+      transform: translate3d(0, -4.2vh, 0) scale(0.9, 1.16) rotate(0.7deg);
+    }
+    78% {
+      transform: translate3d(0, 1.1vh, 0) scale(1.08, 0.9) rotate(-0.5deg);
+    }
+    90% {
+      transform: translate3d(0, -0.25vh, 0) scale(0.985, 1.02) rotate(0.15deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1, 1) rotate(0);
+    }
+  }
+
+  @keyframes intro-fade-up {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes ciao-land {
+    0% {
+      transform: translateY(82px) scale(1.22, 0.62) rotate(-2.2deg);
+      opacity: 0;
+    }
+    56% {
+      transform: translateY(-46px) scale(0.82, 1.28) rotate(1.1deg);
+      opacity: 1;
+    }
+    74% {
+      transform: translateY(12px) scale(1.18, 0.9) rotate(-0.8deg);
+    }
+    86% {
+      transform: translateY(-6px) scale(0.96, 1.06) rotate(0.35deg);
+    }
+    100% {
+      transform: translateY(0) scale(1, 1) rotate(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes ciao-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
+  }
+
+  @keyframes ciao-shadow {
+    0%,
+    100% {
+      filter: var(--ink-bleed-filter) drop-shadow(0 24px 8px rgba(0, 0, 0, 0.05));
+    }
+    50% {
+      filter: var(--ink-bleed-filter) drop-shadow(0 8px 1px rgba(0, 0, 0, 0.4));
+    }
+  }
+
+  @keyframes scratches-drift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, -18px, 0);
+    }
+  }
+}

@@ -79,7 +79,7 @@
 - Output structure (proposed)
   - `index.html` (root, no Jekyll layout)
   - `.nojekyll` (root)
-  - `assets/styles/site.css` (hand-authored modern CSS)
+  - `assets/styles/*.css` (hand-authored modern CSS; split by layers)
   - `assets/scripts/site.js` (site bootstrap + CIAO + interaction state machine)
   - `assets/scripts/face.js` (Three.js face renderer + rig + animation loop)
   - `assets/images/face.svg` (your exported rigged SVG)

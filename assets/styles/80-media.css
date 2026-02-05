@@ -1,0 +1,47 @@
+@layer media {
+  @media (max-width: 720px) {
+    .face-wrap {
+      width: min(98vw, 720px);
+      height: clamp(280px, 68vh, 560px);
+      height: clamp(280px, 68svh, 560px);
+    }
+
+    .contact-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* Wide + shallow screens (laptops): avoid cutting off CIAO */
+  @media (min-width: 900px) and (max-height: 700px) {
+    :root {
+      --ciao-letter-h: clamp(48px, 10vh, 112px);
+    }
+
+    .hero {
+      padding: clamp(12px, 2.5vw, 28px);
+    }
+
+    .face-wrap {
+      height: clamp(280px, 60vh, 640px);
+      height: clamp(280px, 60svh, 640px);
+    }
+
+    .hero-copy {
+      gap: min(2vh, 28px);
+    }
+
+    .blurb {
+      font-size: clamp(1rem, 1.3vw, 1.4rem);
+    }
+  }
+
+  /* Narrow phones: keep the face from dominating vertically */
+  @media (max-width: 420px) {
+    .face-wrap {
+      width: min(100vw, 380px);
+      height: clamp(220px, 46vh, 420px);
+      height: clamp(220px, 46svh, 420px);
+    }
+  }
+}

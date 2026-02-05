@@ -1,0 +1,33 @@
+@layer tokens {
+  :root {
+    color-scheme: light;
+    --paper: #f2ece2;
+    --paper-deep: #e6dfd3;
+    --ink: #1f1b17;
+    --ink-soft: #2c2723;
+    --accent: #2a2520;
+    --vignette: rgba(0, 0, 0, 0.5);
+    --grain: rgba(0, 0, 0, 0.05);
+
+    --ink-bleed-1: rgba(10, 9, 8, 0.52);
+    --ink-bleed-2: rgba(10, 9, 8, 0.24);
+    --ink-bleed-3: rgba(10, 9, 8, 0.08);
+    --ink-bleed-filter: drop-shadow(0.4px 0.3px 0.2px var(--ink-bleed-1)) drop-shadow(0 1.2px 0.9px var(--ink-bleed-2))
+      drop-shadow(0 2.4px 1.8px var(--ink-bleed-3)) drop-shadow(0 10px 10px rgba(10, 9, 8, 0.05));
+
+    --intro-reveal-dur: 2200ms;
+    --intro-face-delay: 1300ms;
+    --intro-face-dur: 1100ms;
+    --intro-ciao-delay: 1600ms;
+    --intro-ciao-dur: 900ms;
+    --intro-blurb-delay: 2500ms;
+    --intro-blurb-dur: 900ms;
+
+    --intro-letter-delay: 1800ms;
+
+    --ciao-land-dur: 1050ms;
+    --ciao-land-settle: 180ms;
+
+    --ciao-letter-h: clamp(60px, 20vw, 140px);
+  }
+}

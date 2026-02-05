@@ -1,0 +1,25 @@
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+    overscroll-behavior: none;
+  }
+
+  body.reduce-motion {
+    filter: none;
+  }
+
+  body {
+    margin: 0;
+    font-family: "EB Garamond", serif;
+    color: var(--ink);
+    background: #0a0908;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+}
