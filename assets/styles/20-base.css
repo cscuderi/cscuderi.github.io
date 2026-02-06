@@ -23,7 +23,7 @@
     margin: 0;
     font-family: "EB Garamond", serif;
     color: var(--ink);
-    background: --black;
+    background: --ink;
     min-height: 100vh;
     min-height: 100svh;
     overflow-x: hidden;
