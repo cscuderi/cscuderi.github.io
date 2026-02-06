@@ -1,0 +1,86 @@
+@layer layout {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-stage {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(6px, 1.6vh, 14px);
+  }
+
+  .face-wrap {
+    width: min(96vw, 1200px);
+    height: clamp(320px, 70vh, 860px);
+    height: clamp(320px, 70svh, 860px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    will-change: transform;
+    transform-origin: 50% 45%;
+  }
+
+  .face-jiggle,
+  .face-intro {
+    position: absolute;
+    inset: 0;
+  }
+
+  .face-jiggle {
+    will-change: transform;
+  }
+
+  body.is-intro .face-intro {
+    opacity: 0;
+    transform: translate3d(0, 44vh, 0) scale(1.15, 0.72) rotate(-2deg);
+    transform-origin: 50% 60%;
+    animation: intro-squash-in-face var(--intro-face-dur) cubic-bezier(0.17, 0.92, 0.22, 1.2) var(--intro-face-delay)
+      both;
+  }
+
+  body.is-intro .face-fallback,
+  body:not(.has-webgl) .face-fallback {
+    opacity: 1;
+  }
+
+  body.has-webgl .face-fallback {
+    opacity: 0;
+  }
+
+  /* Ensure the canvas sits above the SVG fallback. */
+  .face-intro > * {
+    position: absolute;
+    inset: 0;
+  }
+
+  #face-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 260ms ease-out;
+    z-index: 2;
+    filter: blur(0.5px);
+  }
+
+  body.has-webgl #face-canvas {
+    opacity: 1;
+  }
+
+  .face-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+  }
+}

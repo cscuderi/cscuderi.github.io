@@ -1,0 +1,88 @@
+@layer ciao {
+  /* On slow connections: show nothing until hero assets + fonts are ready. */
+  body.is-preintro #main,
+  body.is-preintro .contact {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ciao-jiggle {
+    will-change: transform;
+  }
+
+  body.is-intro .ciao-intro {
+    opacity: 0;
+    transform: translate3d(0, 20vh, 0) scale(1.12, 0.78) rotate(-1deg);
+    transform-origin: 50% 60%;
+    animation: intro-squash-in var(--intro-ciao-dur) cubic-bezier(0.17, 0.92, 0.22, 1.2) var(--intro-ciao-delay) both;
+  }
+
+  .ciao {
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(4px, 1vw, 10px);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    will-change: transform;
+    transform-origin: 50% 60%;
+    min-height: var(--ciao-letter-h);
+  }
+
+  .ciao-letter {
+    display: inline-flex;
+    align-items: flex-end;
+    animation:
+      ciao-land var(--ciao-land-dur) cubic-bezier(0.16, 0.92, 0.18, 1.18) calc(var(--intro-letter-delay) + var(--delay))
+        both,
+      ciao-bob 4.6s ease-in-out
+        calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
+  }
+
+  .reduce-motion .ciao-letter {
+    animation: none;
+  }
+
+  .ciao-letter img {
+    height: var(--ciao-letter-h);
+    aspect-ratio: var(--ar, 1 / 1);
+    width: auto;
+    display: block;
+    animation: ciao-shadow 4.6s ease-in-out
+      calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
+  }
+
+  .ciao-letter.o {
+    position: relative;
+    left: -4px;
+  }
+
+  .blurb {
+    max-width: 680px;
+    text-align: center;
+    margin: 0;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  body.is-intro .blurb {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    animation: intro-fade-up var(--intro-blurb-dur) ease-out var(--intro-blurb-delay) both;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: min(3vh, 48px);
+    text-wrap: balance;
+    position: relative;
+    top: -84px;
+    padding: clamp(16px, 4vw, 40px);
+  }
+}

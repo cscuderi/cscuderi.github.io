@@ -1,4 +1,21 @@
 @layer effects {
+  body.is-preintro .background-effects {
+    opacity: 0;
+  }
+
+  body.has-intro-started #site-wrap {
+    background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
+  }
+
+  body.is-intro .background-effects {
+    opacity: 1;
+  }
+
+  body.is-intro #site-wrap {
+    clip-path: circle(0% at 50% 45%);
+    animation: intro-reveal var(--intro-reveal-dur) cubic-bezier(0.12, 0.9, 0.18, 1) both;
+  }
+
   .background-effects {
     position: fixed;
     inset: 0;
@@ -11,49 +28,13 @@
   .vignette {
     position: absolute;
     inset: 0;
-    box-shadow: inset 0 0 15vw var(--vignette);
+    box-shadow: inset 0 0 20vw var(--vignette);
   }
 
   .grain {
     position: absolute;
     inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, var(--grain) 0, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 2px),
-      repeating-linear-gradient(90deg, var(--grain) 0, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 2px);
     opacity: 0.25;
     mix-blend-mode: multiply;
-  }
-
-  .scratches {
-    position: absolute;
-    inset: 0;
-    opacity: 0.16;
-    mix-blend-mode: multiply;
-    background-image:
-      repeating-linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0) 0px,
-        rgba(0, 0, 0, 0) 14px,
-        rgba(0, 0, 0, 0.08) 15px,
-        rgba(0, 0, 0, 0) 16px,
-        rgba(0, 0, 0, 0) 44px
-      ),
-      repeating-linear-gradient(
-        88deg,
-        rgba(0, 0, 0, 0) 0px,
-        rgba(0, 0, 0, 0) 90px,
-        rgba(0, 0, 0, 0.09) 92px,
-        rgba(0, 0, 0, 0) 94px
-      ),
-      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0) 6px);
-    background-size:
-      100% 100%,
-      100% 100%,
-      100% 100%;
-    animation: scratches-drift 900ms steps(2, end) infinite;
-  }
-
-  .reduce-motion #app :where(p, a, h1, h2, h3, h4, h5, h6, li, small, strong, em) {
-    text-shadow: none;
   }
 }

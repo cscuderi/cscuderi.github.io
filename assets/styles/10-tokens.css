@@ -3,11 +3,11 @@
     color-scheme: light;
     --paper: #f2ece2;
     --paper-deep: #e6dfd3;
-    --ink: #1f1b17;
-    --ink-soft: #2c2723;
+    --ink: #1e1d19;
+    --ink-light: #d3d0c4;
     --accent: #2a2520;
-    --vignette: rgba(0, 0, 0, 0.5);
-    --grain: rgba(0, 0, 0, 0.05);
+    --black: #0a0908;
+    --vignette: rgba(0, 0, 0, 1);
 
     --ink-bleed-1: rgba(10, 9, 8, 0.52);
     --ink-bleed-2: rgba(10, 9, 8, 0.24);

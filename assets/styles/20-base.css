@@ -1,4 +1,10 @@
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   html,
   body {
     height: 100%;
@@ -17,9 +23,15 @@
     margin: 0;
     font-family: "EB Garamond", serif;
     color: var(--ink);
-    background: #0a0908;
+    background: --black;
     min-height: 100vh;
     min-height: 100svh;
     overflow-x: hidden;
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
   }
 }
