@@ -309,6 +309,8 @@ const jiggle = {
   velocity: 0,
   value: 0,
   speed: 0,
+  faceKick: 0,
+  faceKickSpeed: 0,
 };
 
 const applyJiggle = (time) => {
@@ -333,11 +335,17 @@ const applyJiggle = (time) => {
   const amt = clamp(jiggle.value, -1.1, 1.1);
   const abs = Math.abs(amt);
 
+  // Extra kick on tap/click (face only).
+  jiggle.faceKickSpeed += (0 - jiggle.faceKick) * 0.14;
+  jiggle.faceKickSpeed *= 0.7;
+  jiggle.faceKick += jiggle.faceKickSpeed;
+
   if (faceJiggle) {
-    const y = -dir * abs * 10;
-    const sx = clamp(1 - amt * 0.11, 0.82, 1.18);
-    const sy = clamp(1 + amt * 0.18, 0.78, 1.26);
-    const rz = -dir * abs * 1.0;
+    const kick = jiggle.faceKick;
+    const y = -dir * abs * 10 + kick * -22;
+    const sx = clamp(1 - (amt + kick) * 0.11, 0.82, 1.18);
+    const sy = clamp(1 + (amt + kick) * 0.18, 0.78, 1.26);
+    const rz = -dir * abs * 1.0 + kick * 1.6;
     faceJiggle.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) rotate(${rz.toFixed(3)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
   }
 
@@ -382,8 +390,8 @@ const pointerToTarget = (event) => {
 const getAutopilotTarget = (time) => {
   const t = time * 0.00012;
   return {
-    x: Math.sin(t * 1.1) * 0.18,
-    y: Math.cos(t * 1.4) * 0.12,
+    x: Math.sin(t * 1.1) * 0.24,
+    y: Math.cos(t * 1.4) * 0.16,
   };
 };
 
@@ -394,9 +402,10 @@ const updateFaceTarget = (time) => {
 
   if (!isTouch) {
     const idle = time - lastPointerTime > 2000;
-    const target = idle ? { x: 0, y: 0 } : lastPointer;
+    const autoTarget = getAutopilotTarget(time);
+    const target = idle ? { x: autoTarget.x * 0.6, y: autoTarget.y * 0.6 } : lastPointer;
     face.setTarget(target.x, target.y);
-    face.setResponsiveness(idle ? 0.05 : 0.1);
+    face.setResponsiveness(idle ? 0.08 : 0.1);
     face.setWakeBoost(0);
     return;
   }
@@ -408,7 +417,7 @@ const updateFaceTarget = (time) => {
   } else {
     const autoTarget = getAutopilotTarget(time);
     face.setTarget(autoTarget.x, autoTarget.y);
-    face.setResponsiveness(0.06);
+    face.setResponsiveness(0.07);
     face.setWakeBoost(0);
   }
 };
@@ -459,6 +468,7 @@ if (!prefersReducedMotion.matches) {
         && event.clientY >= rect.top && event.clientY <= rect.bottom;
       if (inside) {
         face.triggerMouthOpen?.();
+        jiggle.faceKickSpeed -= 1.15;
       }
     }
     if (!isTouch) {

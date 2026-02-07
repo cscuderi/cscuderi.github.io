@@ -22,8 +22,9 @@
     --intro-ciao-dur: 900ms;
     --intro-blurb-delay: 2500ms;
     --intro-blurb-dur: 900ms;
-
     --intro-letter-delay: 1800ms;
+
+    --burst-scale: 1.5;
 
     --ciao-land-dur: 1050ms;
     --ciao-land-settle: 180ms;

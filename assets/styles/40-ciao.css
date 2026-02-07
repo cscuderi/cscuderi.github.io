@@ -1,10 +1,4 @@
 @layer ciao {
-  /* On slow connections: show nothing until hero assets + fonts are ready. */
-  body.is-preintro {
-    opacity: 0;
-    pointer-events: none;
-  }
-
   .hero-copy {
     display: flex;
     flex-direction: column;
@@ -21,14 +15,18 @@
 
   body.is-intro .ciao-intro {
     opacity: 0;
-    transform: translate3d(0, 20vh, 0) scale(1.12, 0.78) rotate(-1deg);
+    transform: translate3d(0, 10px, 0);
     transform-origin: 50% 60%;
-    animation: intro-squash-in var(--intro-ciao-dur) cubic-bezier(0.17, 0.92, 0.22, 1.2) var(--intro-ciao-delay) both;
+    animation: intro-fade-up 520ms ease-out var(--intro-ciao-delay) both;
   }
 
   .ciao-letter {
     display: inline-flex;
     align-items: flex-end;
+    animation: none;
+  }
+
+  body.has-intro-started .ciao-letter {
     animation:
       ciao-land var(--ciao-land-dur) cubic-bezier(0.16, 0.92, 0.18, 1.18) calc(var(--intro-letter-delay) + var(--delay))
         both,
@@ -45,6 +43,10 @@
     aspect-ratio: var(--ar, 1 / 1);
     width: auto;
     display: block;
+    animation: none;
+  }
+
+  body.has-intro-started .ciao-letter img {
     animation: ciao-shadow 4.6s ease-in-out
       calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
   }

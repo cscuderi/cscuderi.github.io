@@ -554,6 +554,12 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     faceGroup.position.x = baseFacePosition.x + tx * 0.07;
     faceGroup.position.y = baseFacePosition.y + ty * 0.05;
 
+    // Default idle motion (breathing) so the face never feels dead.
+    const breath = Math.sin(time * 0.0011) * 0.006;
+    const sway = Math.sin(time * 0.0009) * 0.006;
+    faceGroup.position.y += breath;
+    faceGroup.rotation.z += sway;
+
     const blinkAmount = updateBlink(time);
     const eyeScale = 1 - blinkAmount * 0.85;
     const lidScale = Math.max(0.01, blinkAmount);
@@ -572,17 +578,16 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     }
 
     // Track in SVG units so motion scales with the art.
-    // Track in SVG units so motion scales with the art.
     // Boost vertical a bit so up/down reads clearly.
     // Because we flip the SVG Y axis (faceGroup scale.y is negative), translate eyes with inverted Y.
     const invTy = -ty;
     const pupilOffset = new THREE.Vector2(
-      THREE.MathUtils.clamp(tx * maxSize * 0.028, -maxSize * 0.045, maxSize * 0.045),
-      THREE.MathUtils.clamp(invTy * maxSize * 0.04, -maxSize * 0.06, maxSize * 0.06),
+      THREE.MathUtils.clamp(tx * maxSize * 0.034, -maxSize * 0.055, maxSize * 0.055),
+      THREE.MathUtils.clamp(invTy * maxSize * 0.048, -maxSize * 0.072, maxSize * 0.072),
     );
     const eyeOffset = new THREE.Vector2(
-      THREE.MathUtils.clamp(tx * maxSize * 0.01, -maxSize * 0.018, maxSize * 0.018),
-      THREE.MathUtils.clamp(invTy * maxSize * 0.016, -maxSize * 0.028, maxSize * 0.028),
+      THREE.MathUtils.clamp(tx * maxSize * 0.012, -maxSize * 0.022, maxSize * 0.022),
+      THREE.MathUtils.clamp(invTy * maxSize * 0.02, -maxSize * 0.034, maxSize * 0.034),
     );
 
     if (parts.eyeL && basePositions.eyeL) {
@@ -650,6 +655,7 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     const squash = THREE.MathUtils.clamp(motion * 6, 0, 1);
     mouthRig.anchor.scale.set(1 + squash * 0.12, 1 - squash * 0.08, 1);
 
+
     if (parts.browL && basePositions.browL) {
       parts.browL.position.y = basePositions.browL.y + ty * 0.1;
     }
@@ -668,7 +674,10 @@ export const createFace = async (canvas, { reducedMotion = false, debug = false 
     const width = Math.max(1, canvas.clientWidth);
     const height = Math.max(1, canvas.clientHeight);
     const aspect = width / height;
-    const frustumHeight = 2;
+    const baseFrustumHeight = 2;
+    // If the canvas is narrow, widen the view so the face scales down instead of cropping.
+    const widen = aspect < 1 ? Math.min(1 / Math.max(0.25, aspect), 1.6) : 1;
+    const frustumHeight = baseFrustumHeight * widen;
     camera.top = frustumHeight / 2;
     camera.bottom = -frustumHeight / 2;
     camera.left = -(frustumHeight * aspect) / 2;
