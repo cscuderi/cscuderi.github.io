@@ -34,4 +34,12 @@
     z-index: 2;
     opacity: 1;
   }
+
+  hr {
+    width: clamp(320px, 60%, var(--page-max-width));
+    border: 12px groove var(--ink-light);
+    border-radius: 24px;
+    opacity: 0.5;
+    margin: 64px auto;
+  }
 }

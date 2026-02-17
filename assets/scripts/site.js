@@ -1,10 +1,13 @@
 import { createFace } from "./face.js";
+import { initYearRoman } from "./year.js";
 
 const publicApi = (() => {
   const obj = window.face && typeof window.face === "object" ? window.face : {};
   window.face = obj;
   return obj;
 })();
+
+initYearRoman();
 
 let debugEnabled = Boolean(publicApi.debug);
 
@@ -15,6 +18,8 @@ const faceJiggle = document.querySelector(".face-jiggle");
 const ciaoJiggle = document.querySelector(".ciao-jiggle");
 const faceWrap = document.querySelector(".face-wrap");
 const tapHint = document.querySelector(".tap-hint");
+const scrollHint = document.querySelector(".scroll-hint");
+const blurb = document.querySelector(".blurb");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 
@@ -23,46 +28,48 @@ const intro = {
   startAt: performance.now(),
 };
 
-const withTimeout = (promise, timeoutMs) => new Promise((resolve) => {
-  let done = false;
-  const timer = window.setTimeout(() => {
-    if (done) return;
-    done = true;
-    resolve({ ok: false, timeout: true });
-  }, timeoutMs);
-
-  promise
-    .then((value) => {
+const withTimeout = (promise, timeoutMs) =>
+  new Promise((resolve) => {
+    let done = false;
+    const timer = window.setTimeout(() => {
       if (done) return;
       done = true;
-      window.clearTimeout(timer);
-      resolve({ ok: true, value });
-    })
-    .catch((error) => {
-      if (done) return;
-      done = true;
-      window.clearTimeout(timer);
-      resolve({ ok: false, error });
-    });
-});
+      resolve({ ok: false, timeout: true });
+    }, timeoutMs);
 
-const waitForImg = (img) => new Promise((resolve) => {
-  if (!img) {
-    resolve();
-    return;
-  }
-  if (img.complete && img.naturalWidth > 0) {
-    resolve();
-    return;
-  }
-  const done = () => {
-    img.removeEventListener("load", done);
-    img.removeEventListener("error", done);
-    resolve();
-  };
-  img.addEventListener("load", done, { once: true });
-  img.addEventListener("error", done, { once: true });
-});
+    promise
+      .then((value) => {
+        if (done) return;
+        done = true;
+        window.clearTimeout(timer);
+        resolve({ ok: true, value });
+      })
+      .catch((error) => {
+        if (done) return;
+        done = true;
+        window.clearTimeout(timer);
+        resolve({ ok: false, error });
+      });
+  });
+
+const waitForImg = (img) =>
+  new Promise((resolve) => {
+    if (!img) {
+      resolve();
+      return;
+    }
+    if (img.complete && img.naturalWidth > 0) {
+      resolve();
+      return;
+    }
+    const done = () => {
+      img.removeEventListener("load", done);
+      img.removeEventListener("error", done);
+      resolve();
+    };
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", done, { once: true });
+  });
 
 const waitForHeroAssets = async () => {
   const hero = document.querySelector(".hero");
@@ -82,13 +89,77 @@ const waitForHeroAssets = async () => {
     })();
   }
 
-  await Promise.all([
-    withTimeout(imageWait, 5000),
-    withTimeout(fontWait, 5000),
-  ]);
+  await Promise.all([withTimeout(imageWait, 5000), withTimeout(fontWait, 5000)]);
 };
 
 let introSmileScheduled = false;
+
+const INTRO_TOTAL_MS = 3600;
+let scrollHintTimer = 0;
+let scrollHintHideTimer = 0;
+let scrollHintDismissed = false;
+const scrollHintDismissKeys = new Set(["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ", "Spacebar"]);
+
+const setScrollHintVisible = (visible) => {
+  if (!scrollHint) {
+    return;
+  }
+
+  if (visible) {
+    if (!scrollHint.hidden) {
+      return;
+    }
+    scrollHint.hidden = false;
+    window.requestAnimationFrame(() => {
+      scrollHint.classList.add("is-visible");
+    });
+    return;
+  }
+
+  scrollHint.classList.remove("is-visible");
+  if (scrollHintHideTimer) {
+    window.clearTimeout(scrollHintHideTimer);
+  }
+  scrollHintHideTimer = window.setTimeout(() => {
+    if (scrollHint) {
+      scrollHint.hidden = true;
+    }
+  }, 250);
+};
+
+const hasRoomForScrollHint = () => {
+  if (!scrollHint || !blurb) {
+    return false;
+  }
+  if (window.scrollY > 4) {
+    return false;
+  }
+  if (window.innerHeight < 520) {
+    return false;
+  }
+  const rect = blurb.getBoundingClientRect();
+  const space = window.innerHeight - rect.bottom;
+  return space > 120;
+};
+
+const scheduleScrollHint = (delayMs) => {
+  if (!scrollHint || scrollHintDismissed) {
+    return;
+  }
+  if (scrollHintTimer) {
+    window.clearTimeout(scrollHintTimer);
+  }
+  scrollHintTimer = window.setTimeout(() => {
+    scrollHintTimer = 0;
+    if (scrollHintDismissed) {
+      return;
+    }
+    if (!hasRoomForScrollHint()) {
+      return;
+    }
+    setScrollHintVisible(true);
+  }, delayMs);
+};
 
 const scheduleIntroSmile = () => {
   if (!intro.enabled || introSmileScheduled || !face) {
@@ -109,18 +180,18 @@ const startIntro = () => {
   document.body.classList.remove("is-preintro");
   document.body.classList.add("has-intro-started");
 
-  if (!intro.enabled) {
-    return;
+  intro.startAt = performance.now();
+
+  if (intro.enabled) {
+    document.body.classList.add("is-intro");
+    window.setTimeout(() => {
+      document.body.classList.remove("is-intro");
+    }, INTRO_TOTAL_MS);
+    scheduleIntroSmile();
   }
 
-  intro.startAt = performance.now();
-  document.body.classList.add("is-intro");
-
-  window.setTimeout(() => {
-    document.body.classList.remove("is-intro");
-  }, 3600);
-
-  scheduleIntroSmile();
+  // Show a "Scroll down" hint only after the intro settles and the user hasn't scrolled.
+  scheduleScrollHint((intro.enabled ? INTRO_TOTAL_MS : 0) + 2000);
 };
 
 if (intro.enabled) {
@@ -464,8 +535,11 @@ if (!prefersReducedMotion.matches) {
   window.addEventListener("pointerdown", (event) => {
     if (face && faceWrap) {
       const rect = faceWrap.getBoundingClientRect();
-      const inside = event.clientX >= rect.left && event.clientX <= rect.right
-        && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
       if (inside) {
         face.triggerMouthOpen?.();
         jiggle.faceKickSpeed -= 1.15;

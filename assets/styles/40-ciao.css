@@ -3,10 +3,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*gap: min(3vh, 24px);*/
+    gap: min(3vh, 24px);
     text-wrap: balance;
     position: relative;
     top: -60px;
+    padding: 0 24px;
+  }
+
+  .ciao {
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(2px, 0.9vw, 10px);
+    line-height: 1;
+    max-width: 100%;
   }
 
   .ciao-jiggle {
@@ -15,7 +28,7 @@
 
   body.is-intro .ciao-intro {
     opacity: 0;
-    transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 0, 0);
     transform-origin: 50% 60%;
     animation: intro-fade-up 520ms ease-out var(--intro-ciao-delay) both;
   }
@@ -23,15 +36,16 @@
   .ciao-letter {
     display: inline-flex;
     align-items: flex-end;
-    animation: none;
-  }
-
-  body.has-intro-started .ciao-letter {
+    flex: 0 0 auto;
     animation:
       ciao-land var(--ciao-land-dur) cubic-bezier(0.16, 0.92, 0.18, 1.18) calc(var(--intro-letter-delay) + var(--delay))
         both,
       ciao-bob 4.6s ease-in-out
         calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
+  }
+
+  body.is-preintro .ciao-letter {
+    animation: none;
   }
 
   .reduce-motion .ciao-letter {
@@ -43,12 +57,14 @@
     aspect-ratio: var(--ar, 1 / 1);
     width: auto;
     display: block;
-    animation: none;
+    animation:
+      ciao-shadow-intro 200ms calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur)) forwards,
+      ciao-shadow 4.6s ease-in-out
+        calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle) + 200ms) infinite;
   }
 
-  body.has-intro-started .ciao-letter img {
-    animation: ciao-shadow 4.6s ease-in-out
-      calc(var(--intro-letter-delay) + var(--delay) + var(--ciao-land-dur) + var(--ciao-land-settle)) infinite;
+  body.is-preintro .ciao-letter img {
+    animation: none;
   }
 
   .ciao-letter.o {
@@ -69,5 +85,47 @@
     opacity: 0;
     transform: translate3d(0, 10px, 0);
     animation: intro-fade-up var(--intro-blurb-dur) ease-out var(--intro-blurb-delay) both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 18px);
+    transform: translate3d(-50%, 8px, 0);
+    display: inline-flex;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform, opacity;
+  }
+
+  .scroll-hint.is-visible {
+    opacity: 0.6;
+    transform: translate3d(-50%, 0, 0);
+    animation:
+      scroll-hint-in 380ms cubic-bezier(0.18, 0.92, 0.2, 1.15) 0ms both,
+      scroll-hint-bob 2.8s ease-in-out 900ms infinite;
+  }
+
+  .scroll-hint-hand {
+    width: 58px;
+    aspect-ratio: 60 / 80;
+    height: auto;
+    flex: 0 0 auto;
+    background-image: url("../images/hand-sprite.svg");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 235px 80px;
+    animation: hand-frames 500ms steps(4) 0ms reverse infinite;
+  }
+
+  .reduce-motion .scroll-hint,
+  .reduce-motion .scroll-hint.is-visible {
+    animation: none;
+  }
+
+  .reduce-motion .scroll-hint-hand {
+    animation: none;
   }
 }

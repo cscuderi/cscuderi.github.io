@@ -1,5 +1,5 @@
 @layer media {
-  @media (max-width: 720px) {
+  @media (max-width: 768px) {
     .face-wrap {
       width: min(98vw, 720px);
       height: clamp(280px, 68vh, 560px);
@@ -9,6 +9,29 @@
     .contact-inner {
       flex-direction: column;
       align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .footer-tech {
+      gap: 0;
+    }
+
+    .footer-tech-head {
+      font-size: 1.5rem;
+    }
+
+    .footer-tech-made {
+      flex-direction: column;
+      gap: 18px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .footer-skills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
     }
   }
 
@@ -42,6 +65,10 @@
       width: min(100vw, 380px);
       height: clamp(220px, 46vh, 420px);
       height: clamp(220px, 46svh, 420px);
+    }
+
+    :root {
+      --ciao-letter-h: clamp(44px, 14vw, 110px);
     }
   }
 }

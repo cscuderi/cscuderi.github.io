@@ -3,12 +3,12 @@
     opacity: 0;
   }
 
-  body.has-intro-started #site-wrap {
-    background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
-  }
-
   body.is-intro .background-effects {
     opacity: 1;
+  }
+
+  body.has-intro-started #site-wrap {
+    background: radial-gradient(circle at 30% 15%, #f6f1e9 0%, var(--paper) 45%, var(--paper-deep) 100%);
   }
 
   body.is-intro #site-wrap {
