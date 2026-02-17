@@ -40,10 +40,11 @@
     <link rel="stylesheet" href="assets/styles/20-base.css" />
     <link rel="stylesheet" href="assets/styles/30-face.css" />
     <link rel="stylesheet" href="assets/styles/40-ciao.css" />
-    <link rel="stylesheet" href="assets/styles/50-footer.css" />
-    <link rel="stylesheet" href="assets/styles/60-effects.css" />
+    <link rel="stylesheet" href="assets/styles/50-about.css" />
+    <link rel="stylesheet" href="assets/styles/60-footer.css" />
     <link rel="stylesheet" href="assets/styles/70-animations.css" />
-    <link rel="stylesheet" href="assets/styles/80-media.css" />
+    <link rel="stylesheet" href="assets/styles/80-effects.css" />
+    <link rel="stylesheet" href="assets/styles/90-media.css" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond" rel="stylesheet" />
 
     <!-- Hotjar -->
@@ -100,7 +101,8 @@
                 </div>
               </div>
               <p class="blurb">
-                I'm Carlin; a developer and designer with a passion for building accessible, engaging web experiences.
+                I'm Carlin; a senior frontend engineer with a background in design, building accessible, engaging web
+                experiences.
               </p>
 
               <div class="scroll-hint" hidden aria-hidden="true">
@@ -111,11 +113,17 @@
         </section>
       </main>
 
-      <footer class="footer">
-        <h2>
-          <img src="assets/images/about.svg" alt="Presenting: Me... Talking about myself" />
-        </h2>
-        <ul class="footer-skills">
+      <section class="about">
+        <img class="about-header" src="assets/images/about.svg" alt="Presenting: Me... Talking about myself" />
+
+        <p>
+          I began as a graphic designer and gradually traded kerning for components. Now I build scalable frontend
+          systems, shape design systems, and make sure the web works for everyone. I like clean architecture, inclusive
+          interfaces, and code that doesn’t fight back.
+        </p>
+
+        <hr />
+        <ul class="about-skills">
           <li>Design & Interaction (Figma, UX, visual systems)</li>
           <li>Frontend Architecture (React / TypeScript)</li>
           <li>Design Systems & Accessibility Leadership</li>
@@ -125,8 +133,11 @@
         </ul>
 
         <hr />
+      </section>
 
-        <p class="footer-tech">
+      <footer class="footer">
+        <img class="footer-logo" src="assets/images/shield-rev.svg" alt="" />
+        <p class="footer-tech" aria-label="This site was made with front-end technologies!">
           <span class="footer-tech-head">This site was</span>
           <span class="footer-tech-made">
             made with
@@ -134,7 +145,7 @@
             technologies!
           </span>
         </p>
-        <img class="footer-logo" src="assets/images/shield-rev.svg" alt="" />
+
         <p class="footer-copyright">&copy; Copyright <span aria-label="2026" data-year-roman>MMXXVI</span></p>
         <ul class="footer-links">
           <li>

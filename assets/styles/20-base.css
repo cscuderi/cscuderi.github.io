@@ -5,28 +5,36 @@
     box-sizing: border-box;
   }
 
+  html {
+    scrollbar-gutter: stable;
+    overscroll-behavior: none;
+    font-size: 16px;
+  }
+
+  @media (max-width: 568px) {
+    html {
+      font-size: 0.7rem;
+    }
+  }
+
   html,
   body {
     height: 100%;
   }
 
-  html {
-    scrollbar-gutter: stable;
-    overscroll-behavior: none;
-  }
-
-  body.reduce-motion {
-    filter: none;
-  }
-
   body {
     margin: 0;
     font-family: "EB Garamond", serif;
+    font-size: 1.6rem;
     color: var(--ink);
     background: --ink;
     min-height: 100vh;
     min-height: 100svh;
     overflow-x: hidden;
+  }
+
+  body.reduce-motion {
+    filter: none;
   }
 
   main {
