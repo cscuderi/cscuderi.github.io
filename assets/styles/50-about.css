@@ -1,0 +1,77 @@
+@layer about {
+  .about {
+    padding: 64px 24px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ink-warm);
+    color: var(--ink-light);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-size: 1.6rem;
+  }
+
+  .about-header {
+    display: block;
+    max-width: 760px;
+    margin: 64px auto 0 auto;
+  }
+
+  .about p {
+    text-wrap: pretty;
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0;
+  }
+
+  .about-skills {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 1280px) {
+    .about-skills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+    }
+  }
+
+  .about-skills li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .about-skills li {
+      text-align: left;
+      align-items: baseline;
+      text-wrap: balance;
+    }
+  }
+
+  .about-skills li::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    background: currentColor;
+    opacity: 0.9;
+    -webkit-mask-image: url("../images/star.svg");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url("../images/star.svg");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+}

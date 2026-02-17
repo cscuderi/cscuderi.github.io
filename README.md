@@ -1,5 +1,6 @@
-# Howdy! 👋
+This is my personal site hosted on GitHub.
 
-This is my personal site hosted at [carlinscuderi.com](http://carlinscuderi.com).
+All assets are static (HTML, CSS, JS)
 
-Run the dev watch process: `bundle exec jekyll serve --watch`
+Run a simple Python server to see locally in browser.
+`python3 -m http.server 8080`

@@ -1,0 +1,112 @@
+@layer face {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .hero-stage {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(6px, 1.6vh, 14px);
+  }
+
+  .face-wrap {
+    width: min(96vw, 1200px);
+    height: min(clamp(320px, 70vh, 860px), calc(96vw * 0.86));
+    height: min(clamp(320px, 70svh, 860px), calc(96vw * 0.86));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    will-change: transform;
+    transform-origin: 50% 45%;
+  }
+
+  .face-jiggle,
+  .face-intro {
+    position: absolute;
+    inset: 0;
+  }
+
+  .face-jiggle {
+    will-change: transform;
+  }
+
+  body.is-intro .face-intro {
+    opacity: 0;
+    transform: translate3d(0, 44vh, 0) scale(1.15, 0.72) rotate(-2deg);
+    transform-origin: 50% 60%;
+    animation: intro-squash-in-face var(--intro-face-dur) cubic-bezier(0.17, 0.92, 0.22, 1.2) var(--intro-face-delay)
+      both;
+  }
+
+  body.is-intro .face-fallback,
+  body:not(.has-webgl) .face-fallback {
+    opacity: 1;
+  }
+
+  body.has-webgl .face-fallback {
+    opacity: 0;
+  }
+
+  /* Ensure the canvas sits above the SVG fallback. */
+  .face-fallback,
+  #face-canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  .burst {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(100%, 740px);
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0.2;
+    z-index: 0;
+    will-change: transform;
+    transform-origin: 50% 50%;
+    transform: translate3d(-50%, -50%, 0) scale(var(--burst-scale)) rotate(0deg);
+    pointer-events: none;
+  }
+
+  body.is-intro .burst {
+    animation: burst-in 900ms cubic-bezier(0.14, 0.92, 0.2, 1.1) calc(var(--intro-face-delay) + 1100ms) both;
+  }
+
+  body:not(.is-intro) .burst {
+    animation: burst-spin 26s linear 0ms infinite;
+  }
+
+  #face-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 260ms ease-out;
+    z-index: 2;
+    filter: blur(0.5px);
+  }
+
+  body.has-webgl #face-canvas {
+    opacity: 1;
+  }
+
+  .face-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+  }
+}
