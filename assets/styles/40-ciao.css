@@ -117,8 +117,20 @@
     background-image: url("../images/hand-sprite.svg");
     background-repeat: no-repeat;
     background-position: 0 0;
-    background-size: 235px 80px;
+    background-size: 240px 80px;
     animation: hand-frames 500ms steps(4) 0ms reverse infinite;
+  }
+
+  .scroll-hint-text {
+    font-family: "Montserrat", Arial, sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 0.85rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--ink);
+    opacity: 0.95;
   }
 
   .reduce-motion .scroll-hint,

@@ -1,4 +1,3 @@
-import { createFace } from "./face.js";
 import { initYearRoman } from "./year.js";
 
 const publicApi = (() => {
@@ -12,6 +11,7 @@ initYearRoman();
 let debugEnabled = Boolean(publicApi.debug);
 
 let face;
+let faceLoadPromise = null;
 
 const canvas = document.querySelector("#face-canvas");
 const faceJiggle = document.querySelector(".face-jiggle");
@@ -28,68 +28,12 @@ const intro = {
   startAt: performance.now(),
 };
 
-const withTimeout = (promise, timeoutMs) =>
-  new Promise((resolve) => {
-    let done = false;
-    const timer = window.setTimeout(() => {
-      if (done) return;
-      done = true;
-      resolve({ ok: false, timeout: true });
-    }, timeoutMs);
-
-    promise
-      .then((value) => {
-        if (done) return;
-        done = true;
-        window.clearTimeout(timer);
-        resolve({ ok: true, value });
-      })
-      .catch((error) => {
-        if (done) return;
-        done = true;
-        window.clearTimeout(timer);
-        resolve({ ok: false, error });
-      });
-  });
-
-const waitForImg = (img) =>
-  new Promise((resolve) => {
-    if (!img) {
-      resolve();
-      return;
-    }
-    if (img.complete && img.naturalWidth > 0) {
-      resolve();
-      return;
-    }
-    const done = () => {
-      img.removeEventListener("load", done);
-      img.removeEventListener("error", done);
-      resolve();
-    };
-    img.addEventListener("load", done, { once: true });
-    img.addEventListener("error", done, { once: true });
-  });
-
-const waitForHeroAssets = async () => {
-  const hero = document.querySelector(".hero");
-  const imgs = hero ? Array.from(hero.querySelectorAll("img")) : [];
-  const imageWait = Promise.all(imgs.map(waitForImg));
-
-  let fontWait = Promise.resolve();
-  if (document.fonts && typeof document.fonts.load === "function") {
-    fontWait = (async () => {
-      // These weights match the Google Fonts request in index.html.
-      await Promise.all([
-        document.fonts.load('900 1em "Montserrat"'),
-        document.fonts.load('400 1em "Montserrat"'),
-        document.fonts.load('400 1em "EB Garamond"'),
-      ]);
-      await document.fonts.ready;
-    })();
+const afterIdle = (fn) => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(fn, { timeout: 2500 });
+  } else {
+    window.setTimeout(fn, 800);
   }
-
-  await Promise.all([withTimeout(imageWait, 5000), withTimeout(fontWait, 5000)]);
 };
 
 let introSmileScheduled = false;
@@ -126,6 +70,35 @@ const setScrollHintVisible = (visible) => {
     }
   }, 250);
 };
+
+const dismissScrollHint = () => {
+  if (scrollHintDismissed) {
+    return;
+  }
+  scrollHintDismissed = true;
+  if (scrollHintTimer) {
+    window.clearTimeout(scrollHintTimer);
+    scrollHintTimer = 0;
+  }
+  setScrollHintVisible(false);
+};
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (window.scrollY > 4) {
+      dismissScrollHint();
+    }
+  },
+  { passive: true },
+);
+window.addEventListener("wheel", dismissScrollHint, { passive: true });
+window.addEventListener("touchmove", dismissScrollHint, { passive: true });
+window.addEventListener("keydown", (event) => {
+  if (scrollHintDismissKeys.has(event?.key)) {
+    dismissScrollHint();
+  }
+});
 
 const hasRoomForScrollHint = () => {
   if (!scrollHint || !blurb) {
@@ -194,13 +167,8 @@ const startIntro = () => {
   scheduleScrollHint((intro.enabled ? INTRO_TOTAL_MS : 0) + 2000);
 };
 
-if (intro.enabled) {
-  // Don’t kick off the intro until visible hero assets are ready.
-  waitForHeroAssets().then(startIntro);
-} else {
-  // Reduced motion: show the page immediately.
-  startIntro();
-}
+// Don’t block first paint on fonts/images.
+startIntro();
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -332,39 +300,79 @@ function stopDebugLoop() {
   }
 }
 
-try {
-  if (!canvas) {
-    throw new Error("Missing #face-canvas");
+const loadWebglFace = async () => {
+  if (!canvas || prefersReducedMotion.matches) {
+    return null;
   }
-  face = await createFace(canvas, { reducedMotion: prefersReducedMotion.matches, debug: debugEnabled });
-
-  // Only hide the SVG fallback once we know the WebGL face actually built geometry.
-  const debug = face.getDebugInfo?.();
-  if (!debug || debug.meshCount <= 0) {
-    throw new Error("Face initialized but produced no geometry");
+  if (face) {
+    return face;
+  }
+  if (faceLoadPromise) {
+    return faceLoadPromise;
   }
 
-  // Wait until layout has settled so canvas has non-zero size.
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
-      try {
-        face.resize();
-        face.update(performance.now());
-        document.body.classList.add("has-webgl");
-      } catch (error) {
-        console.error(error);
-        showError(error?.stack || error?.message || error);
+  faceLoadPromise = (async () => {
+    try {
+      const mod = await import("./face.js");
+      const created = await mod.createFace(canvas, { reducedMotion: prefersReducedMotion.matches, debug: debugEnabled });
+
+      // Only hide the SVG fallback once we know the WebGL face actually built geometry.
+      const debug = created.getDebugInfo?.();
+      if (!debug || debug.meshCount <= 0) {
+        throw new Error("Face initialized but produced no geometry");
       }
-    });
+
+      face = created;
+
+      // Wait until layout has settled so canvas has non-zero size.
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          try {
+            face.resize();
+            face.update(performance.now());
+            document.body.classList.add("has-webgl");
+          } catch (error) {
+            console.error(error);
+            showError(error?.stack || error?.message || error);
+          }
+        });
+      });
+
+      scheduleIntroSmile();
+
+      // Apply any pre-set value.
+      publicApi.debug = debugEnabled;
+      return face;
+    } catch (error) {
+      console.error(error);
+      showError(error?.stack || error?.message || error);
+      return null;
+    } finally {
+      faceLoadPromise = null;
+    }
+  })();
+
+  return faceLoadPromise;
+};
+
+// Lazy-load WebGL once the hero is in view.
+if (faceWrap && typeof IntersectionObserver !== "undefined") {
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        io.disconnect();
+        afterIdle(() => {
+          void loadWebglFace();
+        });
+      }
+    },
+    { root: null, threshold: 0.1 },
+  );
+  io.observe(faceWrap);
+} else {
+  afterIdle(() => {
+    void loadWebglFace();
   });
-
-  scheduleIntroSmile();
-
-  // Apply any pre-set value.
-  publicApi.debug = debugEnabled;
-} catch (error) {
-  console.error(error);
-  showError(error?.stack || error?.message || error);
 }
 
 let rafId = 0;
@@ -471,6 +479,10 @@ const updateFaceTarget = (time) => {
     return;
   }
 
+  if (!face) {
+    return;
+  }
+
   if (!isTouch) {
     const idle = time - lastPointerTime > 2000;
     const autoTarget = getAutopilotTarget(time);
@@ -499,16 +511,13 @@ const tick = (time) => {
   }
   updateFaceTarget(time);
   applyJiggle(time);
-  face.update(time);
+  face?.update?.(time);
   rafId = window.requestAnimationFrame(tick);
 };
 
 const start = () => {
-  if (!face) {
-    return;
-  }
   if (running || prefersReducedMotion.matches) {
-    face.update(performance.now());
+    face?.update?.(performance.now());
     return;
   }
   running = true;
@@ -533,6 +542,12 @@ if (!prefersReducedMotion.matches) {
   });
 
   window.addEventListener("pointerdown", (event) => {
+    if (!face) {
+      // Ensure face loads on first interaction.
+      afterIdle(() => {
+        void loadWebglFace();
+      });
+    }
     if (face && faceWrap) {
       const rect = faceWrap.getBoundingClientRect();
       const inside =

@@ -8,20 +8,44 @@
       name="description"
       content="Senior frontend engineer with a background in design, focused on scalable React architecture, design systems, accessibility, and API-driven UI."
     />
+    <link rel="canonical" href="https://cscuderi.github.io/" />
+    <meta name="robots" content="index,follow" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta name="theme-color" content="#0a0908" />
+
+    <meta property="og:site_name" content="Carlin Scuderi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cscuderi.github.io/" />
+    <meta property="og:title" content="Carlin Scuderi - Senior Frontend Engineer & Designer" />
+    <meta
+      property="og:description"
+      content="Senior frontend engineer with a background in design, focused on scalable React architecture, design systems, accessibility, and API-driven UI."
+    />
+    <meta property="og:image" content="https://cscuderi.github.io/share.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Carlin Scuderi - Senior Frontend Engineer & Designer" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://cscuderi.github.io/share.png" />
+    <meta name="twitter:title" content="Carlin Scuderi - Senior Frontend Engineer & Designer" />
+    <meta
+      name="twitter:description"
+      content="Senior frontend engineer with a background in design, focused on scalable React architecture, design systems, accessibility, and API-driven UI."
+    />
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Carlin Scuderi" />
+    <link rel="manifest" href="/site.webmanifest" />
     <style>
       html,
       body {
         background: #0a0908;
-      }
-
-      /* Hide all content until hero assets/fonts are ready */
-      body.is-preintro #site-wrap {
-        visibility: hidden;
-      }
-
-      body.has-intro-started #site-wrap {
-        visibility: visible;
       }
     </style>
 
@@ -47,21 +71,15 @@
     <link rel="stylesheet" href="assets/styles/90-media.css" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond" rel="stylesheet" />
 
-    <!-- Hotjar -->
-    <script>
-      (function (h, o, t, j, a, r) {
-        h.hj =
-          h.hj ||
-          function () {
-            (h.hj.q = h.hj.q || []).push(arguments);
-          };
-        h._hjSettings = { hjid: 997278, hjsv: 6 };
-        a = o.getElementsByTagName("head")[0];
-        r = o.createElement("script");
-        r.async = 1;
-        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-        a.appendChild(r);
-      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Carlin Scuderi",
+        "jobTitle": "Senior Frontend Engineer & Designer",
+        "url": "https://cscuderi.github.io/",
+        "sameAs": ["https://www.linkedin.com/in/carlinscuderi/", "https://github.com/cscuderi"]
+      }
     </script>
   </head>
   <body class="is-preintro">
@@ -81,7 +99,8 @@
             <div class="hero-copy">
               <div class="ciao-jiggle">
                 <div class="ciao-intro">
-                  <h1 id="hero-title" lang="it" aria-label="Ciao!" class="ciao">
+                  <h1 id="hero-title" lang="it" class="ciao">
+                    <span class="sr-only" lang="en">Carlin Scuderi — Senior Frontend Engineer &amp; Designer</span>
                     <span class="ciao-letter c" style="--delay: 0ms; --ar: 482.58 / 579.01"
                       ><img src="assets/images/c.svg" width="483" height="579" alt=""
                     /></span>
@@ -107,6 +126,7 @@
 
               <div class="scroll-hint" hidden aria-hidden="true">
                 <span class="scroll-hint-hand"></span>
+                <span class="scroll-hint-text">Scroll down!</span>
               </div>
             </div>
           </div>
@@ -131,7 +151,6 @@
           <li>Full-Stack Collaboration (Rails / GraphQL)</li>
           <li>Performance & Inclusive Web Standards</li>
         </ul>
-
         <hr />
       </section>
 
@@ -183,15 +202,51 @@
 
     <script type="module" src="assets/scripts/site.js"></script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9507179-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "UA-9507179-1");
+      // Defer third-party scripts
+      window.addEventListener("load", () => {
+        const afterIdle = (fn) => {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(fn, { timeout: 5000 });
+          } else {
+            window.setTimeout(fn, 3500);
+          }
+        };
+
+        afterIdle(() => {
+          // Google Analytics (legacy UA)
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = window.gtag || gtag;
+
+          const ga = document.createElement("script");
+          ga.async = true;
+          ga.src = "https://www.googletagmanager.com/gtag/js?id=UA-9507179-1";
+          document.head.appendChild(ga);
+
+          gtag("js", new Date());
+          gtag("config", "UA-9507179-1");
+        });
+
+        afterIdle(() => {
+          // Hotjar
+          (function (h, o, t, j, a, r) {
+            h.hj =
+              h.hj ||
+              function () {
+                (h.hj.q = h.hj.q || []).push(arguments);
+              };
+            h._hjSettings = { hjid: 997278, hjsv: 6 };
+            a = o.getElementsByTagName("head")[0];
+            r = o.createElement("script");
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+          })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+        });
+      });
     </script>
   </body>
 </html>

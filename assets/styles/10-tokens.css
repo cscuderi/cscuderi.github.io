@@ -20,7 +20,6 @@
     --intro-face-dur: 1100ms;
 
     --intro-ciao-delay: 1600ms;
-    --intro-ciao-dur: 900ms;
     --intro-letter-delay: 1800ms;
     --intro-blurb-delay: 2500ms;
     --intro-blurb-dur: 900ms;
@@ -31,12 +30,6 @@
     --ciao-land-settle: 180ms;
 
     --ciao-letter-h: clamp(60px, 20vw, 140px);
-
-    --bp-xs: 480px;
-    --bp-sm: 576px;
-    --bp-md: 768px;
-    --bp-lg: 1024px;
-    --bp-xl: 1280px;
 
     --page-max-width: 1600px;
   }
