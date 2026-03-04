@@ -52,24 +52,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="assets/images/face.svg" as="image" type="image/svg+xml" />
-    <link rel="preload" href="assets/images/mouth-open.svg" as="image" type="image/svg+xml" />
-    <link rel="preload" href="assets/images/mouth-smile.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/c.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/i.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/a.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/o.svg" as="image" type="image/svg+xml" />
     <link rel="preload" href="assets/images/e.svg" as="image" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles/00-layers.css" />
-    <link rel="stylesheet" href="assets/styles/10-tokens.css" />
-    <link rel="stylesheet" href="assets/styles/20-base.css" />
-    <link rel="stylesheet" href="assets/styles/30-face.css" />
-    <link rel="stylesheet" href="assets/styles/40-ciao.css" />
-    <link rel="stylesheet" href="assets/styles/50-about.css" />
-    <link rel="stylesheet" href="assets/styles/60-footer.css" />
-    <link rel="stylesheet" href="assets/styles/70-animations.css" />
-    <link rel="stylesheet" href="assets/styles/80-effects.css" />
-    <link rel="stylesheet" href="assets/styles/90-media.css" />
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/styles/site.css" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css?family=Montserrat:400,900|EB+Garamond&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <script type="application/ld+json">
       {
@@ -91,7 +96,14 @@
               <img class="burst" src="assets/images/burst.svg" alt="" aria-hidden="true" />
               <div class="face-jiggle">
                 <div class="face-intro">
-                  <img class="face-fallback" src="assets/images/face.svg" alt="" aria-hidden="true" />
+                  <img
+                    class="face-fallback"
+                    src="assets/images/face.svg"
+                    alt=""
+                    aria-hidden="true"
+                    fetchpriority="high"
+                    decoding="async"
+                  />
                   <canvas id="face-canvas" aria-hidden="true"></canvas>
                 </div>
               </div>

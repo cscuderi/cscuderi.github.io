@@ -23,6 +23,11 @@ const blurb = document.querySelector(".blurb");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 
+let scrollingUntil = 0;
+const markScrolling = (now = performance.now()) => {
+  scrollingUntil = Math.max(scrollingUntil, now + 160);
+};
+
 const intro = {
   enabled: !prefersReducedMotion.matches,
   startAt: performance.now(),
@@ -34,6 +39,15 @@ const afterIdle = (fn) => {
   } else {
     window.setTimeout(fn, 800);
   }
+};
+
+const afterLoadIdle = (fn) => {
+  const run = () => afterIdle(fn);
+  if (document.readyState === "complete") {
+    run();
+    return;
+  }
+  window.addEventListener("load", run, { once: true });
 };
 
 let introSmileScheduled = false;
@@ -86,14 +100,29 @@ const dismissScrollHint = () => {
 window.addEventListener(
   "scroll",
   () => {
+    markScrolling();
     if (window.scrollY > 4) {
       dismissScrollHint();
     }
   },
   { passive: true },
 );
-window.addEventListener("wheel", dismissScrollHint, { passive: true });
-window.addEventListener("touchmove", dismissScrollHint, { passive: true });
+window.addEventListener(
+  "wheel",
+  (event) => {
+    markScrolling(event?.timeStamp ? event.timeStamp : performance.now());
+    dismissScrollHint();
+  },
+  { passive: true },
+);
+window.addEventListener(
+  "touchmove",
+  (event) => {
+    markScrolling(event?.timeStamp ? event.timeStamp : performance.now());
+    dismissScrollHint();
+  },
+  { passive: true },
+);
 window.addEventListener("keydown", (event) => {
   if (scrollHintDismissKeys.has(event?.key)) {
     dismissScrollHint();
@@ -361,7 +390,7 @@ if (faceWrap && typeof IntersectionObserver !== "undefined") {
     (entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         io.disconnect();
-        afterIdle(() => {
+        afterLoadIdle(() => {
           void loadWebglFace();
         });
       }
@@ -370,7 +399,7 @@ if (faceWrap && typeof IntersectionObserver !== "undefined") {
   );
   io.observe(faceWrap);
 } else {
-  afterIdle(() => {
+  afterLoadIdle(() => {
     void loadWebglFace();
   });
 }
@@ -441,6 +470,7 @@ window.addEventListener(
   "scroll",
   () => {
     const now = performance.now();
+    markScrolling(now);
     const y = window.scrollY || 0;
     const delta = y - jiggle.lastScrollY;
     jiggle.lastScrollY = y;
@@ -509,9 +539,14 @@ const tick = (time) => {
   if (!running) {
     return;
   }
-  updateFaceTarget(time);
+  const scrolling = time < scrollingUntil;
+  if (!scrolling) {
+    updateFaceTarget(time);
+  }
   applyJiggle(time);
-  face?.update?.(time);
+  if (!scrolling) {
+    face?.update?.(time);
+  }
   rafId = window.requestAnimationFrame(tick);
 };
 
@@ -568,6 +603,26 @@ if (!prefersReducedMotion.matches) {
     lastPointerTime = performance.now();
     markInteracted();
   });
+}
+
+// Pause the RAF loop when the hero is off-screen.
+const hero = document.querySelector(".hero");
+if (hero && typeof IntersectionObserver !== "undefined") {
+  const heroIo = new IntersectionObserver(
+    (entries) => {
+      if (document.hidden || prefersReducedMotion.matches) {
+        return;
+      }
+      const isVisible = entries.some((entry) => entry.isIntersecting);
+      if (isVisible) {
+        start();
+      } else {
+        stop();
+      }
+    },
+    { root: null, threshold: 0.01 },
+  );
+  heroIo.observe(hero);
 }
 
 window.addEventListener("resize", () => {
